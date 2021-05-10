@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="stu-filterbybianhao">
     <el-input
             placeholder="请输入考试编号"
             v-model="value"

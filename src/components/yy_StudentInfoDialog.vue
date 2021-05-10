@@ -4,8 +4,9 @@
             type="text"
             size="small"
             @click="openDialog">查看详情</el-button>
+
     <el-dialog
-            width="70%"
+            width="60%"
             top="20px"
             title="学生详情信息"
             :modal-append-to-body="false"
@@ -19,27 +20,27 @@
         <div class="beizhu">
           <h3>备注信息</h3>
           <div class="beizhu-text">
-            我是一名优秀的学生，我要考上清华，北大
+            {{stuData.student_desc}}
           </div>
         </div>
       </div>
       <div class="xinxi right">
         <ul>
-          <li>学号：<span>201800023</span></li>
-          <li>密码：<span>123456</span></li>
-          <li>姓名：<span>张三</span></li>
-          <li>性别：<span>男</span></li>
-          <li>年龄：<span>20</span></li>
-          <li>名族：<span>汉族</span></li>
-          <li>政治面貌：<span>共青团员</span></li>
-          <li>获奖情况：<span>省打篮球一等奖</span></li>
-          <li>在读状态：<span>在读</span></li>
-          <li>班主任：<span>李四</span></li>
-          <li>班级：<span>高三一班</span></li>
-          <li>身份证号：<span>5111111221654533546</span></li>
-          <li>住址：<span>四川省成都市武侯区桂溪街道高新青年公寓1栋6-666</span></li>
-          <li>联系方式：<span>110110110110</span></li>
-          <li>入学日期：<span>2000-6-6</span></li>
+          <li>学号：<span>{{stuData.student_number}}</span></li>
+          <li>密码：<span>{{stuData.student_password}}</span></li>
+          <li>姓名：<span>{{stuData.student_name}}</span></li>
+          <li>性别：<span>{{stuData.student_gender}}</span></li>
+          <li>年龄：<span>{{stuData.student_age}}</span></li>
+          <li>名族：<span>{{stuData.student_nation}}</span></li>
+          <li>政治面貌：<span>{{stuData.student_politics}}</span></li>
+          <li>获奖情况：<span>{{stuData.student_experience}}</span></li>
+          <li>在读状态：<span>{{stuData.student_state==1?'在读':stuData.student_state==2?'休学':'退学'}}</span></li>
+          <li>班主任：<span>{{stuData.student_number}}</span></li>
+          <li>班级：<span>{{stuData.class_name}}</span></li>
+          <li>身份证号：<span>{{stuData.student_idcardno}}</span></li>
+          <li>住址：<span>{{stuData.student_home}}</span></li>
+          <li>联系方式：<span>{{stuData.student_contact}}</span></li>
+          <li>入学日期：<span>{{stuData.student_date}}6-6</span></li>
         </ul>
       </div>
     </el-dialog>
@@ -49,6 +50,7 @@
 <script>
   export default {
     name: "yy_StudentInfoDialog",
+    props:['stuData'],
     data(){
       return{
         dialogFormVisible:false
@@ -91,9 +93,9 @@
     ul{
       text-align: left;
       li{
-        border-bottom: 1px solid gray;
+        white-space: normal;
         margin: 5px 2px;
-        padding: 10px 0;
+        padding: 8px 0;
         font-size: 16px;
         font-weight: bold;
         span{
@@ -105,6 +107,10 @@
   }
 </style>
 <style>
+  @import '../assets/css/font.css';
+  .stu-info-dialog{
+    font-family: kaola;
+  }
   .stu-info-dialog .el-dialog__body{
     display: flex;
     justify-content: space-around;

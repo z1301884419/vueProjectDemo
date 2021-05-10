@@ -7,7 +7,10 @@
       <yy_FilterByTestType/><!--老师-->
     </div>
 <!--    显示班级排名（学生）-->
-    <el-button type="primary" plain class="show-class-score">显示班级排名</el-button>
+    <div class="show-class-score">
+      <el-button type="primary" size="small" plain>显示班级排名</el-button>
+    </div>
+
 <!--    成绩表-->
     <div class="score-table">
       <yy_ClassGreadTable/>
@@ -42,13 +45,29 @@
       display: flex;
       >div{
         width: 150px;
-        margin: 3rem 1rem;
+        margin: 2.5rem 1rem;
       }
+    }
+    .show-class-score{
+      padding:0 1rem;
+      button{
+        height: 34px;
+      }
+
     }
     .score-table{
       width: 100%;
-      margin: 0 auto;
+      margin: 1rem auto;
 
     }
+  }
+</style>
+<style>
+  @import '../assets/css/font.css';
+  .stu-score input{
+    font-family: kaola;
+  }
+  .stu-score button{
+    font-family: kaola;
   }
 </style>

@@ -14,6 +14,8 @@ const StudentInfo = () => import('../views/StudentInfo.vue');//学生信息管�
 const StudentScore = () => import('../views/StudentScore.vue');//学生成绩管理
 const StuParentMgt = () => import('../views/StuParentMgt.vue');//学生家长管理
 const TeacherInfo = () => import('../views/TeacherInfo.vue');//教师信息管理
+// 个人中心
+const stuCenter = () => import('../components/yy_StudentInfoOnlySelf.vue');//学生个人中心
 
 
 
@@ -94,7 +96,17 @@ const routes = [
         component: PersonalCenter,
         meta: {
           isLogin: true,
-        }
+        },
+        children: [
+          {
+            path: 'stuCenter',
+            name: 'stuCenter',
+            component: stuCenter,
+            meta: {
+              isLogin: true,
+            }
+          }
+        ]
       },
       {
         path: 'StudentInfo',
@@ -136,7 +148,7 @@ const routes = [
 
 const router = new VueRouter({
   routes,
-  mode:'history'
+  mode: 'history'
 })
 
 export default router

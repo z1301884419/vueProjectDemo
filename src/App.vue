@@ -14,4 +14,11 @@ body,html{
   font-family: kaola;
   font-size: 10px;
 }
+  *{
+    padding: 0;
+    margin: 0;
+  }
+  li{
+    list-style: none;
+  }
 </style>

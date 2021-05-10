@@ -2,10 +2,13 @@
   <div class="add-stu">
     <el-button type="primary" plain @click="openDialog">添加学生</el-button>
 
-    <el-dialog title="录入学生信息" :visible.sync="dialogFormVisible">
+    <el-dialog title="录入学生信息" top="40px" :visible.sync="dialogFormVisible">
       <el-form :model="form">
         <el-form-item label="学号" label-width="150px">
           <el-input v-model="form.xuehao" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" label-width="150px">
+          <el-input v-model="form.mima" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="班级" label-width="150px">
           <el-input v-model="form.banji" autocomplete="off"></el-input>
@@ -20,7 +23,13 @@
           </el-select>
         </el-form-item>
         <el-form-item label="出生日期" label-width="150px">
-          <el-input v-model="form.birthday" autocomplete="off"></el-input>
+          <el-date-picker
+                  v-model="form.birthday"
+                  type="date"
+                  placeholder="选择日期"
+                  format="yyyy 年 MM 月 dd 日"
+                  value-format="yyyy-MM-dd">
+          </el-date-picker>
         </el-form-item>
         <el-form-item label="获奖情况" label-width="150px">
           <el-input v-model="form.huojiang" autocomplete="off"></el-input>
@@ -45,6 +54,7 @@
         dialogFormVisible: false,
         form: {
           xuehao: '',
+          mima:'',
           banji: '',
           name: '',
           birthday: '',
@@ -62,7 +72,7 @@
         this.dialogFormVisible = false
       },
       sureAdd(){
-        console.log(this.gridData);
+        console.log(this.form);
       },
     },
 

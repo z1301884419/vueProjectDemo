@@ -6,18 +6,14 @@
     <el-table-column
             fixed
             align="center"
-            prop="name"
-            label="姓名">
-    </el-table-column>
-    <el-table-column
-            align="center"
             prop="xuehao"
             label="学号">
     </el-table-column>
     <el-table-column
+            fixed
             align="center"
-            prop="password"
-            label="密码">
+            prop="name"
+            label="姓名">
     </el-table-column>
     <el-table-column
             align="center"
@@ -62,9 +58,8 @@
             width="200">
       <template slot-scope="scope">
         <el-button
-                @click="lookMore(scope.$index,scope.row)"
                 type="text"
-                size="small">查看详情</el-button>
+                size="small"><yy_StudentInfoDialog/></el-button>
         <el-button
                 @click="setStu(scope.$index,scope.row)"
                 type="text"
@@ -80,8 +75,12 @@
 </template>
 
 <script>
+  import yy_StudentInfoDialog from '@/components/yy_StudentInfoDialog'
   export default {
     name: "yy_StudentInfoTable",
+    components:{
+      yy_StudentInfoDialog,
+    },
     data() {
       return {
         tableData: [{

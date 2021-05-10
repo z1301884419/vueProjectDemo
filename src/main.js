@@ -6,6 +6,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
 import http from './utils/request';
 import mixins from './mixins/mixins';
+import echarts from 'echarts';
 
 // 在线图标库
 import IconFontOnline from 'vue-iconfont-online';
@@ -13,6 +14,7 @@ Vue.use(IconFontOnline, {  url: '//at.alicdn.com/t/font_2534815_idwh0uhqwf.css',
 
 Vue.config.productionTip = false
 Vue.prototype.$axios=http
+Vue.prototype.$echarts=echarts
 
 Vue.use(ElementUI)
 Vue.use(mixins)

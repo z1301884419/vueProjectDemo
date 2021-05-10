@@ -46,7 +46,7 @@
               <span class="iconfont icon-xinfeng"></span>
             </el-badge>
           </div>
-          <el-avatar class="headerSpan" :size='50'> user </el-avatar>
+          <router-link :to="{ path: '/Home/PersonalCenter' }"><el-avatar class="headerSpan" :size='50'> user </el-avatar></router-link>
           <div class="exitBox">
             退出登录<span class="iconfont icon-tuichu"></span>
           </div>
@@ -291,6 +291,12 @@ body > .el-container {
   padding-left: 10px;
   box-sizing: border-box;
   // border: 1px solid red;
+  a{
+    line-height: 80px;
+    span{
+      margin-top: 20px;
+    }
+  }
 }
 .exitBox {
   background-color: #c5e3d2;

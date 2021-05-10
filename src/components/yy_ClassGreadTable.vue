@@ -1,0 +1,134 @@
+<template>
+  <el-table
+          :data="tableData"
+          header-cell-style="background-color:#d4edf9"
+          style="width: 100%">
+    <el-table-column
+            align="center"
+            prop="className"
+            label="班级">
+    </el-table-column>
+    <el-table-column
+            fixed
+            align="center"
+            prop="name"
+            label="姓名">
+    </el-table-column>
+    <el-table-column
+            align="center"
+            prop="yuwen"
+            label="语文">
+    </el-table-column>
+    <el-table-column
+            align="center"
+            prop="shuxue"
+            label="数学">
+    </el-table-column>
+    <el-table-column
+            align="center"
+            prop="yingyu"
+            label="英语">
+    </el-table-column>
+    <el-table-column
+            align="center"
+            prop="wuli"
+            label="物理">
+    </el-table-column>
+    <el-table-column
+            align="center"
+            prop="huaxue"
+            label="化学">
+    </el-table-column>
+    <el-table-column
+            align="center"
+            prop="shengwu"
+            label="生物">
+    </el-table-column>
+    <el-table-column
+            align="center"
+            prop="total"
+            label="总分">
+    </el-table-column>
+    <el-table-column
+            align="center"
+            prop="testType"
+            label="考试类型">
+    </el-table-column>
+    <!--操作-->
+    <el-table-column
+            fixed="right"
+            label="操作"
+            width="100">
+      <template slot-scope="scope">
+        <el-button
+                @click="setStu(scope.$index,scope.row)"
+                type="text"
+                size="small">修改</el-button>
+        <el-button
+                type="text"
+                style="color: red"
+                @click="delStu(scope.$index,scope.row)"
+                size="small">删除</el-button>
+      </template>
+    </el-table-column>
+  </el-table>
+</template>
+
+<script>
+  export default {
+    name: "yy_ClassGreadTable",
+    data(){
+      return{
+        tableData:[{
+          className:'高一三班',
+          name:'李四',
+          yuwen:'80',
+          shuxue:'90',
+          yingyu:'98',
+          wuli:'98',
+          huaxue:'88',
+          shengwu:'96',
+          total:'',
+          testType:'期末'
+        },{
+          className:'高一三班',
+          name:'李四',
+          yuwen:'80',
+          shuxue:'90',
+          yingyu:'98',
+          wuli:'98',
+          huaxue:'88',
+          shengwu:'96',
+          total:'',
+          testType:'期末'
+        },{
+          className:'高一三班',
+          name:'李四',
+          yuwen:'80',
+          shuxue:'90',
+          yingyu:'98',
+          wuli:'98',
+          huaxue:'88',
+          shengwu:'96',
+          total:'',
+          testType:'期末'
+        }],
+      }
+    },
+    methods:{
+      setStu(index,row){
+        console.log(index);
+        console.log(row);
+      },
+      delStu(index,row){
+        console.log(index);
+        console.log(row);
+      },
+    },
+  }
+</script>
+
+<style scoped>
+
+</style>
+

@@ -2,10 +2,12 @@
   <div class="stu-score">
     <div class="filter-cpns">
       <yy_FilterByBianHao/>
-      <yy_FilterByClass/>
-      <yy_FilterBySubject/>
-      <yy_FilterByTestType/>
+      <yy_FilterByClass/><!--老师-->
+      <yy_FilterBySubject/><!--老师-->
+      <yy_FilterByTestType/><!--老师-->
     </div>
+<!--    显示班级排名（学生）-->
+    <el-button type="primary" plain class="show-class-score">显示班级排名</el-button>
 <!--    成绩表-->
     <div class="score-table">
       <yy_ClassGreadTable/>

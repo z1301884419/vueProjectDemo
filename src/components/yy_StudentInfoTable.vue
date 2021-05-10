@@ -1,7 +1,7 @@
 <template>
   <el-table
           :data="tableData"
-          header-cell-style="background-color:#d4edf9"
+          :header-cell-style="{'background-color':'#d4edf9'}"
           style="width: 100%;">
     <el-table-column
             fixed
@@ -28,12 +28,6 @@
             align="center"
             prop="age"
             label="年龄">
-    </el-table-column>
-    <el-table-column
-            align="center"
-            width="100"
-            prop="birthday"
-            label="出生日期">
     </el-table-column>
     <el-table-column
             align="center"
@@ -65,8 +59,12 @@
     <el-table-column
             fixed="right"
             label="操作"
-            width="100">
+            width="200">
       <template slot-scope="scope">
+        <el-button
+                @click="lookMore(scope.$index,scope.row)"
+                type="text"
+                size="small">查看详情</el-button>
         <el-button
                 @click="setStu(scope.$index,scope.row)"
                 type="text"
@@ -92,7 +90,6 @@
           password: '12345',
           sex: '男',
           age: '20',
-          birthday: '2020-5-15',
           idNumber: '511302211115155413',
           zaiduzhuangtai: '在读',
           minzu: '汉族',
@@ -104,7 +101,6 @@
           password: '12345',
           sex: '男',
           age: '20',
-          birthday: '2020-5-15',
           idNumber: '511302211115155413',
           zaiduzhuangtai: '在读',
           minzu: '汉族',
@@ -116,7 +112,6 @@
           password: '12345',
           sex: '男',
           age: '20',
-          birthday: '2020-5-15',
           idNumber: '511302211115155413',
           zaiduzhuangtai: '在读',
           minzu: '汉族',
@@ -128,7 +123,6 @@
           password: '12345',
           sex: '男',
           age: '20',
-          birthday: '2020-5-15',
           idNumber: '511302211115155413',
           zaiduzhuangtai: '在读',
           minzu: '汉族',
@@ -139,6 +133,11 @@
       }
     },
     methods:{
+      lookMore(index,row){
+        console.log(index);
+        console.log(row);
+        console.log('跳转到学生个人信息页面');
+      },
       setStu(index,row){
         console.log(index);
         console.log(row);

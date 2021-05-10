@@ -1,7 +1,7 @@
 <template>
   <el-table
           :data="tableData"
-          header-cell-style="background-color:#d4edf9"
+          :header-cell-style="{'background-color':'#d4edf9'}"
           style="width: 100%">
     <el-table-column
             align="center"

@@ -4,6 +4,9 @@
       <yy_FilterByBianHao/>
       <yy_FilterByClass/>
     </div>
+    <div class="add-stu">
+      <yy_AddStudentDialog/>
+    </div>
     <!--    学生信息表-->
     <div class="stu-table">
       <yy_StudentInfoTable/>
@@ -14,12 +17,14 @@
   import yy_FilterByBianHao from '@/components/yy_FilterByBianHao'
   import yy_FilterByClass from '@/components/yy_FilterByClass'
   import yy_StudentInfoTable from '@/components/yy_StudentInfoTable'
+  import yy_AddStudentDialog from '@/components/yy_AddStudentDialog'
   export default {
     name:'StudentInfo',
     components:{
       yy_FilterByBianHao,
       yy_FilterByClass,
       yy_StudentInfoTable,
+      yy_AddStudentDialog,
     },
     data(){
       return{

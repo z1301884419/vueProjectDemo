@@ -35,8 +35,10 @@
       </el-table-column>
       <el-table-column
               align="center"
-              prop="student_state"
               label="在读状态">
+        <template slot-scope="scope">
+          {{scope.row.student_state==1?'在读':scope.row.student_state==2?'休学':'退学'}}
+        </template>
       </el-table-column>
       <el-table-column
               align="center"
@@ -92,100 +94,9 @@
     },
     data() {
       return {
-        tableData: [{
-          student_number: '201500021',
-          student_password:'123456',
-          class_name: '高三二班',
-          student_name: '张三',
-          student_birthday: '2005-05-15',
-          student_age:'20',
-          student_idcardno:'511302200505155223',
-          student_nation:'汉族',
-          student_politics:'共青团员',
-          student_state:'1',
-          student_home:'成都市武侯区桂溪街道高新青年公寓一栋6-666',
-          student_contact:'120110119115',
-          student_parent:'张大五',
-          student_gender: '男',
-          student_date:'2018-09-21',
-          student_experience:'四川省高中生篮球比赛一等奖',
-          student_desc: '我是一个好人，我每天都要干三碗饭',
-        },{
-          student_number: '201500021',
-          student_password:'123456',
-          class_name: '高三一班',
-          student_name: '张三分',
-          student_birthday: '2002-05-15',
-          student_age:'18',
-          student_idcardno:'5121412200505155223',
-          student_nation:'汉族',
-          student_politics:'共青团员',
-          student_state:'1',
-          student_home:'成都市武侯区桂溪街道高新青年公寓一栋6-666',
-          student_contact:'120110119115',
-          student_parent:'张二权',
-          student_gender: '男',
-          student_date:'2018-09-21',
-          student_experience:'四川省高中生篮球比赛一等奖',
-          student_desc: '我是一个好人，我每天都要干三碗饭',
-        },{
-          student_number: '201500021',
-          student_password:'123456',
-          class_name: '高三二班',
-          student_name: '李四',
-          student_birthday: '2005-01-15',
-          student_age:'20',
-          student_idcardno:'511302200505155223',
-          student_nation:'汉族',
-          student_politics:'共青团员',
-          student_state:'1',
-          student_home:'成都市武侯区桂溪街道高新青年公寓一栋6-666',
-          student_contact:'120110119115',
-          student_parent:'李铁牛',
-          student_gender: '男',
-          student_date:'2018-09-21',
-          student_experience:'四川省高中生篮球比赛一等奖',
-          student_desc: '我是一个好人，我每天都要干三碗饭',
-        }, {
-          student_number: '201500021',
-          student_password:'123456',
-          class_name: '高三二班',
-          student_name: '王七八',
-          student_birthday: '2005-05-15',
-          student_age:'20',
-          student_idcardno:'511302200505155223',
-          student_nation:'汉族',
-          student_politics:'共青团员',
-          student_state:'3',
-          student_home:'成都市武侯区桂溪街道高新青年公寓一栋6-666',
-          student_contact:'120110119115',
-          student_parent:'王建邺',
-          student_gender: '男',
-          student_date:'2018-09-21',
-          student_experience:'四川省高中生篮球比赛一等奖',
-          student_desc: '我是一个好人，我每天都要干三碗饭',
-        }, {
-          student_number: '201500021',
-          student_password:'123456',
-          class_name: '高一二班',
-          student_name: '刘三山',
-          student_birthday: '2000-05-15',
-          student_age:'20',
-          student_idcardno:'511302200505155223',
-          student_nation:'汉族',
-          student_politics:'共青团员',
-          student_state:'2',
-          student_home:'成都市武侯区桂溪街道高新青年公寓一栋6-666',
-          student_contact:'120110119115',
-          student_parent:'刘大',
-          student_gender: '男',
-          student_date:'2018-09-21',
-          student_experience:'四川省高中生篮球比赛一等奖',
-          student_desc: '我是一个好人，我每天都要干三碗饭',
-        }],
-
       }
     },
+    props:['tableData'],
     methods:{
       setStu(index,row){
         console.log(index);
@@ -206,5 +117,8 @@
   @import '../assets/css/font.css';
   .stu-table .el-button{
     font-family: kaola;
+  }
+  .stu-table .el-table td{
+    padding: 0!important;
   }
 </style>

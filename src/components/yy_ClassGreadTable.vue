@@ -64,7 +64,7 @@
           <el-button
                   @click="setGread(scope.$index,scope.row)"
                   type="text"
-                  size="small">修改</el-button>
+                  size="small">{{scope.row.yuwen?'修改':'录入'}}</el-button>
           <el-button
                   type="text"
                   style="color: red"
@@ -82,7 +82,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="sureSet">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -94,13 +94,14 @@
     data(){
       return{
         form:{
+          index:'',
           value:'',
         },
         dialogFormVisible:false,
         tableData:[{
           className:'高一三班',
           name:'李四',
-          yuwen:'80',
+          yuwen:'',
           shuxue:'90',
           yingyu:'98',
           wuli:'98',
@@ -136,15 +137,18 @@
     methods:{
       //修改学生成绩，老师只能修改自己科的成绩
       setGread(index,row){
-        console.log(index);
-        console.log(row);
         this.dialogFormVisible=true
-
+        this.form.index = index
         this.form.value = row.yuwen
       },
+      //删除学生信息(任课老师只能删自己的学科)
       delStu(index,row){
         console.log(index);
         console.log(row);
+      },
+      sureSet(){
+        this.tableData[this.form.index].yuwen = this.form.value
+        this.dialogFormVisible = false
       },
     },
   }

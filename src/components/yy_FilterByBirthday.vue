@@ -1,17 +1,19 @@
 <template>
   <div class="stu-filterbybianhao">
-    <el-input
-            placeholder="请输入考试编号"
+    <el-date-picker
             v-model="value"
+            type="date"
+            placeholder="请选择日期"
+            format="yyyy 年 MM 月 dd 日"
             @change="changValue"
-            clearable>
-    </el-input>
+            value-format="yyyy-MM-dd">
+    </el-date-picker>
   </div>
 </template>
 
 <script>
   export default {
-    name: "yy_FilterByBianHao",
+    name: "yy_FilterByBirthday",
     data(){
       return{
         value:'',
@@ -28,3 +30,4 @@
 <style scoped>
 
 </style>
+

@@ -1,7 +1,8 @@
 <template>
   <div class="stu-score">
     <div class="filter-cpns">
-      <yy_FilterByBianHao/>
+      <yy_FilterByInput :filterData="{data:allStuData,text:'请输入考试编号',filterProperty:'student_number'}"
+                        @filteredData="filteredByXuehaoFn"/>
       <yy_FilterByClass/><!--老师-->
       <yy_FilterBySubject/><!--老师-->
       <yy_FilterByTestType/><!--老师-->
@@ -15,13 +16,23 @@
     <div class="score-table">
       <yy_ClassGreadTable/>
     </div>
+    <!--分页-->
+    <div class="fenye">
+      <el-pagination
+              :hide-on-single-page="true"
+              :page-size="8"
+              :pager-count="9"
+              layout="prev, pager, next"
+              :total="100">
+      </el-pagination>
+    </div>
   </div>
 </template>
 <script>
   import yy_FilterByClass from '@/components/yy_FilterByClass'
   import yy_FilterBySubject from '@/components/yy_FilterBySubject'
   import yy_FilterByTestType from '@/components/yy_FilterByTestType'
-  import yy_FilterByBianHao from '@/components/yy_FilterByBianHao'
+  import yy_FilterByInput from '@/components/yy_FilterByInput'
   import yy_ClassGreadTable from '@/components/yy_ClassGreadTable'
   export default {
     name:'StudentScore',
@@ -29,7 +40,7 @@
       yy_FilterByClass,
       yy_FilterBySubject,
       yy_FilterByTestType,
-      yy_FilterByBianHao,
+      yy_FilterByInput,
       yy_ClassGreadTable,
     },
     data(){
@@ -59,6 +70,12 @@
       width: 100%;
       margin: 1rem auto;
 
+    }
+    .fenye{
+      .el-pagination{
+        margin: 0 auto;
+        text-align: center;
+      }
     }
   }
 </style>

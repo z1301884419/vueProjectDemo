@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import loginModules from './modules/loginModules'
+import yy_module from './modules/yy_module'
 
 Vue.use(Vuex)
 
@@ -12,6 +13,7 @@ export default new Vuex.Store({
   actions: {
   },
   modules: {
-    loginModules
+    loginModules,
+    yy_module,
   }
 })

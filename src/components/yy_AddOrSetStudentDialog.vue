@@ -44,6 +44,15 @@
         <el-form-item label="政治面貌" required label-width="100px">
           <el-input v-model="form.student_politics" autocomplete="off"></el-input>
         </el-form-item>
+        <!--班主任修改在读状态-->
+        <el-form-item v-if="'班主任'" label="在读状态" required label-width="100px">
+          <el-select :value="form.student_state==1?'在读':form.student_state==2?'休学':'退学'" @change="stateChange($event)">
+            <el-option label="在读" :value=1></el-option>
+            <el-option label="休学" :value=2></el-option>
+            <el-option label="退学" :value=3></el-option>
+          </el-select>
+        </el-form-item>
+        <!---->
         <el-form-item label="住址" label-width="100px">
           <el-input v-model="form.student_home" autocomplete="off"></el-input>
         </el-form-item>
@@ -90,6 +99,7 @@
           student_nation:'',
           student_politics:'',
           student_home:'',
+          student_state:1,
           student_contact:'',
           student_gender: '',
           student_experience:'',
@@ -111,6 +121,9 @@
       },
       sureAdd(){
         console.log(this.form);
+      },
+      stateChange(e){
+        this.form.student_state=e
       },
     },
 

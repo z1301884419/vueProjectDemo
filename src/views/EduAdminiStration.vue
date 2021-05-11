@@ -46,6 +46,32 @@
     </div>
     <!-- 分页 -->
     <el-pagination layout="prev, pager, next" :total="totalLength" :page-size="pageSize" @current-change="handleCurrentChange"></el-pagination>
+
+    <!-- 模态框部分 -->
+    <!-- 分配任课教师的弹框 -->
+    <!-- <el-dialog title="分配任课教师" :visible.sync="addTeacher" width="33%">
+      <el-form :model="addTeachForm" :rules="addTeachrules" ref="addTeachForm" label-width="80px" class="demo-ruleForm">
+        <el-form-item label="工号" prop="staff_number">
+          <el-input v-model="addTeachForm.staff_number"></el-input>
+        </el-form-item>
+        <el-form-item label="姓名" prop="staff_name">
+          <el-input v-model="addTeachForm.staff_name"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="staff_password">
+          <el-input type="password" v-model="addTeachForm.staff_password" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="电话" prop="staff_phone">
+          <el-input v-model="addTeachForm.staff_phone"></el-input>
+        </el-form-item>
+        <el-form-item label="年龄" prop="staff_age">
+          <el-input v-model.number="addTeachForm.staff_age"></el-input>
+        </el-form-item>
+        <el-form-item class="btnBox">
+          <el-button @click="addTeacher = false">取 消</el-button>
+          <el-button class="successBtn" @click="addTeacherRequest('addTeachForm')">确 定</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog> -->
   </div>
 </template>
 <script>

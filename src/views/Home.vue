@@ -37,6 +37,11 @@
     </el-aside>
     <el-container>
       <el-header height="80px">
+        <div class="signInBox">
+          <h3 class="signInError"><i class="el-icon-alarm-clock"></i> 签到</h3>
+          <!-- <h3 class="signInSuccess"><i class="el-icon-check signInSuccess"></i>已签到</h3> -->
+          <p><i class="el-icon-location-information"></i>位置信息:<span>四川省成都市武侯区桂溪街道云华路国家西部信息安全产业基地</span></p>
+        </div>
         <div class="userBox">
           <div class="messageBox">
             <el-badge :value="3" class="item">
@@ -247,7 +252,7 @@ body > .el-container {
   p {
     margin: 0;
     height: 80px;
-    line-height: 80px;
+    line-height: 90px;
     font-size: 2.2rem;
     color: #16b387;
   }
@@ -281,9 +286,32 @@ body > .el-container {
     }
   }
 }
+// 签到
+.signInBox{
+  width: 50%;
+  // border: 1px solid greenyellow;
+  display: flex;
+  font-size: 1.8rem;
+  h3{
+    margin-left: 3rem;
+    cursor: pointer;
+  }
+  p{
+    margin: 0 3rem;
+    color: gray;
+  }
+}
+// 签到成功
+.signInSuccess{
+  color: #f66077;
+}
+// 未签到或失败
+.signInError{
+  color: #228ab9;
+}
 // header-----user
 .userBox {
-  width: 100%;
+  width: 50%;
   display: flex;
   justify-content: flex-end;
   align-items: center;

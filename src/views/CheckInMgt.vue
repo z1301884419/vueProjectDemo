@@ -15,19 +15,15 @@
         <el-button class="addAbsenceBtn">添加缺勤记录</el-button>
       </div>
       <div class="selectAbsenceExam">
-        <el-select
-          v-model="selectAbsenceList"
-          placeholder="请选择查询的考试年级"
-        >
+        <el-select v-model="selectAbsenceList" placeholder="请选择查询的考勤班级">
           <el-option label="高一一班" value="shanghai"></el-option>
-          <el-option label="高一二班" value="beijing"></el-option>
         </el-select>
           <el-date-picker
-            v-model="value2"
+            v-model="CheckInDate1"
             align="right"
             type="date"
             placeholder="选择日期"
-            :picker-options="pickerOptions"
+            :picker-options="pickerCheckInDate"
           >
           </el-date-picker>
         <el-button plain class="selectAbsenceBtn">查看考勤信息</el-button>
@@ -58,13 +54,12 @@
   </div>
 </template>
 <script>
-// import echarts from "echarts";
 export default {
   data() {
     return {
       input: "",
-      selectAbsenceList: [],
-      pickerOptions: {
+      selectAbsenceList: [],//查询的考勤年级
+      pickerCheckInDate: {
         disabledDate(time) {
           return time.getTime() > Date.now();
         },
@@ -103,7 +98,6 @@ export default {
       // 基于准备好的dom，初始化echarts实例
       // let myChart = echarts.init(document.getElementById("checkInEchartsBox"));
       let myChart = this.$echarts.init(document.getElementById("checkInEchartsBox"));
-
       // 指定图表的配置项和数据
       let option = {
         title: {
@@ -137,7 +131,7 @@ export default {
 .checkInBox {
   width: 100%;
   height: 100%;
-  border: 1px solid red;
+  // border: 1px solid red;
 }
 // 分割线
 .el-divider--horizontal {

@@ -133,6 +133,7 @@ export default {
   }
   p{
     font-size: 1.6rem;
+    padding: 1rem;
   }
   p:nth-child(1){
     color: #16b387;

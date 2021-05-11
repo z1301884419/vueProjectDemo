@@ -15,7 +15,12 @@
       <yy_FilterByInput :filterData="{data:allStuData,text:'请输入姓名',filterProperty:'student_name'}"
                         @filteredData="filteredByNameFn"/>
       <!--性别-->
-      <yy_FilterBySex :filterData="allStuData" @filteredData="filteredBySexFn"/>
+      <yy_FilterBySelect :filterData="{
+      optionData:{label:'lable',value:'value',data:[{lable:'男',value:'男'},{lable:'女',value:'女'}]},
+      data:allStuData,
+      text:'请选择性别',
+      filterProperty:'student_gender'
+      }" @filteredData="filteredBySexFn"/>
       <!--出生日期-->
       <yy_FilterByBirthday/>
     </div>
@@ -41,11 +46,9 @@
   </div>
 </template>
 <script>
-  //import yy_FilterByClass from '@/components/yy_FilterByClass'
-
   import yy_FilterBySelect from '@/components/yy_FilterBySelect'
-  import yy_FilterBySex from '@/components/yy_FilterBySex'
   import yy_FilterByInput from '@/components/yy_FilterByInput'
+
   import yy_FilterByBirthday from '@/components/yy_FilterByBirthday'
   import yy_StudentInfoTable from '@/components/yy_StudentInfoTable'
   import yy_AddOrSetStudentDialog from '@/components/yy_AddOrSetStudentDialog'
@@ -54,12 +57,8 @@
   export default {
     name:'StudentInfo',
     components:{
-      //yy_FilterByBianHao,
-      //yy_FilterByClass,
-      //yy_FilterByName,
       yy_FilterBySelect,
       yy_FilterByInput,
-      yy_FilterBySex,
       yy_FilterByBirthday,
       yy_StudentInfoTable,
       yy_AddOrSetStudentDialog,
@@ -95,6 +94,7 @@
       },
       //筛选性别
       filteredBySexFn(data){
+        console.log(data);
         this.filteredBySexData = data
         this.filterFn()
        },

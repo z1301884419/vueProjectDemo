@@ -6,7 +6,7 @@
             style="width: 100%">
       <el-table-column
               align="center"
-              prop="className"
+              prop="class_name"
               label="班级">
       </el-table-column>
       <el-table-column
@@ -98,42 +98,9 @@
           value:'',
         },
         dialogFormVisible:false,
-        tableData:[{
-          className:'高一三班',
-          name:'李四',
-          yuwen:'',
-          shuxue:'90',
-          yingyu:'98',
-          wuli:'98',
-          huaxue:'88',
-          shengwu:'96',
-          total:'',
-          testType:'期末'
-        },{
-          className:'高一三班',
-          name:'李四',
-          yuwen:'80',
-          shuxue:'90',
-          yingyu:'98',
-          wuli:'98',
-          huaxue:'88',
-          shengwu:'96',
-          total:'',
-          testType:'期末'
-        },{
-          className:'高一三班',
-          name:'李四',
-          yuwen:'80',
-          shuxue:'90',
-          yingyu:'98',
-          wuli:'98',
-          huaxue:'88',
-          shengwu:'96',
-          total:'',
-          testType:'期末'
-        }],
       }
     },
+    props:['tableData'],
     methods:{
       //修改学生成绩，老师只能修改自己科的成绩
       setGread(index,row){

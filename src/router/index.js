@@ -17,7 +17,10 @@ const TeacherInfo = () => import('../views/TeacherInfo.vue');//教师信息管�
 // 个人中心
 const stuCenter = () => import('../components/yy_StudentInfoDialog.vue');//学生个人中心
 
-
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 
 Vue.use(VueRouter)
 

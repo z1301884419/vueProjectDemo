@@ -7,6 +7,9 @@ import 'element-ui/lib/theme-chalk/index.css';
 import http from './utils/request';
 import mixins from './mixins/mixins';
 import echarts from 'echarts';
+import {
+  getStorage
+} from './utils/storage'
 // import VueAMap from 'vue-amap';
 // 在线图标库
 import IconFontOnline from 'vue-iconfont-online';
@@ -18,6 +21,25 @@ Vue.prototype.$echarts=echarts
 
 Vue.use(ElementUI)
 Vue.use(mixins)
+
+router.beforeEach((to, from, next) => {
+  let user = getStorage('user')
+  console.log(user) //null
+  console.log("123");
+  console.log(to.meta.isLogin)
+
+  if (to.meta.isLogin) {
+    if (user) {
+      // 进入你想要进入的页面
+      next()
+    } else {
+      // 重新让你去登录页面
+      router.push('/Login')
+    }
+  } else {
+    next()
+  }
+})
 // Vue.use(VueAMap)
 
 // VueAMap.initAMapApiLoader({

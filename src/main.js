@@ -43,7 +43,27 @@ Vue.use(mixins)
 //   plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor','AMap.Geolocation','Geocoder'],//plugin所要用到的模块功能，按需添加
 //   v: '1.4.4',//高德 sdk 版本为 1.4.4
 // });
-
+let loadingInstance;
+http.interceptors.request.use(function (config) {
+  console.log(config);
+  // 在发送请求之前做些什么,全屏加载
+  // 显示加载动画
+  loadingInstance = ElementUI.Loading.service({ fullscreen: true ,text:"登录中...","background":"rgba(0,0,0,0.5)"});
+  return config;
+}, function (error) {
+  // 对请求错误做些什么
+  return Promise.reject(error);
+});
+// 添加响应拦截器
+http.interceptors.response.use(function (response) {
+  // 对响应数据做点什么
+  // 关闭动画
+  loadingInstance.close();
+  return response;
+}, function (error) {
+  // 对响应错误做点什么
+  return Promise.reject(error);
+});
 
 new Vue({
   router,

@@ -52,7 +52,7 @@
             </el-badge>
           </div>
           <router-link :to="{ path: '/Home/PersonalCenter' }"><el-avatar class="headerSpan" :size='50'> user </el-avatar></router-link>
-          <div class="exitBox">
+          <div class="exitBox" @click="tuichu">
             退出登录<span class="iconfont icon-tuichu"></span>
           </div>
         </div>
@@ -175,6 +175,31 @@ export default {
     };
   },
   methods: {
+
+    tuichu() {
+      this.$confirm("您确定要退出登录吗？", "温馨提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.$message({
+            type: "success",
+            message: "您已退出登录!",
+            offset: 100,
+          });
+          sessionStorage.removeItem("user")
+          this.$router.push("/Login")
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消该操作",
+            offset: 100,
+          });
+        });
+    },
+
     changeIndex(n) {
       this.currentIndex = n;
     },
@@ -329,6 +354,7 @@ body > .el-container {
 .exitBox {
   background-color: #c5e3d2;
   padding: 0 15px;
+  cursor: pointer;
 }
 .messageBox {
   // border: 1px solid green;

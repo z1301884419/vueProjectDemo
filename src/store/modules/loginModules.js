@@ -1,5 +1,5 @@
 // import { getStorage, setStorage, removeStorage } from '../../utils/storage'//
-// import {setStorage} from '../../utils/storage'//
+import {setStorage} from '../../utils/storage'//
 
 import api from '../../utils/loginapi'
 
@@ -15,7 +15,7 @@ export default {
         console.log(data);
         if(data.data.code==200){
           console.log(data);
-          // setStorage('user',data.data.data.o)
+          setStorage('user',data.data.data.o)
         }
         return data.data.code
       })

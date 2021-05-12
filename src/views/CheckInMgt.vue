@@ -15,50 +15,61 @@
         <el-button class="addAbsenceBtn">添加缺勤记录</el-button>
       </div>
       <div class="selectAbsenceExam">
-        <el-select v-model="selectAbsenceList" placeholder="请选择查询的考勤班级">
-          <el-option label="高一一班" value="shanghai"></el-option>
-        </el-select>
-          <el-date-picker
-            v-model="CheckInDate1"
-            align="right"
-            type="date"
-            placeholder="选择日期"
-            :picker-options="pickerCheckInDate"
-          >
-          </el-date-picker>
+        <el-input
+          v-model="selectStuName"
+          placeholder="请输入学生姓名"
+        ></el-input>
+        <el-date-picker
+          v-model="CheckInDateStart"
+          align="right"
+          type="date"
+          placeholder="选择开始日期"
+          :picker-options="pickerCheckInDate"
+        >
+        </el-date-picker>
+        <el-date-picker
+          v-model="CheckInDateEnd"
+          align="right"
+          type="date"
+          placeholder="选择结束日期"
+          :picker-options="pickerCheckInDate"
+        >
+        </el-date-picker>
         <el-button plain class="selectAbsenceBtn">查看考勤信息</el-button>
         <el-button type="info" plain>重置</el-button>
       </div>
     </div>
-    <!-- 表格 -->
-    <!-- <div class="checkInTable">
-      <el-table :data="tableData" style="width: 100%">
-        <el-table-column prop="id" label="考试编号" width="180">
-        </el-table-column>
-        <el-table-column prop="type" label="考试类型" width="180">
-        </el-table-column>
-        <el-table-column prop="class" label="考试班级"> </el-table-column>
-        <el-table-column prop="time" label="考试时间"> </el-table-column>
-        <el-table-column prop="people" label="考试发起人"> </el-table-column>
-        <el-table-column label="操作">
-          <template> -->
-            <!--  slot-scope="scope" -->
-            <!-- <el-button size="mini">取消考试</el-button>
-            <el-button size="mini" type="danger">修改考试信息</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div> -->
-    <!-- 图表 -->
-    <div id="checkInEchartsBox" ref="myChart" style="width: 600px;height:400px;"></div>
+    <div class="mainbox">
+      <!-- 表格 -->
+      <div class="checkInTable">
+        <el-table :data="checkInTableData" style="width: 100%">
+          <el-table-column prop="id" label="学生id" align="center" width="100"> </el-table-column>
+          <el-table-column prop="name" label="学生姓名" align="center" width="150"> </el-table-column>
+          <el-table-column prop="startTime" label="上学打卡时间" align="center" width="250"> </el-table-column>
+          <el-table-column prop="endTime" label="放学打卡时间" align="center" width="300"> </el-table-column>
+          <el-table-column label="操作" align="center">
+            <template>
+              <!--  slot-scope="scope" -->
+              <el-button size="mini" type="primary" icon="el-icon-edit" circle></el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <!-- 图表 -->
+      <div
+        id="checkInEchartsBox"
+        ref="myChart"
+        style="width: 600px; height: 400px"
+      ></div>
+    </div>
   </div>
 </template>
 <script>
 export default {
   data() {
     return {
-      input: "",
-      selectAbsenceList: [],//查询的考勤年级
+      selectStuName: "",
+      selectAbsenceList: [], //查询的考勤年级
       pickerCheckInDate: {
         disabledDate(time) {
           return time.getTime() > Date.now();
@@ -88,43 +99,56 @@ export default {
           },
         ],
       },
-      CheckInDate1: '',
-      tableData: [],
+      CheckInDateStart: "",
+      CheckInDateEnd: "",
+      checkInTableData: [
+        {id:1,name:'大大',startTime:'2021年5月12日 8:30',endTime:'2021年5月12日 18:00'},
+        {id:2,name:'小小',startTime:'2021年5月12日 8:30',endTime:'2021年5月12日 18:00'},
+        {id:3,name:'喜洋洋',startTime:'2021年5月12日 8:30',endTime:'2021年5月12日 18:00'},
+        {id:4,name:'美羊羊',startTime:'2021年5月12日 8:30',endTime:'2021年5月12日 18:00'},
+        {id:5,name:'懒洋洋',startTime:'2021年5月12日 8:30',endTime:'2021年5月12日 18:00'},
+        {id:6,name:'灰太狼',startTime:'2021年5月12日 8:30',endTime:'2021年5月12日 18:00'},
+
+      ],
     };
   },
-  methods:{
-    drawChart(){
-      console.log(document.getElementById("checkInEchartsBox"))
+  methods: {
+    drawChart() {
+      console.log(document.getElementById("checkInEchartsBox"));
       // 基于准备好的dom，初始化echarts实例
       // let myChart = echarts.init(document.getElementById("checkInEchartsBox"));
-      let myChart = this.$echarts.init(document.getElementById("checkInEchartsBox"));
+      let myChart = this.$echarts.init(
+        document.getElementById("checkInEchartsBox")
+      );
       // 指定图表的配置项和数据
       let option = {
         title: {
-          text: "ECharts 入门示例"
+          text: "学生出勤表",
         },
         tooltip: {},
         legend: {
-          data: ["销量"]
+          data: ["正常出勤"],
         },
-        xAxis: {
-          data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
-        },
-        yAxis: {},
         series: [
           {
-            name: "销量",
-            type: "bar",
-            data: [555,1111,222,333,222,444]
-          }
-        ]
+            name: "出勤情况",
+            type: "pie",
+            data: [
+              { name: "正常出勤", value: 80 },
+              { name: "迟到", value: 5 },
+              { name: "旷课", value: 10 },
+              { name: "早退", value: 5 },
+            ],
+            color: ["#78c5b0", "#C5E3D2", "#B2DBD4", "#16B387", "#F9D789"],
+          },
+        ],
       };
       myChart.setOption(option);
-    }
+    },
   },
-  mounted(){
+  mounted() {
     this.drawChart();
-  }
+  },
 };
 </script>
 <style lang="less" scoped>
@@ -189,5 +213,24 @@ export default {
   background-color: #b2dbd4;
   border: 1px solid #b2dbd4;
   color: #fff;
+}
+// 下
+.mainbox{
+  width: 100%;
+  margin-top: 2rem;
+  display: flex;
+}
+// 表格
+.checkInTable {
+  width: 70%;
+  // border: 1px solid rgb(0, 255, 42);
+  padding: 0 2%;
+
+}
+// 图表
+#checkInEchartsBox {
+  width: 30%;
+  margin-top: 5%;
+  // border: 1px solid red;
 }
 </style>

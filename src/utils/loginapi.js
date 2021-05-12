@@ -14,6 +14,12 @@ export default {
         data: data
         // console.log(data);
     }),
+    ZHUCE_API:data=>http({
+      url: '/register/regist',
+      method: 'post',
+      data: data
+      // console.log(data);
+  }),
     
   }
   

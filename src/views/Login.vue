@@ -198,12 +198,12 @@
     </el-form-item> -->
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button @click="dialogFormVisible1 = false">取 消</el-button>
           <!-- <el-button type="primary" @click="TianJia(),dialogFormVisible = false,resetForm('form')" >确 定</el-button>
      -->
           <el-button
             type="primary"
-            @click="XiugaiInfo(), (dialogFormVisible1 = false)"
+            @click="zhuCe(), dialogFormVisible1 = false"
             >确 定</el-button
           >
         </div>
@@ -390,6 +390,15 @@ export default {
         data: {
           parentPhone: this.form1.parentPhone,
         },
+      }).then((data) => {
+        console.log(data);
+      });
+    },
+    zhuCe(){
+       this.LoginAction2({
+        name: "ZHUCE_API",
+        data: this.form1
+        
       }).then((data) => {
         console.log(data);
       });

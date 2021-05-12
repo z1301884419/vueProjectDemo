@@ -1,5 +1,11 @@
 <template>
   <div class="stu-score">
+    <el-breadcrumb separator-class="el-icon-arrow-right">
+      <el-breadcrumb-item :to="{ path: '/Home/HomePage' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item>学生管理</el-breadcrumb-item>
+      <el-breadcrumb-item>学生成绩管理</el-breadcrumb-item>
+    </el-breadcrumb>
+    <el-divider></el-divider>
     <div class="filter-cpns">
       <!--通过考试编号-->
       <yy_FilterByInput :filterData="{data:classGreadData,text:'请输入考试编号',filterProperty:'bianhao'}"
@@ -25,7 +31,7 @@
     </div>
 <!--    显示班级排名（学生）-->
     <div class="show-class-score">
-      <el-button type="primary" size="small" plain>显示班级排名</el-button>
+      <el-button size="small" plain>显示班级排名</el-button>
     </div>
 
 <!--    成绩表-->
@@ -135,5 +141,24 @@
   }
   .stu-score button{
     font-family: kaola;
+  }
+  .show-class-score>.el-button{
+    background-color: #16B387;
+    border: 1px solid #16B387;
+  }
+  .show-class-score>.el-button{
+    color: #fff!important;
+  }
+  .show-class-score>.el-button:hover{
+    color: #16B387!important;
+    background-color: white;
+  }
+  .el-divider--horizontal{
+    margin: 0;
+  }
+  .el-breadcrumb{
+    padding-left: 1rem;
+    line-height: 3;
+    font-size: 1.6rem;
   }
 </style>

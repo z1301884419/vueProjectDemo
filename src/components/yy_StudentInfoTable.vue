@@ -86,6 +86,7 @@
 <script>
   import yy_StudentInfoDialog from '@/components/yy_StudentInfoDialog'
   import yy_AddOrSetStudentDialog from '@/components/yy_AddOrSetStudentDialog'
+  import delAgain from '@/utils/sureAgainBox'
   export default {
     name: "yy_StudentInfoTable",
     components:{
@@ -98,13 +99,12 @@
     },
     props:['tableData'],
     methods:{
-      setStu(index,row){
-        console.log(index);
-        console.log(row);
-      },
       delStu(index,row){
         console.log(index);
         console.log(row);
+        delAgain.bind(this)({
+          text: "删除"
+        })
       }
     }
   }

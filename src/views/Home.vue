@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-aside width="280px" :style="{ height: getAsideHeight }">
+    <el-aside class="asideLeft" width="280px" :style="{ height: getAsideHeight }">
       <div class="asideTitle">
         <div><img src="../assets/img/logo.png" alt="" /></div>
         <p>家校通后台管理</p>
@@ -51,8 +51,11 @@
               <span class="iconfont icon-xinfeng"></span>
             </el-badge>
           </div>
-          <router-link :to="{ path: '/Home/PersonalCenter' }"><el-avatar class="headerSpan" :size='50'> user </el-avatar></router-link>
-          <div class="exitBox">
+          <router-link :to="{ path: '/Home/PersonalCenter' }">
+            <el-avatar  class="headerSpan" :size='50' :src="user"></el-avatar>
+            <!-- :src="{{user.parentImg}}" -->
+          </router-link>
+          <div class="exitBox" @click="tuichu">
             退出登录<span class="iconfont icon-tuichu"></span>
           </div>
         </div>
@@ -69,6 +72,7 @@
 export default {
   data() {
     return {
+       user:this.$store.state.loginModules.user.parentImg,
       bodyHeight: window.innerHeight,
       currentIndex: 0,
       navList: [
@@ -172,9 +176,35 @@ export default {
           children: "",
         },
       ],
+     
     };
   },
   methods: {
+
+    tuichu() {
+      this.$confirm("您确定要退出登录吗？", "温馨提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.$message({
+            type: "success",
+            message: "您已退出登录!",
+            offset: 100,
+          });
+          sessionStorage.removeItem("user")
+          this.$router.push("/Login")
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消该操作",
+            offset: 100,
+          });
+        });
+    },
+
     changeIndex(n) {
       this.currentIndex = n;
     },
@@ -195,6 +225,9 @@ export default {
       this.bodyHeight = window.innerHeight;
     };
   },
+  created(){
+    console.log(this.user);
+  }
 };
 </script>
 <style lang="less" scoped>
@@ -329,6 +362,7 @@ body > .el-container {
 .exitBox {
   background-color: #c5e3d2;
   padding: 0 15px;
+  cursor: pointer;
 }
 .messageBox {
   // border: 1px solid green;
@@ -356,5 +390,21 @@ body > .el-container {
 }
 .el-main {
   padding: 0;
+}
+
+
+
+.asideLeft::-webkit-scrollbar {
+  width: 6px;
+}
+.asideLeft::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  box-shadow: inset 0 0 5px rgb(194, 194, 194);
+  background-color: rgb(63, 140, 240);
+}
+.asideLeft::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(185, 185, 185);
+  border-radius: 0;
+  background-color: rgb(189, 189, 189);
 }
 </style>

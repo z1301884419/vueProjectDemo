@@ -1,5 +1,11 @@
 <template>
   <div class="stu-info">
+    <el-breadcrumb separator-class="el-icon-arrow-right">
+      <el-breadcrumb-item :to="{ path: '/Home/HomePage' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item>学生管理</el-breadcrumb-item>
+      <el-breadcrumb-item>学生信息管理</el-breadcrumb-item>
+    </el-breadcrumb>
+    <el-divider></el-divider>
     <div class="filter-cpns">
       <!--学号-->
       <yy_FilterByInput :filterData="{data:allStuData,text:'请输入学号',filterProperty:'student_number'}"
@@ -24,8 +30,8 @@
       <!--出生日期-->
       <yy_FilterByBirthday/>
     </div>
-    <div class="add-stu">
-      <el-button style="padding:0 1rem;margin: 0 0.5rem " type="primary" size="small" plain>
+    <div class="add-student">
+      <el-button style="padding:0 1rem;margin: 0 0.5rem;" size="small" plain>
         <yy_AddOrSetStudentDialog :stuData="{text:'添加学生',title:'添加学生信息'}"/>
       </el-button>
     </div>
@@ -138,7 +144,7 @@
          margin: 2.5rem 1rem;
        }
      }
-    .add-stu{
+    .add-student{
       margin: 0 0.5rem;
     }
      .stu-table{
@@ -166,14 +172,23 @@
   .el-main{
     overflow: hidden!important;
   }
-  /*.stu-info .el-pagination button{*/
-  /*  height: 35px;*/
-  /*  line-height: 35px;*/
-  /*  font-size: 15px;*/
-  /*}*/
-  /*.stu-info .el-pager li{*/
-  /*  height: 35px;*/
-  /*  line-height: 35px;*/
-  /*  font-size: 15px;*/
-  /*}*/
+  .add-student>.el-button{
+    background-color: #16B387;
+    border: 1px solid #16B387;
+  }
+  .add-student>.el-button .add-btn span{
+    color: #fff!important;
+  }
+  .add-student>.el-button:hover .add-btn span{
+    color: #16B387!important;
+  }
+  .el-divider--horizontal{
+    margin: 0;
+  }
+  .el-breadcrumb{
+    padding-left: 1rem;
+    line-height: 3;
+    font-size: 1.6rem;
+  }
+
 </style>

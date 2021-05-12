@@ -1,11 +1,13 @@
 <template>
   <div class="add-stu">
-    <el-button type="text" size="small" @click="openDialog">{{stuData.text}}</el-button>
+    <el-button type="text" class="add-btn" size="small" @click="openDialog">{{stuData.text}}</el-button>
 
     <el-dialog
             :modal-append-to-body="false"
+            :close-on-click-modal="false"
             :title="stuData.title"
             top="40px"
+            @close="closeDialog('form')"
             :visible.sync="dialogFormVisible">
       <el-form :model="form" :rules="addrule" ref="form" status-icon>
         <el-form-item label="学号" required label-width="100px" prop="student_number">
@@ -227,6 +229,5 @@
   .add-stu .el-form-item__content{
     text-align: left!important;
   }
-
 
 </style>

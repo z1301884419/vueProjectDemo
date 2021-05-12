@@ -3,6 +3,7 @@
     <el-table
             :data="tableData"
             :header-cell-style="{'background-color':'#d4edf9'}"
+            :default-sort = "{prop: 'total', order: 'descending'}"
             style="width: 100%">
       <el-table-column
               align="center"
@@ -18,37 +19,49 @@
       <el-table-column
               align="center"
               prop="yuwen"
+              sortable
               label="语文">
       </el-table-column>
       <el-table-column
               align="center"
               prop="shuxue"
+              sortable
               label="数学">
       </el-table-column>
       <el-table-column
               align="center"
               prop="yingyu"
+              sortable
               label="英语">
       </el-table-column>
       <el-table-column
               align="center"
               prop="wuli"
+              sortable
               label="物理">
       </el-table-column>
       <el-table-column
               align="center"
               prop="huaxue"
+              sortable
               label="化学">
       </el-table-column>
       <el-table-column
               align="center"
               prop="shengwu"
+              sortable
               label="生物">
       </el-table-column>
       <el-table-column
               align="center"
               prop="total"
+              sortable
               label="总分">
+      </el-table-column>
+      <el-table-column
+              align="center"
+              label="排名">
+        <template slot-scope="scope">{{scope.$index+1}}</template>
       </el-table-column>
       <el-table-column
               align="center"
@@ -76,7 +89,7 @@
     <!--修改成绩模态框-->
     <el-dialog title="修改考试成绩" width="300px" :visible.sync="dialogFormVisible">
       <el-form :model="form">
-        <el-form-item label="考试成绩" label-width="100">
+        <el-form-item label="考试成绩(语文)" label-width="100">
           <el-input v-model="form.value" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
@@ -89,6 +102,7 @@
 </template>
 
 <script>
+  import delAgain from '@/utils/sureAgainBox'
   export default {
     name: "yy_ClassGreadTable",
     data(){
@@ -112,6 +126,11 @@
       delStu(index,row){
         console.log(index);
         console.log(row);
+        delAgain.bind(this)({
+          text:'删除'
+        }).then(()=>{
+          console.log(22);
+        })
       },
       sureSet(){
         this.tableData[this.form.index].yuwen = this.form.value

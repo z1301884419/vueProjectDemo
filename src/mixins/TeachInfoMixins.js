@@ -1,4 +1,4 @@
-// import api from '../utils/api'
+import api from '../utils/api'
 export default {
   data() {
     return {
@@ -75,26 +75,26 @@ export default {
     //   console.log(this.dataList);
     //   return this.getOnePage
     // },
-    // // 删除数据的方法
-    // DeleteData(obj) {
-    //   return this.$confirm('此操作将永久删除该信息, 是否继续?', '提示', {
-    //     confirmButtonText: '确定',
-    //     cancelButtonText: '取消',
-    //     type: 'warning'
-    //   }).then(() => {
-    //     return api[obj.name](obj.data).then(data => {
-    //       if (data.data.code == 200) {
-    //         this.openSuccess('删除成功', '该数据已成功移出!');
-    //         return 200
-    //       } else {
-    //         this.openError('删除失败', '删除失败，请重新删除!');
-    //         return 400
-    //       }
-    //     })
-    //   }).catch(() => {
-    //     this.openInfo('提示', "操作已取消!");
-    //   });
-    // },
+    // 删除数据的方法
+    DeleteData(obj) {
+      return this.$confirm('此操作将永久删除该信息, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        return api[obj.name](obj.data).then(data => {
+          if (data.data.code == 200) {
+            this.openSuccess('删除成功', '该数据已成功移出!');
+            return 200
+          } else {
+            this.openError('删除失败', '删除失败，请重新删除!');
+            return 400
+          }
+        })
+      }).catch(() => {
+        this.openInfo('提示', "操作已取消!");
+      });
+    },
     // // 修改数据的方法
     // ModifyDate(obj) {
     //   return api[obj.name](obj.data).then(data => {

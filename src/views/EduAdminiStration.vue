@@ -20,7 +20,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="searchForm.course" placeholder="请选择年级">
+        <el-select v-model="searchForm.course" placeholder="请选择班级">
           <el-option label="一班" value="shanghai"></el-option>
           <el-option label="二班" value="beijing"></el-option>
         </el-select>
@@ -48,30 +48,30 @@
     <el-pagination layout="prev, pager, next" :total="totalLength" :page-size="pageSize" @current-change="handleCurrentChange"></el-pagination>
 
     <!-- 模态框部分 -->
-    <!-- 分配任课教师的弹框 -->
-    <!-- <el-dialog title="分配任课教师" :visible.sync="addTeacher" width="33%">
-      <el-form :model="addTeachForm" :rules="addTeachrules" ref="addTeachForm" label-width="80px" class="demo-ruleForm">
-        <el-form-item label="工号" prop="staff_number">
-          <el-input v-model="addTeachForm.staff_number"></el-input>
+    <!-- 添加班级的弹框 -->
+    <el-dialog title="添加班级" :visible.sync="addClass" width="33%">
+      <el-form :model="addClassForm" label-width="80px">
+        <el-form-item label="工号">
+          <el-input v-model="addClassForm.staff_number"></el-input>
         </el-form-item>
-        <el-form-item label="姓名" prop="staff_name">
-          <el-input v-model="addTeachForm.staff_name"></el-input>
+        <el-form-item label="姓名">
+          <el-input v-model="addClassForm.staff_name"></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="staff_password">
-          <el-input type="password" v-model="addTeachForm.staff_password" autocomplete="off"></el-input>
+        <el-form-item label="密码">
+          <el-input type="password" v-model="addClassForm.staff_password" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="电话" prop="staff_phone">
-          <el-input v-model="addTeachForm.staff_phone"></el-input>
+        <el-form-item label="电话">
+          <el-input v-model="addClassForm.staff_phone"></el-input>
         </el-form-item>
-        <el-form-item label="年龄" prop="staff_age">
-          <el-input v-model.number="addTeachForm.staff_age"></el-input>
+        <el-form-item label="年龄">
+          <el-input v-model.number="addClassForm.staff_age"></el-input>
         </el-form-item>
         <el-form-item class="btnBox">
-          <el-button @click="addTeacher = false">取 消</el-button>
-          <el-button class="successBtn" @click="addTeacherRequest('addTeachForm')">确 定</el-button>
+          <el-button @click="addClass = false">取 消</el-button>
+          <el-button class="successBtn" @click="addClassRequest">确 定</el-button>
         </el-form-item>
       </el-form>
-    </el-dialog> -->
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -90,6 +90,7 @@ export default {
       searchForm: {},
       pageSize: 12, //一页显示多少条
       totalLength: 20, //一共有多少条数据
+      addClassForm: {},
     };
   },
   methods: {
@@ -148,7 +149,7 @@ export default {
   overflow: hidden;
 }
 .el-card {
-  background-color: #fdf07f85;
+  background-color: #f7efa7c7;
   text-align: center;
   border-radius: 2rem;
   min-height: 25rem;

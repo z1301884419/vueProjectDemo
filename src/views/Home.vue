@@ -40,7 +40,7 @@
         <div class="signInBox">
           <h3 class="signInError"><i class="el-icon-alarm-clock"></i> 签到</h3>
           <!-- <h3 class="signInSuccess"><i class="el-icon-check signInSuccess"></i>已签到</h3> -->
-          <p><i class="el-icon-location-information"></i>位置信息:<span>四川省成都市武侯区桂溪街道云华路国家西部信息安全产业基地</span></p>
+          <!-- <p><i class="el-icon-location-information"></i>位置信息:<span>四川省成都市武侯区桂溪街道云华路国家西部信息安全产业基地</span></p> -->
         </div>
         <div class="userBox">
           <div class="messageBox">

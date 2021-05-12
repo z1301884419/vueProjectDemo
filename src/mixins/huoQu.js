@@ -26,6 +26,13 @@ export default {
           console.log(data);
   
         })
+      },
+      LoginAction2(obj){
+        console.log(obj);
+        return api[obj.name](obj.data).then(data=>{
+          console.log(data);
+  
+        })
       }
     },
     computed: {

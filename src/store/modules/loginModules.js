@@ -1,12 +1,12 @@
 // import { getStorage, setStorage, removeStorage } from '../../utils/storage'//
-import {setStorage} from '../../utils/storage'//
+import {getStorage, setStorage} from '../../utils/storage'//
 
 import api from '../../utils/loginapi'
 
 export default {
   namespaced: true,
   state: {
-    
+    user:getStorage("user")||{},
   },
   actions: {
     LoginAction(context,obj){

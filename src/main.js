@@ -31,7 +31,8 @@ router.beforeEach((to, from, next) => {
   if (to.meta.isLogin) {
     if (user) {
       // 进入你想要进入的页面
-      next()
+      next();
+      
     } else {
       // 重新让你去登录页面
       router.push('/Login')

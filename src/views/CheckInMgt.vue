@@ -88,7 +88,7 @@ export default {
           },
         ],
       },
-      value2: '',
+      CheckInDate1: '',
       tableData: [],
     };
   },

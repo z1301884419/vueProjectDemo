@@ -175,6 +175,14 @@ export default {
           icon: "el-icon-dish",
           children: "",
         },
+        {
+          id: 6,
+          index: "6",
+          name: "日志管理",
+          path: "/Home/LogMgt",
+          icon: "el-icon-dish",
+          children: "",
+        },
       ],
      
     };

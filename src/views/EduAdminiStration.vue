@@ -11,7 +11,7 @@
     <!-- 搜索框 -->
     <el-form :inline="true" :model="searchForm" class="demo-form-inline">
       <el-form-item>
-        <el-button class="successBtn">添加班级</el-button>
+        <el-button class="successBtn" @click="addClass = true">添加班级</el-button>
       </el-form-item>
       <el-form-item>
         <el-select v-model="searchForm.course" placeholder="请选择年级">
@@ -145,6 +145,13 @@ export default {
   }
   .el-form-item{
     margin: 1rem;
+  }
+}
+.btnBox{
+  margin-top: 3rem;
+  text-align: right;
+  .successBtn{
+    margin-right: 0;
   }
 }
 // 卡片

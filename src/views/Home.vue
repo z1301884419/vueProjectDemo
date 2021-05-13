@@ -37,9 +37,10 @@
     </el-aside>
     <el-container>
       <el-header height="80px">
+        <!-- 签到 -->
         <div class="signInBox">
-          <h3 class="signInError"><i class="el-icon-alarm-clock"></i> 签到</h3>
-          <!-- <h3 class="signInSuccess"><i class="el-icon-check signInSuccess"></i>已签到</h3> -->
+          <h3 class="signInError signInBtn" v-if="signInFlag&&$store.state.loginModules.userShenfen=='学生'" @click='signInFn'><i class="el-icon-alarm-clock"></i> 签到</h3>
+          <h3 class="signInSuccess" v-else-if="!signInFlag&&$store.state.loginModules.userShenfen=='学生'"><i class="el-icon-check signInSuccess"></i>已签到</h3>
           <!-- <p><i class="el-icon-location-information"></i>位置信息:<span>四川省成都市武侯区桂溪街道云华路国家西部信息安全产业基地</span></p> -->
         </div>
         <div class="userBox">
@@ -69,10 +70,11 @@
   </el-container>
 </template>
 <script>
+import { mapMutations } from "vuex";
 export default {
   data() {
     return {
-       user:this.$store.state.loginModules.user.parentImg,
+      user:this.$store.state.loginModules.user.parentImg,
       bodyHeight: window.innerHeight,
       currentIndex: 0,
       navList: [
@@ -192,11 +194,12 @@ export default {
           children: "",
         },
       ],
-     
+      signInFlag:true,
     };
   },
   methods: {
-
+    ...mapMutations(["loginModules/mutationsLoginOut"]),
+    // 退出登录
     tuichu() {
       this.$confirm("您确定要退出登录吗？", "温馨提示", {
         confirmButtonText: "确定",
@@ -209,7 +212,7 @@ export default {
             message: "您已退出登录!",
             offset: 100,
           });
-          sessionStorage.removeItem("user")
+          this["loginModules/mutationsLoginOut"]();
           this.$router.push("/Login")
         })
         .catch(() => {
@@ -220,7 +223,7 @@ export default {
           });
         });
     },
-
+    // 导航菜单
     changeIndex(n) {
       this.currentIndex = n;
     },
@@ -230,6 +233,10 @@ export default {
     handleClose(key, keyPath) {
       console.log(key, keyPath);
     },
+    // 签到
+    signInFn(){
+      // console.log(this.user);
+    }
   },
   computed: {
     getAsideHeight() {
@@ -240,9 +247,13 @@ export default {
     window.onresize = () => {
       this.bodyHeight = window.innerHeight;
     };
+    
   },
   created(){
     console.log(this.user);
+    console.log(this.$store.state.loginModules.userShenfen);
+    console.log(this.$store.state.loginModules.userShenfen=='学生');
+    console.log(!this.signInFlag&&this.$store.state.loginModules.userShenfen=='学生');
   }
 };
 </script>
@@ -344,6 +355,7 @@ body > .el-container {
   h3{
     margin-left: 3rem;
     cursor: pointer;
+    border: 1px solid red;
   }
   p{
     margin: 0 3rem;

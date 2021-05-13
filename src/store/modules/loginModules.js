@@ -1,5 +1,5 @@
-// import { getStorage, setStorage, removeStorage } from '../../utils/storage'//
-import {getStorage, setStorage} from '../../utils/storage'//
+import { getStorage, setStorage, removeStorage } from '../../utils/storage'//
+// import {getStorage, setStorage} from '../../utils/storage'//
 
 import api from '../../utils/loginapi'
 
@@ -20,8 +20,9 @@ export default {
           setStorage('user',data.data.data.o)
           setStorage('token',data.data.data.token)
           setStorage('shenfen',"学生")
-
-          
+          context.commit('mutationsLogin',data.data.data.o)
+          context.commit('mutationsSetToKen',data.data.data.token)
+          context.commit('mutationsSetShenFen','学生') 
         }
         return data.data.code
       })
@@ -29,5 +30,22 @@ export default {
 
   },
   mutations: {
+    mutationsLogin(state,payload){
+      state.user=payload
+    },
+    mutationsSetShenFen(state,payload){
+      state.userShenfen=payload;
+    },
+    mutationsSetToKen(state,payload){
+      state.token=payload;
+    },
+    mutationsLoginOut(state){
+      removeStorage('user');
+      removeStorage('shenfen');
+      removeStorage('token');
+      state.user={};
+      state.userShenfen="";
+      state.token="";
+    }
   }
 }

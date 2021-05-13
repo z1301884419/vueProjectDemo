@@ -183,6 +183,14 @@ export default {
           icon: "el-icon-dish",
           children: "",
         },
+        {
+          id: 7,
+          index: "7",
+          name: "关键字管理",
+          path: "/Home/AddMemoMgt",
+          icon: "el-icon-dish",
+          children: "",
+        },
       ],
      
     };

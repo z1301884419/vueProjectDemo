@@ -15,6 +15,8 @@ const StudentScore = () => import('../views/StudentScore.vue');//学生成绩管
 const StuParentMgt = () => import('../views/StuParentMgt.vue');//学生家长管理
 const TeacherInfo = () => import('../views/TeacherInfo.vue');//教师信息管理
 const LogMgt = () => import('../views/LogMgt.vue');//日志管理
+const AddMemoMgt = () => import('../views/AddMemoMgt.vue');//留言关键字管理
+
 // 个人中心
 const stuCenter = () => import('../components/yy_StudentInfoDialog.vue');//学生个人中心
 
@@ -148,6 +150,14 @@ const routes = [
         path: 'LogMgt',
         name: 'LogMgt',
         component: LogMgt,
+        meta: {
+          isLogin: true,
+        }
+      },
+      {
+        path: 'AddMemoMgt',
+        name: 'AddMemoMgt',
+        component: AddMemoMgt,
         meta: {
           isLogin: true,
         }

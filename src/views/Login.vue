@@ -380,6 +380,7 @@ export default {
         if(data==200){
           console.log('chengg');
           this.$router.push("/Home");
+          
         }
       });
     },

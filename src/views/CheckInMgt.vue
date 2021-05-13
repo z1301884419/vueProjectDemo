@@ -2,8 +2,7 @@
   <div class="checkInBox">
     <!-- 面包屑导航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/Home/HomePage' }"
-        >首页</el-breadcrumb-item
+      <el-breadcrumb-item :to="{ path: '/Home/HomePage' }">首页</el-breadcrumb-item
       >
       <el-breadcrumb-item>教学管理</el-breadcrumb-item>
       <el-breadcrumb-item>考勤管理</el-breadcrumb-item>
@@ -65,6 +64,7 @@
   </div>
 </template>
 <script>
+import examMixins from '../mixins/examMixins'
 export default {
   data() {
     return {
@@ -112,6 +112,7 @@ export default {
       ],
     };
   },
+  mixins: [examMixins],
   methods: {
     drawChart() {
       console.log(document.getElementById("checkInEchartsBox"));
@@ -145,10 +146,22 @@ export default {
       };
       myChart.setOption(option);
     },
+    // 获取考勤信息
+    getAttendanceDataFn(){
+      this.selectAllData({
+        name:'ATTENDANCEALL',
+        data:{},
+      }).then((data)=>{
+        console.log(data);
+      })
+    }
   },
   mounted() {
     this.drawChart();
   },
+  created(){
+    this.getAttendanceDataFn();
+  }
 };
 </script>
 <style lang="less" scoped>

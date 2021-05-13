@@ -1,3 +1,4 @@
+import api from '../utils/checkInApi'
 export default {
   data() {
 
@@ -34,5 +35,15 @@ export default {
         });
       })
     },
+    //查询一页数据方法
+    selectAllData(obj){
+      console.log(obj);
+      return api[obj.name](obj.data).then(data => {
+        console.log(data);
+        // if (data.data.code == 200) {
+          
+        // }
+      })
+    }
   }
 }

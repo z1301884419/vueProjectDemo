@@ -73,7 +73,7 @@
       <el-form
         :model="addExamFormData"
         :rules="rules"
-        ref="ruleForm"
+        ref="addExamFormData"
         class="demo-ruleForm"
       >
         <el-form-item label="考试年级" label-width="100px" prop="grade">
@@ -94,9 +94,9 @@
             <el-option label="月考" value="beijing"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="考试日期" label-width="100px" prop="date1">
+        <el-form-item label="考试日期" label-width="100px" prop="addExamData">
           <el-date-picker
-            v-model="addExamFormData.date1"
+            v-model="addExamFormData.addExamData"
             align="right"
             type="date"
             placeholder="选择日期"
@@ -113,7 +113,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogAddExam = false">取 消</el-button>
-        <el-button class="addExamBtn" @click="submitForm('ruleForm')"
+        <el-button class="addExamBtn" @click="addExamTrue('addExamFormData')"
           >确 定</el-button
         >
       </div>
@@ -147,7 +147,7 @@ export default {
       addExamFormData: {
         grade: "",
         type:'',
-        date1:'',
+        addExamData:'',
       }, //模态框 表单数据
       // 发起考试的日期选择
       pickerAddExamDate: {
@@ -179,12 +179,6 @@ export default {
           },
         ],
       }, //日期选择器
-      // addExamData: "", //发起考试时间
-      ruleForm: {
-        grade: "",
-        type: "",
-        date1: "",
-      },
       rules: {
         grade: [
           { required: true, message: "请选择考试年级", trigger: "change" },
@@ -192,7 +186,7 @@ export default {
         type: [
           { required: true, message: "请选择考试类型", trigger: "change" },
         ],
-        date1: [
+        addExamData: [
           {
             type: "date",
             required: true,
@@ -223,13 +217,11 @@ export default {
     modifyExam(obj) {
       console.log(obj);
     },
-    submitForm(formName) {
+    addExamTrue(formName) {
       this.$refs[formName].validate((valid) => {
-        console.log(valid);
-        console.log(this.date1);
-        console.log(this.grade);
         if (valid) {
           this.dialogAddExam = false;
+          console.log(this.addExamFormData);
         } else {
           console.log("error submit!!");
           return false;

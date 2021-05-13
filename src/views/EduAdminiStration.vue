@@ -91,12 +91,16 @@ export default {
       pageSize: 12, //一页显示多少条
       totalLength: 20, //一共有多少条数据
       addClassForm: {},
+      addClass: false,
     };
   },
   methods: {
     handleCurrentChange(val) { // 获取页码
       console.log(`当前页: ${val}`);
     },
+    addClassRequest() {
+      this.addClass = false;
+    }
   },
 };
 </script>

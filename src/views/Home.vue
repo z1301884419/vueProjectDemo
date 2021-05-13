@@ -235,6 +235,7 @@ export default {
     },
     // 签到
     signInFn(){
+      this.signInFlag=false;
       // console.log(this.user);
     }
   },

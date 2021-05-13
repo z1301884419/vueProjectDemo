@@ -7,55 +7,68 @@
       <el-table-column
               fixed
               align="center"
-              prop="student_number"
+              prop="calssFullName"
+              width="100"
+              label="班级">
+      </el-table-column>
+      <el-table-column
+              fixed
+              align="center"
+              prop="studentNumber"
               width="100"
               label="学号">
       </el-table-column>
       <el-table-column
               fixed
               align="center"
-              prop="student_name"
+              prop="studentName"
               label="姓名">
       </el-table-column>
       <el-table-column
               align="center"
-              prop="student_gender"
+              prop="studentGender"
               label="性别">
       </el-table-column>
       <el-table-column
               align="center"
-              prop="student_age"
+              prop="studentAge"
               label="年龄">
       </el-table-column>
       <el-table-column
               align="center"
               width="200"
-              prop="student_idcardno"
+              prop="studentIdcardno"
               label="身份证号">
       </el-table-column>
       <el-table-column
               align="center"
               label="在读状态">
         <template slot-scope="scope">
-          {{scope.row.student_state==1?'在读':scope.row.student_state==2?'休学':'退学'}}
+          {{scope.row.studentState==1?'在读':scope.row.studentState==2?'休学':'退学'}}
         </template>
       </el-table-column>
       <el-table-column
               align="center"
-              prop="student_nation"
+              prop="studentNation"
               label="民族">
       </el-table-column>
       <el-table-column
               align="center"
               width="150"
-              prop="student_contact"
+              prop="studentContact"
               label="联系方式">
       </el-table-column>
       <el-table-column
               align="center"
-              prop="student_parent"
+              prop="newParentList"
               label="家长">
       </el-table-column>
+      <el-table-column
+              align="center"
+              prop="headTeacher.staffName"
+              label="班主任">
+      </el-table-column>
+
       <!--操作-->
       <el-table-column
               fixed="right"

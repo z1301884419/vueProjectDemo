@@ -6,52 +6,90 @@
       <el-breadcrumb-item>学生信息管理</el-breadcrumb-item>
     </el-breadcrumb>
     <el-divider></el-divider>
-    <div class="filter-cpns">
-      <!--学号-->
-      <yy_FilterByInput :filterData="{data:allStuData,text:'请输入学号',filterProperty:'student_number'}"
-                        @filteredData="filteredByXuehaoFn"/>
-      <!--班级-->
-      <yy_FilterBySelect :filterData="{
-      optionData:{label:'class_name',value:'class_id',data:[{class_id:'1',class_name:'高一一班'},{class_id:'2',class_name:'高一二班'},{class_id:'3',class_name:'高一三班'}]},
-      data:allStuData,
-      text:'请选择班级',
-      filterProperty:'class_id'
-      }" @filteredData="filteredByClassFn"/>
-      <!--姓名-->
-      <yy_FilterByInput :filterData="{data:allStuData,text:'请输入姓名',filterProperty:'student_name'}"
-                        @filteredData="filteredByNameFn"/>
-      <!--性别-->
-      <yy_FilterBySelect :filterData="{
-      optionData:{label:'lable',value:'value',data:[{lable:'男',value:'男'},{lable:'女',value:'女'}]},
-      data:allStuData,
-      text:'请选择性别',
-      filterProperty:'student_gender'
-      }" @filteredData="filteredBySexFn"/>
-      <!--出生日期-->
-      <yy_FilterByBirthday/>
+    <!--学生的页面-->
+    <div v-if="shenfen=='学生'||shenfen=='家长'" class="this-stu-info">
+      <div class="left">
+        <div>
+          <img src="" style="width: 200px;height: 200px; vertical-align: top" alt="">
+        </div>
+        <div class="beizhu">
+          <h3>备注信息</h3>
+          <div class="beizhu-text">
+            {{stuData.studentDesc}}
+          </div>
+        </div>
+      </div>
+      <div class="xinxi right">
+        <ul>
+          <li>学号：<span>{{stuData.studentNumber}}</span></li>
+          <li>姓名：<span>{{stuData.studentName}}</span></li>
+          <li>性别：<span>{{stuData.studentGender}}</span></li>
+          <li>年龄：<span>{{stuData.studentAge}}</span></li>
+          <li>名族：<span>{{stuData.studentNation}}</span></li>
+          <li>政治面貌：<span>{{stuData.studentPolitics}}</span></li>
+          <li>获奖情况：<span>{{stuData.studentExperience}}</span></li>
+          <li>在读状态：<span>{{stuData.studentState==1?'在读':stuData.student_state==2?'休学':'退学'}}</span></li>
+          <li>班主任：<span>{{stuData.classId}}</span></li>
+          <li>班级：<span>{{stuData.classId}}</span></li>
+          <li>身份证号：<span>{{stuData.studentIdcardno}}</span></li>
+          <li>住址：<span>{{stuData.studentHome}}</span></li>
+          <li>联系方式：<span>{{stuData.studentContact}}</span></li>
+          <li>入学日期：<span>{{stuData.studentDate}}</span></li>
+        </ul>
+      </div>
     </div>
-    <div class="add-student">
-      <el-button style="padding:0 1rem;margin: 0 0.5rem;" size="small" plain>
-        <yy_AddOrSetStudentDialog :stuData="{text:'添加学生',title:'添加学生信息'}"/>
-      </el-button>
-    </div>
-    <!--    学生信息表-->
-    <div class="stu-table">
-      <yy_StudentInfoTable :tableData="renderData"/>
-    </div>
-    <!--分页-->
-    <div class="fenye">
-      <el-pagination
-              :hide-on-single-page="true"
-              :page-size="8"
-              :pager-count="9"
-              layout="prev, pager, next"
-              :total="100">
-      </el-pagination>
+    <!--老师的页面-->
+    <div v-if="shenfen=='老师'||shenfen=='班主任'||shenfen=='管理员'">
+      <div class="filter-cpns">
+        <!--学号-->
+        <yy_FilterByInput :filterData="{data:AllStuXiangData,text:'请输入学号',filterProperty:'student_number'}"
+                          @filteredData="filteredByXuehaoFn"/>
+        <!--班级-->
+        <yy_FilterBySelect :filterData="{
+        optionData:{label:'class_name',value:'class_id',data:[{class_id:'1',class_name:'高一一班'},{class_id:'2',class_name:'高一二班'},{class_id:'3',class_name:'高一三班'}]},
+        data:AllStuXiangData,
+        text:'请选择班级',
+        filterProperty:'class_id'
+        }" @filteredData="filteredByClassFn"/>
+        <!--姓名-->
+        <yy_FilterByInput :filterData="{data:AllStuXiangData,text:'请输入姓名',filterProperty:'student_name'}"
+                          @filteredData="filteredByNameFn"/>
+        <!--性别-->
+        <yy_FilterBySelect :filterData="{
+        optionData:{label:'lable',value:'value',data:[{lable:'男',value:'男'},{lable:'女',value:'女'}]},
+        data:AllStuXiangData,
+        text:'请选择性别',
+        filterProperty:'student_gender'
+        }" @filteredData="filteredBySexFn"/>
+        <!--出生日期-->
+        <yy_FilterByBirthday/>
+      </div>
+      <div class="add-student">
+        <el-button style="padding:0 1rem;margin: 0 0.5rem;" size="small" plain>
+          <yy_AddOrSetStudentDialog :stuData="{text:'添加学生',title:'添加学生信息'}"/>
+        </el-button>
+      </div>
+      <!--    学生信息表-->
+      <div class="stu-table">
+        <yy_StudentInfoTable :tableData="renderData"/>
+      </div>
+      <!--分页-->
+      <div class="fenye">
+        <el-pagination
+                :hide-on-single-page="true"
+                :page-size="5"
+                :pager-count="9"
+                layout="prev, pager, next"
+                :total="renderData.length">
+        </el-pagination>
+      </div>
     </div>
   </div>
 </template>
 <script>
+  import { getStorage } from "../utils/storage";
+  // import formatDate from '../utils/formatDate'
+
   import yy_FilterBySelect from '@/components/yy_FilterBySelect'
   import yy_FilterByInput from '@/components/yy_FilterByInput'
 
@@ -59,7 +97,7 @@
   import yy_StudentInfoTable from '@/components/yy_StudentInfoTable'
   import yy_AddOrSetStudentDialog from '@/components/yy_AddOrSetStudentDialog'
 
-  import {mapState} from 'vuex'
+  import {mapState,mapActions} from 'vuex'
   export default {
     name:'StudentInfo',
     components:{
@@ -81,10 +119,35 @@
       }
     },
     computed:{
-      ...mapState('yy_module',['allStuData'])
+      ...mapState('yy_module',['AllStuXiangData']),
+      shenfen(){
+        return getStorage('shenfen')
+      },
+      stuData(){
+        return getStorage('user')
+      },
+      //生成新的学生信息
+      newStuData(){
+
+        return this.AllStuXiangData.map(v=>{
+          this.$set(v,'calssFullName',v.grade.gradeName+v.clazz.className)
+          let listNotNull = v.parentList.length>0? v.parentList.reduce((prev,cur)=>{
+                prev += cur.parentName+','
+                return prev
+              },''):''
+          this.$set(v,'newParentList',listNotNull?listNotNull.substr(0,listNotNull.length-1):'暂未添加')
+          return v
+        })
+      },
     },
     created() {
-      this.renderData = this.allStuData//初始化表格数据
+      if(this.AllStuXiangData.length==0){
+        this.getAllStuXiangData().then(()=>{
+          this.renderData = this.newStuData//初始化表格数据
+        })
+      }else {
+        this.renderData = this.newStuData//初始化表格数据
+      }
       this.filteredByNameData = this.allStuData//初始化通过名字筛选出的数据
       this.filteredBySexData = this.allStuData//性别
       this.filteredByClassData = this.allStuData//班级
@@ -93,6 +156,7 @@
       this.filteredByDescData = this.allStuData//备注
     },
     methods:{
+      ...mapActions('yy_module',['getAllStuXiangData']),
       //筛选姓名
       filteredByNameFn(data){
         this.filteredByNameData = data
@@ -137,20 +201,59 @@
 </script>
 <style scoped lang="less">
   .stu-info{
+    .this-stu-info{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      .left{
+        .beizhu{
+          width: 200px;
+          white-space: normal;
+          text-align: left;
+          margin-top: 30px;
+          .beizhu-text{
+            margin-top: 20px;
+            border: 1px solid gray;
+            padding: 10px 4px;
+            border-radius: 2px;
+            min-height: 250px;
+            max-height: 300px;
+          }
+        }
+      }
+      .xinxi{
+        display: inline-block;
+        width: 60%;
+        ul{
+          text-align: left;
+          li{
+            white-space: normal;
+            margin: 1px 2px;
+            padding: 8px 0;
+            font-size: 16px;
+            font-weight: bold;
+            span{
+              font-weight: normal;
+            }
+          }
+        }
+      }
+    }
      .filter-cpns{
        display: flex;
+       width: 98%;
+       margin:  0 auto;
        >div{
          width: 150px;
          margin: 2.5rem 1rem;
        }
      }
     .add-student{
-      margin: 0 0.5rem;
+      margin: 0 1.5rem;
     }
      .stu-table{
-       width: 100%;
+       width: 98%;
        margin: 1rem auto;
-
      }
     .fenye{
       .el-pagination{

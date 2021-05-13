@@ -2,126 +2,13 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 Vue.use(Vuex)
-
+import yy_request from '@/utils/request/yy_request'
 export default{
   namespaced:true,
   state: {
     //所有学生数据
-    allStuData:[{
-      student_number: '201500123',
-      student_password:'123456',
-      class_name: '高一三班',
-      class_id:3,
-      student_name: '张三',
-      student_birthday: '2005-01-11',
-      student_age:'22',
-      student_idcardno:'511302200505155223',
-      student_nation:'蛮族',
-      student_politics:'共青团员',
-      student_state:1,
-      student_home:'成都市武侯区桂溪街道高新青年公寓一栋6-666',
-      student_contact:'120110119115',
-      student_parent:'张大五',
-      student_gender: '女',
-      student_date:'2018-09-21',
-      student_experience:'四川省高中生篮球比赛一等奖',
-      student_desc: '我是一个好人，我每天都要干三碗饭',
-    },{
-      student_number: '201500021',
-      student_password:'123456',
-      class_name: '高一二班',
-      class_id:1,
-      student_name: '张三',
-      student_birthday: '2005-05-15',
-      student_age:'20',
-      student_idcardno:'511302200505155223',
-      student_nation:'汉族',
-      student_politics:'共青团员',
-      student_state:1,
-      student_home:'成都市武侯区桂溪街道高新青年公寓一栋6-666',
-      student_contact:'120110119115',
-      student_parent:'张大五',
-      student_gender: '男',
-      student_date:'2018-09-21',
-      student_experience:'四川省高中生篮球比赛一等奖',
-      student_desc: '我是一个好人，我每天都要干三碗饭',
-    },{
-      student_number: '201500021',
-      student_password:'123456',
-      class_name: '高一一班',
-      class_id:1,
-      student_name: '张三分',
-      student_birthday: '2002-05-15',
-      student_age:'18',
-      student_idcardno:'5121412200505155223',
-      student_nation:'汉族',
-      student_politics:'共青团员',
-      student_state:1,
-      student_home:'成都市武侯区桂溪街道高新青年公寓一栋6-666',
-      student_contact:'120110119115',
-      student_parent:'张二权',
-      student_gender: '男',
-      student_date:'2018-09-21',
-      student_experience:'四川省高中生篮球比赛一等奖',
-      student_desc: '我是一个好人，我每天都要干三碗饭',
-    },{
-      student_number: '201500021',
-      student_password:'123456',
-      class_name: '高一二班',
-      class_id:2,
-      student_name: '李四',
-      student_birthday: '2005-01-15',
-      student_age:'20',
-      student_idcardno:'511302200505155223',
-      student_nation:'汉族',
-      student_politics:'共青团员',
-      student_state:1,
-      student_home:'成都市武侯区桂溪街道高新青年公寓一栋6-666',
-      student_contact:'120110119115',
-      student_parent:'李铁牛',
-      student_gender: '男',
-      student_date:'2018-09-21',
-      student_experience:'四川省高中生篮球比赛一等奖',
-      student_desc: '我是一个好人，我每天都要干三碗饭',
-    }, {
-      student_number: '201500021',
-      student_password:'123456',
-      class_name: '高一二班',
-      class_id:2,
-      student_name: '王七八',
-      student_birthday: '2005-05-15',
-      student_age:'20',
-      student_idcardno:'511302200505155223',
-      student_nation:'汉族',
-      student_politics:'共青团员',
-      student_state:3,
-      student_home:'成都市武侯区桂溪街道高新青年公寓一栋6-666',
-      student_contact:'120110119115',
-      student_parent:'王建邺',
-      student_gender: '男',
-      student_date:'2018-09-21',
-      student_experience:'四川省高中生篮球比赛一等奖',
-      student_desc: '我是一个好人，我每天都要干三碗饭',
-    }, {
-      student_number: '201500021',
-      student_password:'123456',
-      class_name: '高一二班',
-      class_id:2,
-      student_name: '刘三山',
-      student_birthday: '2000-05-15',
-      student_age:'20',
-      student_idcardno:'511302200505155223',
-      student_nation:'汉族',
-      student_politics:'共青团员',
-      student_state:2,
-      student_home:'成都市武侯区桂溪街道高新青年公寓一栋6-666',
-      student_contact:'120110119115',
-      student_parent:'刘大',
-      student_gender: '男',
-      student_date:'2018-09-21',
-      student_experience:'四川省高中生篮球比赛一等奖',
-      student_desc: '我是一个好人，我每天都要干三碗饭',
-    }],
+    AllStuXiangData:[],
+
     //学生成绩表数据
     classGreadData:[{
       class_name:'高一三班',
@@ -176,9 +63,42 @@ export default{
       total:'',
       testType:'校级考'
     }],
+    //所有学科信息
+    AllSubject:[],
+    //所有班级信息
+    AllClass:[],
   },
   mutations: {
+    setAllSubject(state,data){
+      state.AllSubject = data
+    },
+    setAllClass(state,data){
+      state.AllClass = data
+    },
+    setAllStuXiangData(state,data){
+      state.AllStuXiangData = data
+    },
+
   },
   actions: {
+    getALLSubject(context){
+      yy_request.SelectAllSubjectFn().then(res=>{
+        console.log(res);
+        context.commit('setAllSubject',res.data)
+      })
+    },
+    getAllClass(context){
+      yy_request.SelectAllClassFn().then(res=>{
+        console.log(res);
+        context.commit('setAllClass',res.data)
+      })
+    },
+    getAllStuXiangData(context){
+      return yy_request.SelectAllStuXiangFn().then(res=>{
+        console.log(res);
+        context.commit('setAllStuXiangData',res.data)
+        return
+      })
+    },
   },
 }

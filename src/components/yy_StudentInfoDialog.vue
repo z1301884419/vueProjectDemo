@@ -27,7 +27,6 @@
       <div class="xinxi right">
         <ul>
           <li>学号：<span>{{stuData.student_number}}</span></li>
-          <li>密码：<span>{{stuData.student_password}}</span></li>
           <li>姓名：<span>{{stuData.student_name}}</span></li>
           <li>性别：<span>{{stuData.student_gender}}</span></li>
           <li>年龄：<span>{{stuData.student_age}}</span></li>
@@ -40,7 +39,7 @@
           <li>身份证号：<span>{{stuData.student_idcardno}}</span></li>
           <li>住址：<span>{{stuData.student_home}}</span></li>
           <li>联系方式：<span>{{stuData.student_contact}}</span></li>
-          <li>入学日期：<span>{{stuData.student_date}}6-6</span></li>
+          <li>入学日期：<span>{{stuData.student_date}}</span></li>
         </ul>
       </div>
     </el-dialog>
@@ -72,21 +71,21 @@
 
 <style scoped lang="less">
   .left{
-    .beizhu{
-      width: 200px;
-      white-space: normal;
-      text-align: left;
-      margin-top: 50px;
-      .beizhu-text{
-        margin-top: 20px;
-        border: 1px solid gray;
-        padding: 10px 4px;
-        border-radius: 2px;
-        min-height: 250px;
-        max-height: 300px;
-      }
-    }
-  }
+     .beizhu{
+       width: 200px;
+       white-space: normal;
+       text-align: left;
+       margin-top: 50px;
+       .beizhu-text{
+         margin-top: 20px;
+         border: 1px solid gray;
+         padding: 10px 4px;
+         border-radius: 2px;
+         min-height: 250px;
+         max-height: 300px;
+       }
+     }
+   }
   .xinxi{
     display: inline-block;
     width: 60%;
@@ -103,7 +102,6 @@
         }
       }
     }
-
   }
 </style>
 <style>

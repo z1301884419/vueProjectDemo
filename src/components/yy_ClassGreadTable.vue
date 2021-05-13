@@ -70,6 +70,7 @@
       </el-table-column>
       <!--操作-->
       <el-table-column
+              v-if="shenfen!='学生'&&shenfen!='家长'"
               fixed="right"
               label="操作"
               width="100">
@@ -114,7 +115,7 @@
         dialogFormVisible:false,
       }
     },
-    props:['tableData'],
+    props:['tableData','shenfen'],
     methods:{
       //修改学生成绩，老师只能修改自己科的成绩
       setGread(index,row){

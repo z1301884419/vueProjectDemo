@@ -14,20 +14,18 @@
         <el-button class="successBtn" @click="addClass = true">添加班级</el-button>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="searchForm.course" placeholder="请选择年级">
-          <el-option label="高一" value="shanghai"></el-option>
-          <el-option label="高二" value="beijing"></el-option>
+        <el-select v-model="searchForm.gradeId" placeholder="请选择年级" @change="changeClassRequest">
+          <el-option v-for="item in gradeArr" :key="item.gradeId" :label="item.gradeName" :value="item.gradeId"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="searchForm.course" placeholder="请选择班级">
-          <el-option label="一班" value="shanghai"></el-option>
-          <el-option label="二班" value="beijing"></el-option>
+        <el-select v-model="searchForm.classId" placeholder="请选择班级">
+          <el-option  v-for="item in classArr" :key="item.classId" :label="item.className" :value="item.classId"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button plain class="plainBtn">查询</el-button>
-        <el-button type="info" plain>重置</el-button>
+        <el-button plain class="plainBtn" @click="searchInfo">查询</el-button>
+        <el-button type="info" plain @click="resizeFn">重置</el-button>
       </el-form-item>
     </el-form>
 
@@ -35,9 +33,10 @@
     <div class="cardBox">
       <el-col :span="4" v-for="item in tableData" :key="item.id">
         <el-card shadow="hover">
-          <p>{{ item.className }}</p>
-          <p>班主任: {{item.headTeacher==""?"未分配":item.headTeacher}}</p>
-          <div v-if="item.headTeacher===''"><el-button round plain class="plainBtn">分配班主任</el-button></div>
+          <p>{{ item.gradeName }} {{ item.className }}</p>
+          <p>班主任: {{item.staffName==null?"未分配":item.staffName}}</p>
+          <p>教室地址: {{ item.classroomName }}</p>
+          <div v-if="item.staffName===null"><el-button round plain class="plainBtn">分配班主任</el-button></div>
           <div v-else><el-button round plain class="plainBtn">调换班主任</el-button></div>
           <div><el-button round plain class="plainBtn">分配任课教师</el-button></div>
           <div><el-button round plain class="plainBtn">删除班级</el-button></div>
@@ -50,21 +49,20 @@
     <!-- 模态框部分 -->
     <!-- 添加班级的弹框 -->
     <el-dialog title="添加班级" :visible.sync="addClass" width="33%">
-      <el-form :model="addClassForm" label-width="80px">
-        <el-form-item label="工号">
-          <el-input v-model="addClassForm.staff_number"></el-input>
+      <el-form :model="addClassForm" label-width="80px" class="demo-ruleForm">
+        <el-form-item label="教室">
+          <el-select v-model="addClassForm.classClassroomId" placeholder="请选择教室" @change="changeClassRequest">
+            <el-option v-for="item in classRoomArr" :key="item.classroomId" :label="item.classroomName" :value="item.classroomId"></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="姓名">
-          <el-input v-model="addClassForm.staff_name"></el-input>
+        <el-form-item label="年级">
+          <el-select v-model="addClassForm.classGradeId" placeholder="请选择年级" @change="changeClassRequest">
+            <el-option v-for="item in gradeArr" :key="item.gradeId" :label="item.gradeName" :value="item.gradeId"></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="密码">
-          <el-input type="password" v-model="addClassForm.staff_password" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="电话">
-          <el-input v-model="addClassForm.staff_phone"></el-input>
-        </el-form-item>
-        <el-form-item label="年龄">
-          <el-input v-model.number="addClassForm.staff_age"></el-input>
+        <el-form-item label="班级名称">
+          <el-input v-model="addClassForm.className"></el-input>
+          <span class="tips" v-if="validClassName != 0">该班级已存在!</span>
         </el-form-item>
         <el-form-item class="btnBox">
           <el-button @click="addClass = false">取 消</el-button>
@@ -75,33 +73,131 @@
   </div>
 </template>
 <script>
+import TeachInfoMixins from "../mixins/TeachInfoMixins"
+import TeacherMixins from "../mixins/TeacherMixins"
+import {mapActions} from 'vuex'
 export default {
   data() {
     return {
-      tableData: [
-        { id: 1, className: "高一一班" , headTeacher: ""},
-        { id: 2, className: "高一二班" , headTeacher: "李四"},
-        { id: 3, className: "高一三班" , headTeacher: "张三"},
-        { id: 4, className: "高一四班" , headTeacher: "王五"},
-        { id: 5, className: "高一五班" , headTeacher: ""},
-        { id: 6, className: "高一六班" , headTeacher: ""},
-        { id: 7, className: "高一七班" , headTeacher: ""},
-      ],
-      searchForm: {},
+      tableData: [],
+      searchForm: {  //搜索框值
+        gradeId: null,
+        classId: null
+      },
+      page: 1, //当前第几页
       pageSize: 12, //一页显示多少条
-      totalLength: 20, //一共有多少条数据
-      addClassForm: {},
+      totalLength: 0, //一共有多少条数据
+      addClassForm: { //添加班级的表单
+        classClassroomId: '',
+        classGradeId: '',
+        className: '',
+      },
       addClass: false,
+      gradeArr: [], //年级
+      classArr: [], //班级
+      classRoomArr: [], //空教室
+      classAllArr: [], //所有班级
     };
   },
+  mixins: [TeachInfoMixins, TeacherMixins], //使用mixins里的模块
   methods: {
+    ...mapActions(["teacherModules/SearchAllGradeAction"]),
+    ...mapActions(["teacherModules/SearchAllClassRoomAction"]),
+    getAllClass(){ //获取一页班级
+      this.getAllData({
+        name: 'CLASS_ALL',
+        data: {
+          page: this.page,
+          pageSize: this.pageSize
+        }
+      }).then(data => {
+        console.log(data);
+        this.tableData = data;
+        this.totalLength = data.length;
+      })
+    },
+    getTotalClassData(){ //获取所有班级
+      this.getAllData({
+        name: 'CLASS_TOTALDATA',
+        data: {}
+      }).then(data => {
+        this.classAllArr = data;
+      })
+    },
+    getAllGrade(){ //获取年级
+      this["teacherModules/SearchAllGradeAction"]({
+        name: 'GRADE_ALL',
+        data: {}
+      }).then(data => {
+        console.log(data);
+      })
+    },
     handleCurrentChange(val) { // 获取页码
       console.log(`当前页: ${val}`);
     },
-    addClassRequest() {
+    addClassRequest() {  // 添加班级
       this.addClass = false;
+      if(this.validClassName == 0){
+        // 名字不重复时提交请求 CLASS_ADD
+        this.InsertDate({
+          name: 'CLASS_ADD',
+          data: this.addClassForm
+        }).then(data=>{
+          console.log(data);
+          this.getAllClass()
+          this.addClassForm = {
+            classClassroomId: '',
+            classGradeId: '',
+            className: '',
+          }
+        })
+      } else {
+        this.openError('错误', '该班级已存在!')
+      }
+    },
+    changeClassRequest(){ //选择年级之后请求班级信息
+      this.getAllData({
+        name: 'CLASS_SELECTBYCONDITION',
+        data: {
+          gradeId: this.searchForm.gradeId
+        }
+      }).then(data => {
+        this.classArr = data;
+      })
+    },
+    getClassRoomNotUse(){  //获取没有班级的空教室
+      this["teacherModules/SearchAllClassRoomAction"]({
+        name: 'CLASSROOM_NOTUSE',
+        data: {}
+      }).then(data => {
+        console.log(data);
+      })
+    },
+    searchInfo(){
+      console.log(this.searchForm);
+    },
+    resizeFn(){
+      this.searchForm = {
+        gradeId: null,
+        classId: null
+      }
+      this.getAllClass()
     }
   },
+  computed: {
+    validClassName(){ //验证班级名称是否已存在
+      let classNameArr = this.classAllArr.filter(value =>value.className == this.addClassForm.className && value.classGradeId == this.addClassForm.classGradeId)
+      return classNameArr.length
+    }
+  },
+  created() {
+    this.getAllGrade(); //获取所有年级
+    this.gradeArr = this.$store.state.teacherModules.grade;
+    this.getAllClass(); //获取一页班级信息
+    this.getClassRoomNotUse() //获取所有没有使用过的教室
+    this.classRoomArr = this.$store.state.teacherModules.classroom;
+    this.getTotalClassData() //获取所有班级的信息
+  }
 };
 </script>
 
@@ -146,6 +242,9 @@ export default {
   .el-form-item{
     margin: 1rem;
   }
+  .tips{
+    color: #F66077;
+  }
 }
 .btnBox{
   margin-top: 3rem;
@@ -156,7 +255,7 @@ export default {
 }
 // 卡片
 .cardBox{
-  padding: 2rem;
+  padding: 1rem;
   overflow: hidden;
 }
 .el-card {

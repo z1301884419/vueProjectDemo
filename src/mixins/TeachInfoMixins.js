@@ -1,4 +1,4 @@
-import api from '../utils/api'
+import api from '../utils/eduAdmApi'
 export default {
   data() {
     return {
@@ -28,53 +28,15 @@ export default {
         message: msg
       });
     },
-    // // 获取总数据
-    // getAllData(obj) {
-    //   return api[obj.name](obj.data).then(data => {
-    //     if (data.data.code == 200) {
-    //       console.log(data);
-    //       this.searchStu = data.data.list
-    //       this.dataList = data.data.list;
-    //       this.pageSize = obj.pageSize;
-    //       return this.getOnePage;
-    //     }
-    //     // 登录失败: 返回登录失败的结果
-    //     return data.data.msg
-    //   })
-    // },
-    // // 分页
-    // Paging(nowPage) {
-    //   this.nowPage = nowPage;
-    //   return this.getOnePage;
-    // },
-    // // 获取总数据
-    // getAllData2(obj) {
-    //   return api[obj.name](obj.data).then(data => {
-    //     if (data.data.code == 200) {
-    //       this.dataList2 = data.data.list;
-    //       this.pageSize2 = obj.pageSize;
-    //       return this.getOnePage2;
-    //     }
-    //     return data.data.msg
-    //   })
-    // },
-    // // 分页
-    // Paging2(nowPage) {
-    //   this.nowPage2 = nowPage;
-    //   console.log(this.getOnePage);
-    //   return this.getOnePage2;
-    // },
-    // // 搜索的方法
-    // SearchInfoFn(obj){
-    //   this.dataList = this.searchStu.filter(item => item.baoXiuZhuangTai.indexOf(obj.status) > -1 && item.mingCheng.indexOf(obj.dorm) > -1);
-    //   return this.getOnePage
-    // },
-    // // 搜索的方法
-    // SearchStuInfoFn(obj){
-    //   this.dataList = this.searchStu.filter(item => item.xueHao.indexOf(obj) > -1 );
-    //   console.log(this.dataList);
-    //   return this.getOnePage
-    // },
+    // 获取总数据
+    getAllData(obj) {
+      return api[obj.name](obj.data).then(data => {
+        if (data.data.code == 200) {
+          return data.data.data;
+        }
+        return data.data.msg
+      })
+    },
     // 删除数据的方法
     DeleteData(obj) {
       return this.$confirm('此操作将永久删除该信息, 是否继续?', '提示', {
@@ -105,16 +67,17 @@ export default {
     //     return data.data.code
     //   })
     // },
-    // // 新增数据的方法
-    // InsertDate(obj) {
-    //   return api[obj.name](obj.data).then(data => {
-    //     console.log(data);
-    //     if (data.data.code == 200) {
-    //       this.openSuccess("提交成功", "该信息已提交成功!")
-    //     }
-    //     return data.data.code
-    //   })
-    // },
+    // 新增数据的方法
+    InsertDate(obj) {
+      console.log(obj);
+      return api[obj.name](obj.data).then(data => {
+        console.log(data);
+        if (data.data.code == 200) {
+          this.openSuccess("提交成功", "该信息已提交成功!")
+        }
+        return data.data.code
+      })
+    },
     // // 查询
     // getDiaLogData(obj) {
     //   return api[obj.name](obj.data).then(data => {

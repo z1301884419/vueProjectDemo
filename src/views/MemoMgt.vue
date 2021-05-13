@@ -5,6 +5,26 @@
       <el-button size="mini" class="successBtn">选择老师</el-button>
       <el-button size="mini" class="successBtn">发表</el-button>
     </el-card>
+    <div class="div1">
+      已发表
+    </div>
+    <el-card shadow="hover" v-for="item in tableData" :key="item.id">
+      <div class="contentCard" >
+        <p class="content">
+          <span class="contentTitle">{{ item.teacher }}({{ item.subject }}老师):</span>
+          <span>{{ item.content }}</span>
+          <el-input v-if="item.id==id" class="inputBox" type="textarea" v-model="input2"></el-input>
+          <el-button v-if="item.id==id" size="mini" class="successBtn">回复</el-button>
+        </p>
+        <div>
+          <el-button size="mini" round>删除</el-button>
+          <el-button size="mini" v-if="item.id!=id" round @click="replyClick(item.id)">回复</el-button>
+        </div>
+      </div>
+    </el-card>
+    <div class="div1">
+      已接收
+    </div>
     <el-card shadow="hover" v-for="item in tableData" :key="item.id">
       <div class="contentCard" >
         <p class="content">
@@ -74,5 +94,11 @@ export default {
       color: #16B387;
     }
   }
+}
+.div1{
+  // border: 1px solid rebeccapurple;
+  height: 40px;
+  line-height: 40px;
+  font-size: 20px;
 }
 </style>

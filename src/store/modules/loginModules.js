@@ -7,6 +7,8 @@ export default {
   namespaced: true,
   state: {
     user:getStorage("user")||{},
+    token:getStorage("token")||"",
+    userShenfen:getStorage('shenfen')||"",
   },
   actions: {
     LoginAction(context,obj){
@@ -16,6 +18,10 @@ export default {
         if(data.data.code==200){
           console.log(data);
           setStorage('user',data.data.data.o)
+          setStorage('token',data.data.data.token)
+          setStorage('shenfen',"学生")
+
+          
         }
         return data.data.code
       })

@@ -53,7 +53,7 @@
             </el-badge>
           </div>
           <router-link :to="{ path: '/Home/PersonalCenter' }">
-            <el-avatar  class="headerSpan" :size='50' :src="user"></el-avatar>
+            <el-avatar  class="headerSpan" :size='50' ><img :src='user' alt=""></el-avatar>
             <!-- :src="{{user.parentImg}}" -->
           </router-link>
           <div class="exitBox" @click="tuichu">
@@ -399,6 +399,9 @@ body > .el-container {
     margin: 0 10px;
     font-size: 3rem;
   }
+}
+.el-avatar>img{
+  width: 100%;
 }
 .headerSpan {
   cursor: pointer;

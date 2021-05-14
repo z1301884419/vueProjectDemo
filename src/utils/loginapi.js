@@ -4,7 +4,7 @@ export default {
     
     // 登录
     LOGIN_API: data=>http({
-      url: '/login',
+      url: '/loginOrRegist/login',
       method: 'post',
       data: data
     }),

@@ -7,6 +7,7 @@ export default {
     subject: [],
     grade: [],
     classroom: [],
+    headerTeacher: [],
   },
   actions: {
     // 获取所有数据
@@ -17,7 +18,6 @@ export default {
           console.log(data.data.data);
           context.commit('subjectMutations', data.data.data)
         }
-        // 登录失败: 返回登录失败的结果
         return data.data.code
       })
     },
@@ -28,18 +28,26 @@ export default {
           console.log(data.data.data);
           context.commit('gradeMutations', data.data.data)
         }
-        // 登录失败: 返回登录失败的结果
         return data.data.code
       })
     },
     SearchAllClassRoomAction(context, obj) {
       // 发起请求，接收响应结果
       return api[obj.name](obj.data).then(data => {
+        console.log(22222,data);
         if (data.data.code == 200) {
           console.log(data.data.data);
           context.commit('classRoomMutations', data.data.data)
         }
-        // 登录失败: 返回登录失败的结果
+        return data.data.code
+      })
+    },
+    SearchAllHearchTeacherAction(context, obj) {
+      return api[obj.name](obj.data).then(data => {
+        if (data.data.code == 200) {
+          console.log(111111,data.data.data);
+          context.commit('headerTeacherMutations', data.data.data)
+        }
         return data.data.code
       })
     }
@@ -52,7 +60,10 @@ export default {
       state.grade = payload;
     },
     classRoomMutations(state, payload) {
-      state.classroom = payload
+      state.classroom = payload;
+    },
+    headerTeacherMutations(state, payload) {
+      state.headerTeacher = payload;
     }
   }
 }

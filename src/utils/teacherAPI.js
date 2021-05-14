@@ -10,6 +10,18 @@ export default {
     method: 'post',
     data: data
   }),
+  STAFF_DELETE: data => http({  // 删除教师
+    url: STAFF_DELETE,
+    method: 'post',
+    data: data
+  }),
+  STAFF_UPDATE: data => http({  // 修改教师
+    url: STAFF_UPDATE,
+    method: 'post',
+    data: data
+  }),
 }
 const STAFF_SELECT = '/staff/select';
 const STAFF_ADD = '/staff/add';
+const STAFF_DELETE = '/staff/delete';
+const STAFF_UPDATE = '/staff/selfInfo/update';

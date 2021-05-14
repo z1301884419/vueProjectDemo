@@ -36,13 +36,12 @@
       <el-table-column prop="staffDesc" label="教师描述" align="center"></el-table-column>
       <el-table-column prop="staffAge" label="教师年龄" align="center" width="100px"></el-table-column>
       <el-table-column prop="staffPhone" label="电话" align="center"></el-table-column>
-      <el-table-column prop="staffStatus" label="教师身份" align="center"></el-table-column>
+      <el-table-column prop="roleId" label="教师身份" align="center"></el-table-column>
       <el-table-column prop="staffEntryTime" label="入职时间" align="center"></el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-button class="editBtn" icon="el-icon-edit" circle  @click="modifyDialogShow(scope.row)"></el-button>
           <el-button class="deleteBtn" type="danger" icon="el-icon-delete" circle @click="deleteTeacherRequest(scope.row)"></el-button>
-          <el-button class="searchBtn" type="info" icon="el-icon-search" circle></el-button>
         </template>
         
       </el-table-column>
@@ -67,10 +66,10 @@
           <el-input v-model.number="addTeachForm.staffAge"></el-input>
         </el-form-item>
         <el-form-item label="入职日期" prop="staffEntryTime">
-          <el-date-picker placeholder="选择日期" v-model="addTeachForm.staffEntryTime" style="width: 100%;"></el-date-picker>
+          <el-date-picker v-model="addTeachForm.staffEntryTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期" style="width: 100%;"></el-date-picker>
         </el-form-item>
         <el-form-item label="科目" prop="subjectId">
-          <el-select v-model="addTeachForm.subjectId" placeholder="请选择科目">
+          <el-select v-model="addTeachForm.subjectId" placeholder="请选择科目" style="width: 100%;">
             <el-option v-for="item in subjectArr.subject" :key="item.subjectId" :label="item.subjectName" :value="item.subjectId"></el-option>
           </el-select>
         </el-form-item>
@@ -81,40 +80,12 @@
           <el-button @click="addTeacher = false">取 消</el-button>
           <el-button class="successBtn" @click="addTeacherRequest('addTeachForm')">确 定</el-button>
         </el-form-item>
-    </el-form>
-
-      <!-- <el-form :model="addTeachForm" :rules="addTeachrules" ref="addTeachForm" label-width="80px" class="demo-ruleForm">
-        <el-form-item label="姓名" prop="staffName">
-          <el-input v-model="addTeachForm.staffName"></el-input>
-        </el-form-item>
-        <el-form-item label="电话" prop="staffPhone">
-          <el-input v-model="addTeachForm.staffPhone"></el-input>
-        </el-form-item>
-        <el-form-item label="年龄" prop="staffAge">
-          <el-input v-model.number="addTeachForm.staffAge"></el-input>
-        </el-form-item>
-        <el-form-item label="入职日期" prop="staffEntryTime">
-          <el-date-picker placeholder="选择日期" v-model="addTeachForm.staffEntryTime" style="width: 100%;"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="科目" prop="subjectId">
-          <el-select v-model="addTeachForm.subjectId" placeholder="请选择科目">
-            <el-option v-for="item in subjectArr.subject" :key="item.subjectId" :label="item.subjectName" :value="item.subjectId"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="教师描述" prop="staffDesc">
-          <el-input type="textarea" v-model="addTeachForm.staffDesc"></el-input>
-        </el-form-item>
-        <el-form-item class="btnBox">
-          <el-button @click="addTeacher = false">取 消</el-button>
-          <el-button class="successBtn" @click="addTeacherRequest('addTeachForm')">确 定</el-button>
-        </el-form-item>
-      </el-form> -->
-
+      </el-form>
     </el-dialog>
 
     <!-- 编辑老师的模态框 -->
-    <!-- <el-dialog title="修改教师信息" :visible.sync="editTeacher" width="33%">
-      <el-form :model="editTeachForm" :rules="addTeachrules" ref="addTeachForm" label-width="80px" class="demo-ruleForm">
+    <el-dialog title="修改教师信息" :visible.sync="editTeacher" width="33%">
+      <el-form :model="editTeachForm" :rules="addTeachrules" ref="editTeachForm" label-width="80px" class="demo-ruleForm">
         <el-form-item label="姓名" prop="staffName">
           <el-input v-model="editTeachForm.staffName"></el-input>
         </el-form-item>
@@ -124,14 +95,6 @@
         <el-form-item label="年龄" prop="staffAge">
           <el-input v-model.number="editTeachForm.staffAge"></el-input>
         </el-form-item>
-        <el-form-item label="入职日期" prop="staffEntryTime">
-          <el-date-picker placeholder="选择时间" v-model="editTeachForm.staffEntryTime" style="width: 100%;"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="科目" prop="subjectId">
-          <el-select v-model="editTeachForm.subjectId" placeholder="请选择科目">
-            <el-option v-for="item in subjectArr.subject" :key="item.subjectId" :label="item.subjectName" :value="item.subjectId"></el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item label="教师描述" prop="staffDesc">
           <el-input type="textarea" v-model="editTeachForm.staffDesc"></el-input>
         </el-form-item>
@@ -140,7 +103,7 @@
           <el-button class="successBtn" @click="modifyTeacherRequest('editTeachForm')">确 定</el-button>
         </el-form-item>
       </el-form>
-    </el-dialog> -->
+    </el-dialog>
 
   </div>
 </template>
@@ -163,7 +126,7 @@ export default {
     }
     return {
       tableData: [], //总数据
-      pageSize: 10, //一页显示多少条
+      pageSize: 8, //一页显示多少条
       totalLength: 20, //一共有多少条数据
       page: 1,
       searchForm: {
@@ -177,7 +140,8 @@ export default {
         staffAge: '',
         subjectId: '',
         staffDesc: '',
-        staffEntryTime: ''
+        staffEntryTime: '',
+        staffStatus: 0
       },
       subjectArr:[],
       editTeacher: false, //控制修改老师的弹框显示隐藏
@@ -185,9 +149,7 @@ export default {
         staffName: '',
         staffPhone: '',
         staffAge: '',
-        subjectId: null,
         staffDesc: '',
-        staffEntryTime: null
       },
       addTeachrules: {
         staffName: [
@@ -208,7 +170,7 @@ export default {
           { required: true, message: '请填写教师描述', trigger: 'blur' }
         ],
         staffEntryTime: [
-          { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+          { required: true, message: '请选择日期', trigger: 'change' }
         ],
       },
       delTeacher: false, //控制删除老师的弹框显示隐藏
@@ -218,7 +180,8 @@ export default {
   methods: {
     ...mapActions(["teacherModules/SearchAllDataAction"]),
     handleCurrentChange(val) { // 获取页码
-      console.log(`当前页: ${val}`);
+      this.page = val;
+      this.getAllTeacher();
     },
     validInfo(formName, successCallback, errorCallback){ //验证的方法封装
       this.$refs[formName].validate(valid => {
@@ -237,31 +200,44 @@ export default {
       this.validInfo(formName, ()=>{
         // 验证成功需要穿过去的回调函数
         // 在这里写请求
-        console.log(this.addTeachForm);
-        // this.InsertDate({
-        //   name: 'STAFF_ADD',
-        //   data: this.addTeachForm
-        // })
-        this.addTeacher = false; // 请求之后关闭弹框
-        this.$refs[formName].resetFields(); //清空输入框里的内容
-        this.openSuccess("成功", "该教师已成功添加!"); //添加成功以后的弹框
+        this.InsertDate({
+          name: 'STAFF_ADD',
+          data: this.addTeachForm
+        }).then(data=> {
+          console.log(data);
+          this.getAllTeacher();
+          this.addTeacher = false; // 请求之后关闭弹框
+          this.$refs[formName].resetFields(); //清空输入框里的内容
+          this.openSuccess("成功", "该教师已成功添加!"); //添加成功以后的弹框
+        })
+        
       }, ()=>{
         // 验证失败传过去的回调函数
         this.openError("错误", "您的消息填写有误，未能提交!"); //添加失败以后的弹框
       })
     },
     modifyDialogShow(row){ //打开修改教师数据的弹框
-      console.log(row);
       this.editTeacher = true;
+      this.editTeachForm = {
+        staffName: row.staffName,
+        staffPhone: row.staffPhone,
+        staffAge: row.staffAge,
+        staffDesc: row.staffDesc,
+        staffId: row.staffId
+      }
     },
     modifyTeacherRequest(formName){ //修改教师数据
       this.validInfo(formName, ()=>{
         // 验证成功需要穿过去的回调函数
         // 在这里写请求
-        console.log(this.editTeachForm);
-        this.editTeacher = false; // 请求之后关闭弹框
-        this.$refs[formName].resetFields(); //清空输入框里的内容
-        this.openSuccess("成功", "该教师信息已成功修改添加!"); //添加成功以后的弹框
+        this.ModifyDate({
+          name: 'STAFF_UPDATE',
+          data: this.editTeachForm
+        }).then(data=>{
+          console.log(data);
+          this.editTeacher = false; // 请求之后关闭弹框
+          this.getAllTeacher()
+        })
       }, ()=>{
         // 验证失败传过去的回调函数
         this.openError("错误", "您的消息填写有误，未能提交!"); //添加失败以后的弹框
@@ -270,7 +246,15 @@ export default {
     deleteTeacherRequest(row){ //删除教师信息的请求
       console.log(row);
       // 调用删除的方法，需要参数
-      this.DeleteData();
+      this.DeleteData({
+        name: "STAFF_DELETE",
+        data: {staffIds: [row.staffId]}
+      }).then(data=>{
+        console.log(data);
+        if(data === 200){
+          this.getAllTeacher();
+        }
+      });
     },
     searchFn(){ //搜索的方法
       console.log(this.searchForm);
@@ -288,7 +272,7 @@ export default {
         console.log(data);
       })
     },
-    getAllTeacher(){
+    getAllTeacher(){ //查询第一页教师
       this.getAllDataT({
         name: 'STAFF_SELECT',
         data: {
@@ -296,10 +280,9 @@ export default {
           limit: this.pageSize
         }
       }).then(data => {
-        data.map(item=> item.staffStatus = item.staffStatus == 1 ? '班主任' : '任课教师');
-        this.tableData = data;
-        console.log(data);
-        this.totalLength = data.length;
+        data.data.map(item=> item.roleId = item.roleId == 3 ? '班主任' : '任课教师');
+        this.tableData = data.data;
+        this.totalLength = data.count;
       })
     }
     
@@ -307,11 +290,9 @@ export default {
     
   },
   created(){
-    this.getAllSubject();
-    // 科目信息
-    this.subjectArr = this.$store.state.teacherModules;
-    this.getAllTeacher();
-    
+    this.getAllSubject(); //获取所有学科
+    this.subjectArr = this.$store.state.teacherModules;  // 科目信息
+    this.getAllTeacher(); //获取当前页的老师
   }
 };
 </script>

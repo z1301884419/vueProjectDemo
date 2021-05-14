@@ -35,6 +35,11 @@ export default {
     method: 'post',
     data: data
   }),
+  SELECT_HEADERTEACHER: data => http({ // 查询不是班主任的老师
+    url: SELECT_HEADERTEACHER,
+    method: 'post',
+    data: data
+  }),
 }
 const SUBJECT_ALL = 'subject/all';
 const CLASS_ALL = '/clazz/selectAll';
@@ -43,3 +48,4 @@ const CLASS_SELECTBYCONDITION = '/clazz/selectAll';
 const CLASSROOM_NOTUSE= '/classroom/notUse';
 const CLASS_TOTALDATA= '/clazz/all';
 const CLASS_ADD= '/clazz/add';
+const SELECT_HEADERTEACHER= '/staff/headTeacher';

@@ -10,7 +10,8 @@ export default {
     getAllDataT(obj) {
       return api[obj.name](obj.data).then(data => {
         if (data.data.code == 200) {
-          return data.data.data;
+          console.log(data.data);
+          return {data:data.data.data, count: data.data.count};
         }
         return data.data.msg
       })
@@ -22,7 +23,9 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        console.log(123,obj);
         return api[obj.name](obj.data).then(data => {
+          console.log(12333,data);
           if (data.data.code == 200) {
             this.openSuccess('删除成功', '该数据已成功移出!');
             return 200
@@ -35,16 +38,16 @@ export default {
         this.openInfo('提示', "操作已取消!");
       });
     },
-    // // 修改数据的方法
-    // ModifyDate(obj) {
-    //   return api[obj.name](obj.data).then(data => {
-    //     console.log(data);
-    //     if (data.data.code == 200) {
-    //       this.openSuccess("修改成功", "该信息已修改成功!")
-    //     }
-    //     return data.data.code
-    //   })
-    // },
+    // 修改数据的方法
+    ModifyDate(obj) {
+      return api[obj.name](obj.data).then(data => {
+        console.log(data);
+        if (data.data.code == 200) {
+          this.openSuccess("修改成功", "该信息已修改成功!")
+        }
+        return data.data.code
+      })
+    },
     // 新增数据的方法
     InsertDate(obj) {
       console.log(obj);
@@ -66,24 +69,6 @@ export default {
     //     return data.data.msg
     //   })
     // },
-    // GetDateTimeToString() {
-    //   let date_ = new Date();
-    //   let year = date_.getFullYear();
-    //   let month = date_.getMonth() + 1;
-    //   let day = date_.getDate();
-    //   if (month < 10) month = "0" + month;
-    //   if (day < 10) day = "0" + day;
-
-    //   let hours = date_.getHours();
-    //   let mins = date_.getMinutes();
-    //   let secs = date_.getSeconds();
-    //   let msecs = date_.getMilliseconds();
-    //   if (hours < 10) hours = "0" + hours;
-    //   if (mins < 10) mins = "0" + mins;
-    //   if (secs < 10) secs = "0" + secs;
-    //   if (msecs < 10) secs = "0" + msecs;
-    //   return year + "-" + month + "-" + day + " " + hours + ":" + mins + ":" + secs;
-    // }
   },
   computed: {
     // 显示一页数据

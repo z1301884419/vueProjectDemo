@@ -51,12 +51,12 @@
     <el-dialog title="添加班级" :visible.sync="addClass" width="33%">
       <el-form :model="addClassForm" label-width="80px" class="demo-ruleForm">
         <el-form-item label="教室">
-          <el-select v-model="addClassForm.classClassroomId" placeholder="请选择教室" @change="changeClassRequest">
+          <el-select v-model="addClassForm.classClassroomId" placeholder="请选择教室" @change="changeClassRequest" style="width: 100%;">
             <el-option v-for="item in classRoomArr" :key="item.classroomId" :label="item.classroomName" :value="item.classroomId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="年级">
-          <el-select v-model="addClassForm.classGradeId" placeholder="请选择年级" @change="changeClassRequest">
+          <el-select v-model="addClassForm.classGradeId" placeholder="请选择年级" @change="changeClassRequest" style="width: 100%;">
             <el-option v-for="item in gradeArr" :key="item.gradeId" :label="item.gradeName" :value="item.gradeId"></el-option>
           </el-select>
         </el-form-item>
@@ -70,6 +70,23 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+
+    <!-- 分配班主任的弹框 -->
+    <!-- <el-dialog title="添加班级" :visible.sync="addClass" width="33%">
+      <el-form :model="addClassForm" label-width="80px" class="demo-ruleForm">
+        <el-form-item label="教师">
+          <el-select v-model="addClassForm.classClassroomId" placeholder="请选择教师" @change="changeClassRequest" style="width: 100%;">
+            <el-option v-for="item in headerteacherArr" :key="item.classroomId" :label="item.classroomName" :value="item.classroomId"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item class="btnBox">
+          <el-button @click="addClass = false">取 消</el-button>
+          <el-button class="successBtn" @click="addClassRequest">确 定</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog> -->
+    <!-- 调换班主任的弹框 -->
+
   </div>
 </template>
 <script>
@@ -97,12 +114,14 @@ export default {
       classArr: [], //班级
       classRoomArr: [], //空教室
       classAllArr: [], //所有班级
+      headerteacherArr: [], //所有非班主任老师
     };
   },
   mixins: [TeachInfoMixins, TeacherMixins], //使用mixins里的模块
   methods: {
     ...mapActions(["teacherModules/SearchAllGradeAction"]),
     ...mapActions(["teacherModules/SearchAllClassRoomAction"]),
+    ...mapActions(["teacherModules/SearchAllHearchTeacherAction"]),
     getAllClass(){ //获取一页班级
       this.getAllData({
         name: 'CLASS_ALL',
@@ -173,6 +192,13 @@ export default {
         console.log(data);
       })
     },
+    getHeaderTeacher(){  //获取没有当班主任的老师
+      this["teacherModules/SearchAllHearchTeacherAction"]({
+        name: 'SELECT_HEADERTEACHER'
+      }).then(data => {
+        console.log(data);
+      })
+    },
     searchInfo(){
       console.log(this.searchForm);
     },
@@ -197,6 +223,8 @@ export default {
     this.getClassRoomNotUse() //获取所有没有使用过的教室
     this.classRoomArr = this.$store.state.teacherModules.classroom;
     this.getTotalClassData() //获取所有班级的信息
+    this.getHeaderTeacher() //获取所有不是班主任的老师
+    this.headerteacherArr = this.$store.state.teacherModules.classroom;
   }
 };
 </script>

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 Vue.use(Vuex)
-import yy_request from '@/utils/request/yy_request'
+import yy_request from '@/utils/yy_request'
 export default{
   namespaced:true,
   state: {

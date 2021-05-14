@@ -1,5 +1,5 @@
 //从yy_api导入接口
-import *as yy_api from '../api/yy_api'
+import *as yy_api from '../utils/yy_api'
 /*//从request导入二次封装的axios请求
 import yy_axios from '../request'*/
 import axios from 'axios'

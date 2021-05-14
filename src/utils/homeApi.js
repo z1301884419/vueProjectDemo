@@ -15,5 +15,5 @@ export default{
   }),
 }
 
-const SELECTSIGNIN = '/attendance/get/status'//查询打卡状态
-const ADDSIGNIN = '/attendance/add/attendance'//新增打卡
+const SELECTSIGNIN = 'student/attendance/get/status'//查询打卡状态
+const ADDSIGNIN = 'student/attendance/add/attendance'//新增打卡

@@ -7,7 +7,7 @@ const http=axios.create({
 })
 http.interceptors.request.use(req=>{
   let token=getStorage("token")
-  if(token) req.headers['Authorization'] = `Bearer ${token}`
+  if(token) req.headers['Authorization'] = token
   return req
 })
 http.interceptors.response.use(resp=>{

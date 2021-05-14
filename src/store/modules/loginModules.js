@@ -17,6 +17,7 @@ export default {
         console.log(data);
         if(data.data.code==200){
           console.log(data);
+          console.log(data.data.data.token);
           setStorage('user',data.data.data.o)
           setStorage('token',data.data.data.token)
           setStorage('shenfen',data.data.data.role.roleName)

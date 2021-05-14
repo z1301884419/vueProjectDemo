@@ -44,13 +44,9 @@
         <!--学号-->
         <yy_FilterByInput :filterData="{data:AllStuXiangData,text:'请输入学号',filterProperty:'student_number'}"
                           @filteredData="filteredByXuehaoFn"/>
-        <!--班级-->
-        <yy_FilterBySelect :filterData="{
-        optionData:{label:'class_name',value:'class_id',data:[{class_id:'1',class_name:'高一一班'},{class_id:'2',class_name:'高一二班'},{class_id:'3',class_name:'高一三班'}]},
-        data:AllStuXiangData,
-        text:'请选择班级',
-        filterProperty:'class_id'
-        }" @filteredData="filteredByClassFn"/>
+
+        <!--联级班级选择-->
+        <yy_FilterByClass/>
         <!--姓名-->
         <yy_FilterByInput :filterData="{data:AllStuXiangData,text:'请输入姓名',filterProperty:'student_name'}"
                           @filteredData="filteredByNameFn"/>
@@ -92,6 +88,7 @@
 
   import yy_FilterBySelect from '@/components/yy_FilterBySelect'
   import yy_FilterByInput from '@/components/yy_FilterByInput'
+  import yy_FilterByClass from '@/components/yy_FilterByClass'
 
   import yy_FilterByBirthday from '@/components/yy_FilterByBirthday'
   import yy_StudentInfoTable from '@/components/yy_StudentInfoTable'
@@ -103,6 +100,7 @@
     components:{
       yy_FilterBySelect,
       yy_FilterByInput,
+      yy_FilterByClass,
       yy_FilterByBirthday,
       yy_StudentInfoTable,
       yy_AddOrSetStudentDialog,
@@ -116,6 +114,7 @@
         filteredByDescData:[],//通过备注筛选出的数据
         filteredByXuehaoData:[],//通过学号筛选出的数据
         filteredByClassData:[],//通过班级筛选出的数据
+        checkedClass: [],//联级菜单选的班级
       }
     },
     computed:{
@@ -139,8 +138,39 @@
           return v
         })
       },
+
+      // //生成新的联级班级选择
+      // newClassList(){
+      //   //生成新的班级列表
+      //   let newClassArr = [];
+      //   this.AllClass.map(v=>{
+      //     newClassArr.push({value:v.classGradeId,label:v.gradeName,children:[]})
+      //     return
+      //   })
+      //   newClassArr = newClassArr.map((v)=>{
+      //     return JSON.stringify(v)
+      //   })
+      //   newClassArr =[...new Set(newClassArr)]
+      //   newClassArr = newClassArr.map(v=>{
+      //     return JSON.parse(v)
+      //   })
+      //   //生成新的年级列表结束
+      //   //根据年级取该年纪的班级列表
+      //   this.AllClass.forEach(v=>{
+      //     newClassArr.forEach((vG,vI)=>{
+      //       if(v.classGradeId==vG.value){
+      //         newClassArr[vI].children.push({value:v.classId,label:v.className})
+      //       }
+      //     })
+      //   })
+      //   //根据年级取该年纪的班级列表结束
+      //   return newClassArr
+      // }
     },
     created() {
+      // this.getAllClass()//获取待所有班级
+      // console.log(this.AllClass);
+
       if(this.AllStuXiangData.length==0){
         this.getAllStuXiangData().then(()=>{
           this.renderData = this.newStuData//初始化表格数据
@@ -174,10 +204,10 @@
         this.filterFn()
       },
       //筛选班级
-      filteredByClassFn(data){
-        this.filteredByClassData = data
-        this.filterFn()
-      },
+      // selectClass(value) {
+      //   console.log(value);
+      //   console.log(value[1]);//班级id
+      // },
       //筛选出生日期
       filteredByBirthdayFn(data){
         this.filteredByXuehaoData = data

@@ -19,10 +19,10 @@ export default {
           console.log(data);
           setStorage('user',data.data.data.o)
           setStorage('token',data.data.data.token)
-          setStorage('shenfen',"学生")
+          setStorage('shenfen',data.data.data.role.roleName)
           context.commit('mutationsLogin',data.data.data.o)
           context.commit('mutationsSetToKen',data.data.data.token)
-          context.commit('mutationsSetShenFen','学生') 
+          context.commit('mutationsSetShenFen',data.data.data.role.roleName) 
         }
         return data.data.code
       })

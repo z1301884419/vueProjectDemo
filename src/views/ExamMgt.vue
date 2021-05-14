@@ -31,7 +31,7 @@
     </div>
     <!-- 表格 -->
     <div class="examTable">
-      <el-table :data="tableData" style="width: 100%">
+      <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#D4EDF9',color:'rgb(54, 53, 53)'}">
         <el-table-column prop="id" label="考试编号" align="center">
         </el-table-column>
         <el-table-column prop="type" label="考试类型" align="center">
@@ -248,6 +248,7 @@ export default {
   padding-left: 1rem;
   line-height: 3;
   font-size: 1.6rem;
+  // color: rgb(54, 53, 53);
 }
 // 搜索栏：
 .searchBox {

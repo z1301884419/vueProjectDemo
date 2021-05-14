@@ -1,6 +1,10 @@
 <template>
   <el-container>
-    <el-aside class="asideLeft" width="280px" :style="{ height: getAsideHeight }">
+    <el-aside
+      class="asideLeft"
+      width="280px"
+      :style="{ height: getAsideHeight }"
+    >
       <div class="asideTitle">
         <div><img src="../assets/img/logo.png" alt="" /></div>
         <p>家校通后台管理</p>
@@ -38,10 +42,20 @@
     <el-container>
       <el-header height="80px">
         <!-- 签到 -->
-        <div class="signInBox">
-          <h3 class="signInError signInBtn" v-if="signInFlag&&$store.state.loginModules.userShenfen=='学生'" @click='signInFn'><i class="el-icon-alarm-clock"></i> 签到</h3>
-          <h3 class="signInSuccess" v-else-if="!signInFlag&&$store.state.loginModules.userShenfen=='学生'"><i class="el-icon-check signInSuccess"></i>已签到</h3>
-          <!-- <p><i class="el-icon-location-information"></i>位置信息:<span>四川省成都市武侯区桂溪街道云华路国家西部信息安全产业基地</span></p> -->
+        <div
+          class="signInBox"
+          v-if="$store.state.loginModules.userShenfen == '学生'"
+        >
+          <h3 class="signInBtn" v-if="signInFlag" @click="signInFn">
+            <i class="el-icon-alarm-clock"></i>上课打卡
+          </h3>
+          <h3 v-else @click="signOutFn">
+            <i class="el-icon-alarm-clock"></i>下课打卡
+          </h3>
+          <p>
+            <i class="el-icon-location-information"></i>状态:{{ signInText
+            }}<span></span>
+          </p>
         </div>
         <div class="userBox">
           <div class="messageBox">
@@ -53,7 +67,9 @@
             </el-badge>
           </div>
           <router-link :to="{ path: '/Home/PersonalCenter' }">
-            <el-avatar  class="headerSpan" :size='50' ><img :src='user' alt=""></el-avatar>
+            <el-avatar class="headerSpan" :size="50"
+              ><img :src="user" alt=""
+            /></el-avatar>
             <!-- :src="{{user.parentImg}}" -->
           </router-link>
           <div class="exitBox" @click="tuichu">
@@ -71,10 +87,11 @@
 </template>
 <script>
 import { mapMutations } from "vuex";
+import homeMixins from "../mixins/homeMixins";
 export default {
   data() {
     return {
-      user:this.$store.state.loginModules.user.parentImg,
+      user: this.$store.state.loginModules.user.parentImg,
       bodyHeight: window.innerHeight,
       currentIndex: 0,
       navList: [
@@ -182,21 +199,23 @@ export default {
           index: "6",
           name: "教室管理",
           path: "/Home/ClassRoomMgt",
-          icon: "el-icon-dish",
-          children: '',
+          icon: "iconfont icon-jiaoshiguanli1",
+          children: "",
         },
         {
           id: 7,
           index: "7",
           name: "关键字管理",
           path: "/Home/AddMemoMgt",
-          icon: "el-icon-dish",
+          icon: "iconfont icon-minganguanjianzi",
           children: "",
         },
       ],
-      signInFlag:true,
+      signInFlag: false,
+      signInText: "",
     };
   },
+  mixins: [homeMixins],
   methods: {
     ...mapMutations(["loginModules/mutationsLoginOut"]),
     // 退出登录
@@ -213,7 +232,7 @@ export default {
             offset: 100,
           });
           this["loginModules/mutationsLoginOut"]();
-          this.$router.push("/Login")
+          this.$router.push("/Login");
         })
         .catch(() => {
           this.$message({
@@ -233,11 +252,64 @@ export default {
     handleClose(key, keyPath) {
       console.log(key, keyPath);
     },
+    // 页面加载查询状态
+    selectSignIn() {
+      this.seletcSignInStatus({
+        name: "SELECTSIGNIN",
+        data: {
+          studentNum: this.$store.state.loginModules.user.studentNumber,
+        },
+      }).then((data) => {
+        console.log(data);
+        if (data.code == 200) {
+          let h = parseInt(
+            data.data.attendabnceUpdateTime.split(" ")[1].split(":")[0]
+          );
+          this.signInFlag = h < 12 ? true : false; //true是上课打卡，false下课打卡
+          // data.data.attendabnceAmStatus==2?'代签到':data.data.attendabnceAmStatus==0?''
+          if (this.signInFlag) {
+            if (data.data.attendabnceAmStatus == 2) {
+              this.signInText = "待签到";
+            } else if (data.data.attendabnceAmStatus == 0) {
+              this.signInText = "已签到";
+            } else if (data.data.attendabnceAmStatus == 1) {
+              this.signInText = "已迟到";
+            } else {
+              this.signInText = "无";
+            }
+          } else {
+            if (data.data.attendabncePmStatus == 2) {
+              this.signInText = "待签退";
+            } else if (data.data.attendabncePmStatus == 0) {
+              this.signInText = "已签退";
+            } else if (data.data.attendabncePmStatus == 3) {
+              this.signInText = "早退打卡";
+            } else {
+              this.signInText = "无";
+            }
+          }
+        }
+      });
+    },
     // 签到
-    signInFn(){
-      this.signInFlag=false;
-      // console.log(this.user);
-    }
+    signInFn() {},
+    // 签退
+    signOutFn() {
+      this.addSignInStatus({
+        name: "ADDSIGNIN",
+        data: {
+          studentNum: this.$store.state.loginModules.user.studentNumber,
+        },
+      }).then((data) => {
+        console.log(data);
+        this.$message({
+          message: data,
+          type: "success",
+        });
+        this.signInText = "已签退";
+      });
+    },
+    // 日期比大小
   },
   computed: {
     getAsideHeight() {
@@ -248,14 +320,10 @@ export default {
     window.onresize = () => {
       this.bodyHeight = window.innerHeight;
     };
-    
   },
-  created(){
-    console.log(this.user);
-    console.log(this.$store.state.loginModules.userShenfen);
-    console.log(this.$store.state.loginModules.userShenfen=='学生');
-    console.log(!this.signInFlag&&this.$store.state.loginModules.userShenfen=='学生');
-  }
+  created() {
+    this.selectSignIn();
+  },
 };
 </script>
 <style lang="less" scoped>
@@ -348,27 +416,28 @@ body > .el-container {
   }
 }
 // 签到
-.signInBox{
+.signInBox {
   width: 50%;
   // border: 1px solid greenyellow;
   display: flex;
   font-size: 1.8rem;
-  h3{
+  h3 {
     margin-left: 3rem;
     cursor: pointer;
     border: 1px solid red;
+    user-select: none;
   }
-  p{
+  p {
     margin: 0 3rem;
     color: gray;
   }
 }
 // 签到成功
-.signInSuccess{
+.signInSuccess {
   color: #f66077;
 }
 // 未签到或失败
-.signInError{
+.signInError {
   color: #228ab9;
 }
 // header-----user
@@ -381,9 +450,9 @@ body > .el-container {
   padding-left: 10px;
   box-sizing: border-box;
   // border: 1px solid red;
-  a{
+  a {
     line-height: 80px;
-    span{
+    span {
       margin-top: 20px;
     }
   }
@@ -400,15 +469,15 @@ body > .el-container {
     font-size: 3rem;
   }
 }
-.el-avatar>img{
+.el-avatar > img {
   width: 100%;
 }
 .headerSpan {
   cursor: pointer;
   margin: 0 10px;
 }
-/deep/.el-badge__content.is-fixed{
-  top:25px;
+/deep/.el-badge__content.is-fixed {
+  top: 25px;
   right: 25px;
 }
 // 内容
@@ -423,8 +492,6 @@ body > .el-container {
 .el-main {
   padding: 0;
 }
-
-
 
 .asideLeft::-webkit-scrollbar {
   width: 6px;

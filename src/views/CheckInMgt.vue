@@ -42,25 +42,30 @@
     <div class="mainbox">
       <!-- 表格 -->
       <div class="checkInTable">
-        <el-table :data="checkInTableData" style="width: 100%">
-          <el-table-column prop="id" label="学生id" align="center" width="100">
+        <el-table :data="checkInTableData" style="width: 100%" :header-cell-style="{background:'#D4EDF9',color:'#000'}">
+          <el-table-column
+            prop="student.studentId"
+            label="学生id"
+            align="center"
+            width="100"
+          >
           </el-table-column>
           <el-table-column
-            prop="name"
+            prop="student.studentName"
             label="学生姓名"
             align="center"
             width="150"
           >
           </el-table-column>
           <el-table-column
-            prop="startTime"
+            prop="attendabnceAmTime"
             label="上学打卡时间"
             align="center"
             width="250"
           >
           </el-table-column>
           <el-table-column
-            prop="endTime"
+            prop="attendabncePmTime"
             label="放学打卡时间"
             align="center"
             width="300"
@@ -78,6 +83,15 @@
             </template>
           </el-table-column>
         </el-table>
+        <div class="block pageBox">
+          <el-pagination
+            layout="prev, pager, next"
+            :total="pageTotal"
+            :page-size="pageSize"
+            @current-change="changePage"
+          >
+          </el-pagination>
+        </div>
       </div>
       <!-- 图表 -->
       <div
@@ -93,9 +107,10 @@ import examMixins from "../mixins/examMixins";
 export default {
   data() {
     return {
-      selectStuName: "",
+      selectStuName: "", //查询的数据类型
       selectAbsenceList: [], //查询的考勤年级
       pickerCheckInDate: {
+        //日期选择器
         disabledDate(time) {
           return time.getTime() > Date.now();
         },
@@ -124,46 +139,12 @@ export default {
           },
         ],
       },
-      CheckInDateStart: "",
-      CheckInDateEnd: "",
-      checkInTableData: [
-        {
-          id: 1,
-          name: "大大",
-          startTime: "2021年5月12日 8:30",
-          endTime: "2021年5月12日 18:00",
-        },
-        {
-          id: 2,
-          name: "小小",
-          startTime: "2021年5月12日 8:30",
-          endTime: "2021年5月12日 18:00",
-        },
-        {
-          id: 3,
-          name: "喜洋洋",
-          startTime: "2021年5月12日 8:30",
-          endTime: "2021年5月12日 18:00",
-        },
-        {
-          id: 4,
-          name: "美羊羊",
-          startTime: "2021年5月12日 8:30",
-          endTime: "2021年5月12日 18:00",
-        },
-        {
-          id: 5,
-          name: "懒洋洋",
-          startTime: "2021年5月12日 8:30",
-          endTime: "2021年5月12日 18:00",
-        },
-        {
-          id: 6,
-          name: "灰太狼",
-          startTime: "2021年5月12日 8:30",
-          endTime: "2021年5月12日 18:00",
-        },
-      ],
+      CheckInDateStart: "", //开始日期
+      CheckInDateEnd: "", //查询结束日期
+      checkInTableData: [], //表格数据
+      pageTotal: 20,//表格页码----最大条数
+      pageSize: 8,//表格页码----一页显示多少条
+      nowPage: 1,//表格页码----当前页
     };
   },
   mixins: [examMixins],
@@ -200,35 +181,28 @@ export default {
       };
       myChart.setOption(option);
     },
+    // 点击页码切换当前页
+    changePage(val) {
+      this.nowPage = val;
+      this.getAttendanceDataFn();
+    },
     // 获取考勤信息
     getAttendanceDataFn() {
       this.selectAllData({
         name: "ATTENDANCEALL",
-        data: {},
+        data: {
+          page: this.nowPage,
+          limit: this.pageSize,
+        },
       }).then((data) => {
         console.log(data);
+        if (data.code == 200) {
+          this.checkInTableData = data.data;
+          this.pageTotal = data.count;
+        }
       });
     },
-    GetDateTimeToString(getdate) {
-      let date_ = getdate;
-      let year = date_.getFullYear();
-      let month = date_.getMonth() + 1;
-      let day = date_.getDate();
-      if (month < 10) month = "0" + month;
-      if (day < 10) day = "0" + day;
 
-      let hours = date_.getHours();
-      let mins = date_.getMinutes();
-      let secs = date_.getSeconds();
-      let msecs = date_.getMilliseconds();
-      if (hours < 10) hours = "0" + hours;
-      if (mins < 10) mins = "0" + mins;
-      if (secs < 10) secs = "0" + secs;
-      if (msecs < 10) secs = "0" + msecs;
-      return (
-        year + "-" + month + "-" + day + " " + hours + ":" + mins + ":" + secs
-      );
-    },
   },
   mounted() {
     this.drawChart();
@@ -312,6 +286,11 @@ export default {
   width: 70%;
   // border: 1px solid rgb(0, 255, 42);
   padding: 0 2%;
+}
+// 页码
+.pageBox {
+  text-align: center;
+  margin-top: 10px;
 }
 // 图表
 #checkInEchartsBox {

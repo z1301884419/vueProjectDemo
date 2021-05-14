@@ -2,7 +2,8 @@
   <div class="checkInBox">
     <!-- 面包屑导航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/Home/HomePage' }">首页</el-breadcrumb-item
+      <el-breadcrumb-item :to="{ path: '/Home/HomePage' }"
+        >首页</el-breadcrumb-item
       >
       <el-breadcrumb-item>教学管理</el-breadcrumb-item>
       <el-breadcrumb-item>考勤管理</el-breadcrumb-item>
@@ -42,14 +43,38 @@
       <!-- 表格 -->
       <div class="checkInTable">
         <el-table :data="checkInTableData" style="width: 100%">
-          <el-table-column prop="id" label="学生id" align="center" width="100"> </el-table-column>
-          <el-table-column prop="name" label="学生姓名" align="center" width="150"> </el-table-column>
-          <el-table-column prop="startTime" label="上学打卡时间" align="center" width="250"> </el-table-column>
-          <el-table-column prop="endTime" label="放学打卡时间" align="center" width="300"> </el-table-column>
+          <el-table-column prop="id" label="学生id" align="center" width="100">
+          </el-table-column>
+          <el-table-column
+            prop="name"
+            label="学生姓名"
+            align="center"
+            width="150"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="startTime"
+            label="上学打卡时间"
+            align="center"
+            width="250"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="endTime"
+            label="放学打卡时间"
+            align="center"
+            width="300"
+          >
+          </el-table-column>
           <el-table-column label="操作" align="center">
             <template>
               <!--  slot-scope="scope" -->
-              <el-button size="mini" type="primary" icon="el-icon-edit" circle></el-button>
+              <el-button
+                size="mini"
+                type="primary"
+                icon="el-icon-edit"
+                circle
+              ></el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -64,7 +89,7 @@
   </div>
 </template>
 <script>
-import examMixins from '../mixins/examMixins'
+import examMixins from "../mixins/examMixins";
 export default {
   data() {
     return {
@@ -102,13 +127,42 @@ export default {
       CheckInDateStart: "",
       CheckInDateEnd: "",
       checkInTableData: [
-        {id:1,name:'大大',startTime:'2021年5月12日 8:30',endTime:'2021年5月12日 18:00'},
-        {id:2,name:'小小',startTime:'2021年5月12日 8:30',endTime:'2021年5月12日 18:00'},
-        {id:3,name:'喜洋洋',startTime:'2021年5月12日 8:30',endTime:'2021年5月12日 18:00'},
-        {id:4,name:'美羊羊',startTime:'2021年5月12日 8:30',endTime:'2021年5月12日 18:00'},
-        {id:5,name:'懒洋洋',startTime:'2021年5月12日 8:30',endTime:'2021年5月12日 18:00'},
-        {id:6,name:'灰太狼',startTime:'2021年5月12日 8:30',endTime:'2021年5月12日 18:00'},
-
+        {
+          id: 1,
+          name: "大大",
+          startTime: "2021年5月12日 8:30",
+          endTime: "2021年5月12日 18:00",
+        },
+        {
+          id: 2,
+          name: "小小",
+          startTime: "2021年5月12日 8:30",
+          endTime: "2021年5月12日 18:00",
+        },
+        {
+          id: 3,
+          name: "喜洋洋",
+          startTime: "2021年5月12日 8:30",
+          endTime: "2021年5月12日 18:00",
+        },
+        {
+          id: 4,
+          name: "美羊羊",
+          startTime: "2021年5月12日 8:30",
+          endTime: "2021年5月12日 18:00",
+        },
+        {
+          id: 5,
+          name: "懒洋洋",
+          startTime: "2021年5月12日 8:30",
+          endTime: "2021年5月12日 18:00",
+        },
+        {
+          id: 6,
+          name: "灰太狼",
+          startTime: "2021年5月12日 8:30",
+          endTime: "2021年5月12日 18:00",
+        },
       ],
     };
   },
@@ -147,21 +201,41 @@ export default {
       myChart.setOption(option);
     },
     // 获取考勤信息
-    getAttendanceDataFn(){
+    getAttendanceDataFn() {
       this.selectAllData({
-        name:'ATTENDANCEALL',
-        data:{},
-      }).then((data)=>{
+        name: "ATTENDANCEALL",
+        data: {},
+      }).then((data) => {
         console.log(data);
-      })
-    }
+      });
+    },
+    GetDateTimeToString(getdate) {
+      let date_ = getdate;
+      let year = date_.getFullYear();
+      let month = date_.getMonth() + 1;
+      let day = date_.getDate();
+      if (month < 10) month = "0" + month;
+      if (day < 10) day = "0" + day;
+
+      let hours = date_.getHours();
+      let mins = date_.getMinutes();
+      let secs = date_.getSeconds();
+      let msecs = date_.getMilliseconds();
+      if (hours < 10) hours = "0" + hours;
+      if (mins < 10) mins = "0" + mins;
+      if (secs < 10) secs = "0" + secs;
+      if (msecs < 10) secs = "0" + msecs;
+      return (
+        year + "-" + month + "-" + day + " " + hours + ":" + mins + ":" + secs
+      );
+    },
   },
   mounted() {
     this.drawChart();
   },
-  created(){
+  created() {
     this.getAttendanceDataFn();
-  }
+  },
 };
 </script>
 <style lang="less" scoped>
@@ -228,7 +302,7 @@ export default {
   color: #fff;
 }
 // 下
-.mainbox{
+.mainbox {
   width: 100%;
   margin-top: 2rem;
   display: flex;
@@ -238,7 +312,6 @@ export default {
   width: 70%;
   // border: 1px solid rgb(0, 255, 42);
   padding: 0 2%;
-
 }
 // 图表
 #checkInEchartsBox {

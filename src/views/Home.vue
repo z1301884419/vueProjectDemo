@@ -180,10 +180,10 @@ export default {
         {
           id: 6,
           index: "6",
-          name: "日志管理",
-          path: "/Home/LogMgt",
+          name: "教室管理",
+          path: "/Home/ClassRoomMgt",
           icon: "el-icon-dish",
-          children: "",
+          children: '',
         },
         {
           id: 7,

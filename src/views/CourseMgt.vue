@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="width:90%;margin: 0 auto">
     <div class="form-box">
       <!-- 下拉选择框 -->
       <el-select
@@ -25,7 +25,7 @@
         style="width: 200px; margin-right: 15px"
       >
       </el-input>
-      <el-button type="primary" icon="el-icon-search">搜索</el-button>
+      <el-button type="primary" icon="el-icon-search" style="color:#53b08a;background:white;border:1px solid #53b08a">搜索</el-button>
     </div>
 
     <!-- 课程表 -->
@@ -244,11 +244,11 @@ export default {
       dialogFormVisible: false,
     };
   },
-  created() {
-    this.tableData.map((item) => {
-      return item
-    })
-  },
+  // created() {
+  //   this.tableData.map((item) => {
+  //     return item
+  //   })
+  // },
   mounted() {},
   methods: {
     handleClick(row) {
@@ -289,5 +289,6 @@ export default {
 .form-box {
   display: flex;
   margin-bottom: 2px;
+  
 }
 </style>

@@ -12,7 +12,9 @@
     <!-- 搜索栏 -->
     <div class="searchBox">
       <div class="addExam">
-        <el-button class="addExamBtn" @click="dialogAddExam = true"
+        <el-button
+          class="addExamBtn"
+          @click="(dialogAddExam = true), addExamFn()"
           >发起考试</el-button
         >
       </div>
@@ -31,18 +33,22 @@
     </div>
     <!-- 表格 -->
     <div class="examTable">
-      <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#D4EDF9',color:'rgb(54, 53, 53)'}">
-        <el-table-column prop="id" label="考试编号" align="center">
+      <el-table
+        :data="tableData"
+        style="width: 100%"
+        :header-cell-style="{ background: '#D4EDF9', color: 'rgb(54, 53, 53)' }"
+      >
+        <el-table-column prop="examId" label="考试编号" align="center">
         </el-table-column>
-        <el-table-column prop="type" label="考试类型" align="center">
+        <el-table-column prop="examName" label="考试名称" align="center">
         </el-table-column>
-        <el-table-column prop="class" label="考试班级" align="center">
+        <el-table-column prop="examTypeName" label="考试类型" align="center">
         </el-table-column>
-        <el-table-column prop="time" label="考试时间" align="center">
+        <el-table-column prop="examTime" label="考试时间" align="center">
         </el-table-column>
-        <el-table-column prop="people" label="考试发起人" align="center">
+        <el-table-column prop="staffName" label="考试发起人" align="center">
         </el-table-column>
-        <el-table-column label="操作" align="center">
+        <el-table-column label="操作" align="center" width="400">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -60,13 +66,26 @@
               @click="modifyExam(scope.row)"
               >修改考试信息</el-button
             >
+            <el-button
+              size="mini"
+              type="warning"
+              plain
+              round
+              @click="selectExamClass(scope.row)"
+              >查看考试班级</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
     </div>
     <!-- 页码 -->
     <div class="block">
-      <el-pagination layout="prev, pager, next" :total="70"></el-pagination>
+      <el-pagination
+        layout="prev, pager, next"
+        :total="pageTotal"
+        :page-size="pageSize"
+        @current-change="changePage"
+      ></el-pagination>
     </div>
     <!-- 发起考试模态框 -->
     <el-dialog title="发起考试" :visible.sync="dialogAddExam">
@@ -74,119 +93,84 @@
         :model="addExamFormData"
         :rules="rules"
         ref="addExamFormData"
+        label-width="120px"
         class="demo-ruleForm"
       >
-        <el-form-item label="考试年级" label-width="100px" prop="grade">
-          <el-select
-            v-model="addExamFormData.grade"
-            placeholder="请选择考试年级"
-          >
-            <el-option label="一年级" value="shanghai"></el-option>
-            <el-option label="二年级" value="beijing"></el-option>
-          </el-select>
+        <el-form-item label="考试年级/班级" prop="classList">
+          <el-checkbox-group v-model="addExamFormData.classList">
+            <el-checkbox :label="item.className" name="classList" v-for="item in dataArr" :key='item.classId'></el-checkbox>
+          </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="考试类型" label-width="100px" prop="type">
-          <el-select
-            v-model="addExamFormData.type"
-            placeholder="请选择考试类型"
-          >
-            <el-option label="中考" value="shanghai"></el-option>
-            <el-option label="月考" value="beijing"></el-option>
-          </el-select>
+        <el-form-item label="考试科目" prop="subjectList">
+          <el-checkbox-group v-model="addExamFormData.subjectList">
+            <el-checkbox :label="item.subjectList" name="classList" v-for="item in subjectArr" :key='item.classId'></el-checkbox>
+          </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="考试日期" label-width="100px" prop="addExamData">
-          <el-date-picker
-            v-model="addExamFormData.addExamData"
-            align="right"
-            type="date"
-            placeholder="选择日期"
-            :picker-options="pickerAddExamDate"
-          >
-          </el-date-picker>
+        <el-form-item label="考试科目" prop="name">
+          <el-input v-model="addExamFormData.name"></el-input>
         </el-form-item>
-        <el-form-item label="考试发起人" label-width="100px">
-          <el-input
-            v-model="addExamFormData.people"
-            class="addpeople"
-          ></el-input>
+        <el-form-item label="活动时间" required>
+          <el-col :span="11">
+            <el-form-item prop="date1">
+              <el-date-picker
+                type="date"
+                placeholder="选择日期"
+                v-model="addExamFormData.date1"
+                style="width: 100%"
+              ></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col class="line" :span="2">-</el-col>
+          <el-col :span="11">
+            <el-form-item prop="date2">
+              <el-time-picker
+                placeholder="选择时间"
+                v-model="addExamFormData.date2"
+                style="width: 100%"
+              ></el-time-picker>
+            </el-form-item>
+          </el-col>
         </el-form-item>
+        
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogAddExam = false">取 消</el-button>
-        <el-button class="addExamBtn" @click="addExamTrue('addExamFormData')"
-          >确 定</el-button
+        <el-button class="addExamBtn" @click="addExamTrue('addExamFormData')">确 定</el-button
         >
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
+import examMixins from "../mixins/examMixins";
 export default {
   data() {
     return {
       examSelectId: "", //查询的考试编号
       selectClassList: [], //查询的考试年级
-      tableData: [
-        //渲染的表格数据
-        {
-          id: "1",
-          type: "中考",
-          people: "老王",
-          class: "1班",
-          time: "2021/5/10",
-        },
-        {
-          id: "2",
-          type: "中考",
-          people: "老王",
-          class: "1班",
-          time: "2021/5/10",
-        },
-      ],
-      dialogAddExam: false, //发起考试模态框
+      tableData: [], //表格数据
+      // 页码
+      pageTotal: 0,
+      pageSize: 8,
+      nowPage: 1,
+      dialogAddExam: false,
+      // 模态框数据
+      dataArr: [],
+      subjectArr:[],
       addExamFormData: {
-        grade: "",
-        type:'',
-        addExamData:'',
-      }, //模态框 表单数据
-      // 发起考试的日期选择
-      pickerAddExamDate: {
-        disabledDate(time) {
-          return time.getTime() > Date.now();
-        },
-        shortcuts: [
-          {
-            text: "今天",
-            onClick(picker) {
-              picker.$emit("pick", new Date());
-            },
-          },
-          {
-            text: "昨天",
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24);
-              picker.$emit("pick", date);
-            },
-          },
-          {
-            text: "一周前",
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit("pick", date);
-            },
-          },
-        ],
-      }, //日期选择器
+        name: "",
+        date1: "",
+        date2: "",
+        delivery: false,
+        classList: [],
+        subjectList:[],
+      },
       rules: {
-        grade: [
-          { required: true, message: "请选择考试年级", trigger: "change" },
+        name: [
+          { required: true, message: "请输入活动名称", trigger: "blur" },
+          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
         ],
-        type: [
-          { required: true, message: "请选择考试类型", trigger: "change" },
-        ],
-        addExamData: [
+        date1: [
           {
             type: "date",
             required: true,
@@ -194,9 +178,34 @@ export default {
             trigger: "change",
           },
         ],
+        date2: [
+          {
+            type: "date",
+            required: true,
+            message: "请选择时间",
+            trigger: "change",
+          },
+        ],
+        classList: [
+          {
+            type: "array",
+            required: true,
+            message: "请至少选择一个班级/年级",
+            trigger: "change",
+          },
+        ],
+        subjectList: [
+          {
+            type: "array",
+            required: true,
+            message: "请至少选择一个科目",
+            trigger: "change",
+          },
+        ],
       },
     };
   },
+  mixins: [examMixins],
   methods: {
     // 取消考试
     delExam(obj) {
@@ -213,6 +222,48 @@ export default {
       //   }
       // });
     },
+    // 查询考试
+    selectExam() {
+      this.seletcExamInfo({
+        name: "SELECTEXAMALL",
+        data: {
+          examParam: {
+            limit: this.pageSize,
+            page: this.nowPage,
+          },
+        },
+      }).then((data) => {
+        if (data.code == 200) {
+          this.tableData = data.data;
+          // 判断考试类型
+          this.tableData.forEach((item) => {
+            item.examTypeName =
+              item.examTypeId == 1
+                ? "班级考"
+                : item.examTypeId == 2
+                ? "年级考"
+                : "123";
+          });
+          this.pageTotal = data.count;
+        }
+      });
+    },
+    changePage(num) {
+      this.nowPage = num;
+      this.selectExam();
+    },
+    // 发起考试
+    addExamFn() {
+      this.seletcExamInfo({
+        name: "SELECTEXAMCLASS",
+        data: {},
+      }).then((data) => {
+        console.log(data);
+        this.dataArr=data.data;
+        this.subjectArr=data.data;
+
+      });
+    },
     // 修改考试信息
     modifyExam(obj) {
       console.log(obj);
@@ -228,6 +279,13 @@ export default {
         }
       });
     },
+    // 查看考试班级
+    selectExamClass(obj) {
+      console.log(obj);
+    },
+  },
+  created() {
+    this.selectExam();
   },
 };
 </script>

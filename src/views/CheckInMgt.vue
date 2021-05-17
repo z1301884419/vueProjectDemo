@@ -103,7 +103,7 @@
   </div>
 </template>
 <script>
-import examMixins from "../mixins/examMixins";
+import checkInMixins from "../mixins/checkInMixins";
 export default {
   data() {
     return {
@@ -147,7 +147,7 @@ export default {
       nowPage: 1,//表格页码----当前页
     };
   },
-  mixins: [examMixins],
+  mixins: [checkInMixins],
   methods: {
     drawChart() {
       console.log(document.getElementById("checkInEchartsBox"));
@@ -163,7 +163,8 @@ export default {
         },
         tooltip: {},
         legend: {
-          data: ["正常出勤"],
+           orient: 'vertical',
+           right: '20',
         },
         series: [
           {

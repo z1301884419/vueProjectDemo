@@ -266,7 +266,7 @@ export default {
             data.data.attendabnceUpdateTime.split(" ")[1].split(":")[0]
           );
           this.signInFlag = h < 12 ? true : false; //true是上课打卡，false下课打卡
-          // data.data.attendabnceAmStatus==2?'代签到':data.data.attendabnceAmStatus==0?''
+          // data.data.attendabnceAmStatus==2?'待签到':data.data.attendabnceAmStatus==0?''
           if (this.signInFlag) {
             if (data.data.attendabnceAmStatus == 2) {
               this.signInText = "待签到";
@@ -292,7 +292,21 @@ export default {
       });
     },
     // 签到
-    signInFn() {},
+    signInFn() {
+      this.addSignInStatus({
+        name: "ADDSIGNIN",
+        data: {
+          studentNum: this.$store.state.loginModules.user.studentNumber,
+        },
+      }).then((data) => {
+        console.log(data);
+        this.$message({
+          message: data,
+          type: "success",
+        });
+        this.selectSignIn();
+      });
+    },
     // 签退
     signOutFn() {
       this.addSignInStatus({
@@ -306,7 +320,7 @@ export default {
           message: data,
           type: "success",
         });
-        this.signInText = "已签退";
+        this.selectSignIn();
       });
     },
     // 日期比大小
@@ -419,13 +433,13 @@ body > .el-container {
 // 签到
 .signInBox {
   width: 50%;
-  border: 1px solid greenyellow;
+  // border: 1px solid greenyellow;
   display: flex;
   font-size: 1.8rem;
   h3 {
     margin-left: 3rem;
     cursor: pointer;
-    border: 1px solid red;
+    // border: 1px solid red;
     user-select: none;
   }
   p {

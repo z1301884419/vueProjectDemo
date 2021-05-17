@@ -333,6 +333,7 @@ export default {
   line-height: 80px;
   border-radius: 0 0 0 30px;
   display: flex;
+  justify-content: flex-end;
   padding: 0;
 }
 
@@ -418,7 +419,7 @@ body > .el-container {
 // 签到
 .signInBox {
   width: 50%;
-  // border: 1px solid greenyellow;
+  border: 1px solid greenyellow;
   display: flex;
   font-size: 1.8rem;
   h3 {

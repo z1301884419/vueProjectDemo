@@ -19,7 +19,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="searchForm.classId" placeholder="请选择班级">
+        <el-select v-model="searchForm.clazzId" placeholder="请选择班级">
           <el-option  v-for="item in classArr" :key="item.classId" :label="item.className" :value="item.classId"></el-option>
         </el-select>
       </el-form-item>
@@ -31,15 +31,15 @@
 
     <!-- 班级卡片 -->
     <div class="cardBox">
-      <el-col :span="4" v-for="item in tableData" :key="item.id">
+      <el-col :span="4" v-for="item in tableData" :key="item.classId">
         <el-card shadow="hover">
           <p>{{ item.gradeName }} {{ item.className }}</p>
           <p>班主任: {{item.staffName==null?"未分配":item.staffName}}</p>
           <p>教室地址: {{ item.classroomName }}</p>
-          <div v-if="item.staffName===null"><el-button round plain class="plainBtn">分配班主任</el-button></div>
-          <div v-else><el-button round plain class="plainBtn">调换班主任</el-button></div>
-          <div><el-button round plain class="plainBtn">分配任课教师</el-button></div>
-          <div><el-button round plain class="plainBtn">删除班级</el-button></div>
+          <div v-if="item.staffName===null"><el-button round plain class="plainBtn" @click="allotHearderTeacherShow(item.classId)">分配班主任</el-button></div>
+          <div v-else><el-button round plain class="plainBtn" @click="changeHeaderTeacherShow(item.classId, item.staffName)">调换班主任</el-button></div>
+          <div><el-button round plain class="plainBtn" @click="allotTeacherShow(item.classId)">分配任课教师</el-button></div>
+          <div><el-button round plain class="plainBtn" @click="deleteClass(item.classId)">删除班级</el-button></div>
         </el-card>
       </el-col>
     </div>
@@ -72,20 +72,52 @@
     </el-dialog>
 
     <!-- 分配班主任的弹框 -->
-    <!-- <el-dialog title="添加班级" :visible.sync="addClass" width="33%">
-      <el-form :model="addClassForm" label-width="80px" class="demo-ruleForm">
-        <el-form-item label="教师">
-          <el-select v-model="addClassForm.classClassroomId" placeholder="请选择教师" @change="changeClassRequest" style="width: 100%;">
-            <el-option v-for="item in headerteacherArr" :key="item.classroomId" :label="item.classroomName" :value="item.classroomId"></el-option>
+    <el-dialog title="分配班主任" :visible.sync="allotHearderTeacher" width="33%">
+      <el-form :model="allotHearderTeacherForm" label-width="80px" class="demo-ruleForm">
+        <el-form-item label="分配班主任">
+          <el-select v-model="addClassForm.staffId" placeholder="请选择要分配的班主任" style="width: 100%;">
+            <el-option v-for="item in headerteacherArr" :key="item.staffId" :label="item.staffName" :value="item.staffId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item class="btnBox">
-          <el-button @click="addClass = false">取 消</el-button>
-          <el-button class="successBtn" @click="addClassRequest">确 定</el-button>
+          <el-button @click="allotHearderTeacher = false">取 消</el-button>
+          <el-button class="successBtn" @click="allotHearderTeacherRequest">确 定</el-button>
         </el-form-item>
       </el-form>
-    </el-dialog> -->
+    </el-dialog>
+
     <!-- 调换班主任的弹框 -->
+    <el-dialog title="调换班主任" :visible.sync="changeHearderTeacher" width="33%">
+      <el-form :model="changeHearderTeacherForm" label-width="80px" class="demo-ruleForm">
+        <el-form-item label="原本班主任">
+          <el-input v-model="changeHearderTeacherForm.staffName" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="调换班主任">
+          <el-select v-model="changeHearderTeacherForm.staffId" placeholder="请选择要调换的班主任" style="width: 100%;">
+            <el-option v-for="item in headerteacherArr" :key="item.staffId" :label="item.staffName" :value="item.staffId"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item class="btnBox">
+          <el-button @click="changeHearderTeacher = false">取 消</el-button>
+          <el-button class="successBtn" @click="changeHearderTeacherRequest">确 定</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
+    <!-- 分配任课老师的弹框 -->
+    <el-dialog title="调换班主任" :visible.sync="allotTeacher" width="33%">
+      <el-form :model="allotTeacherForm" label-width="80px" class="demo-ruleForm">
+        <el-form-item :label="item.subjectName + '老师'" v-for="item in allSubjectTeacherArr" :key="item.subjectId">
+          <el-select :v-model="`allotTeacherForm.+ ${item.subjectName}`" placeholder="请选择要分配的任课教师" style="width: 100%;">
+            <el-option v-for="(teacher, i) in item.data" :key="i" :label="teacher.staffName" :value="teacher.staffId"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item class="btnBox">
+          <el-button @click="allotTeacher = false">取 消</el-button>
+          <el-button class="successBtn" @click="allotTeacherRequest">确 定</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
 
   </div>
 </template>
@@ -98,8 +130,8 @@ export default {
     return {
       tableData: [],
       searchForm: {  //搜索框值
-        gradeId: null,
-        classId: null
+        gradeId: '',
+        clazzId: ''
       },
       page: 1, //当前第几页
       pageSize: 12, //一页显示多少条
@@ -115,6 +147,15 @@ export default {
       classRoomArr: [], //空教室
       classAllArr: [], //所有班级
       headerteacherArr: [], //所有非班主任老师
+      subjectArr: [], //所有的学科
+      allotHearderTeacher: false, //显示分配班主任的弹框
+      allotHearderTeacherForm: {},
+      changeHearderTeacher: false,
+      changeHearderTeacherForm: {},
+      allotTeacher:false,
+      allotTeacherForm: {},
+      classId: 0,
+      allSubjectTeacherArr: [], //老师和科目匹配的数据
     };
   },
   mixins: [TeachInfoMixins, TeacherMixins], //使用mixins里的模块
@@ -147,12 +188,11 @@ export default {
       this["teacherModules/SearchAllGradeAction"]({
         name: 'GRADE_ALL',
         data: {}
-      }).then(data => {
-        console.log(data);
       })
     },
     handleCurrentChange(val) { // 获取页码
-      console.log(`当前页: ${val}`);
+      this.page = val;
+      this.this.getAllData()
     },
     addClassRequest() {  // 添加班级
       this.addClass = false;
@@ -188,27 +228,75 @@ export default {
       this["teacherModules/SearchAllClassRoomAction"]({
         name: 'CLASSROOM_NOTUSE',
         data: {}
-      }).then(data => {
-        console.log(data);
       })
     },
     getHeaderTeacher(){  //获取没有当班主任的老师
       this["teacherModules/SearchAllHearchTeacherAction"]({
         name: 'SELECT_HEADERTEACHER'
-      }).then(data => {
-        console.log(data);
       })
     },
+    deleteClass(id){ //删除班级
+      this.DeleteData({
+        name: 'SELECT_DELETE',
+        classId: id
+      }).then(data=>{
+        console.log(data);
+        this.getAllClass()
+      })
+    },
+    allotHearderTeacherShow(id){  //分配班主任的弹框显示
+      this.classId = id;
+      this.allotHearderTeacher = true;
+    },
+    allotHearderTeacherRequest(){ //分配班主任的请求
+      console.log(123);
+    },
+    changeHeaderTeacherShow(id, name){
+      this.classId = id;
+      this.changeHearderTeacherForm.staffName = name;
+      this.changeHearderTeacher = true;
+    },
+    changeHearderTeacherRequest(){ //调换班主任的请求
+
+    },
+    allotTeacherShow(id){ //分配任课教师的显示
+      this.classId = id;
+      this.allotTeacher = true;
+    },
+    allotTeacherRequest(){ //分配任课教师的请求
+
+    },
+    getTeacherBySubject(){ //获取教当前科目的老师
+      this.subjectArr.forEach(item => {
+        this.getAllDataT({
+          name: "STAFF_SELECT",
+          data: {
+            subjectId: item.subjectId
+          }
+        }).then(data=>{
+          this.allSubjectTeacherArr.push({subjectId: item.subjectId, subjectName: item.subjectName, data: data.data})
+        });
+      });
+      
+    },
     searchInfo(){
-      console.log(this.searchForm);
+      this.searchForm.page = this.page;
+      this.searchForm.pageSize = this.pageSize;
+      this.getAllData({
+        name: 'CLASS_ALL',
+        data: this.searchForm
+      }).then(data => {
+        this.tableData = data;
+        this.totalLength = data.length;
+      })
     },
     resizeFn(){
       this.searchForm = {
-        gradeId: null,
-        classId: null
+        gradeId: '',
+        clazzId: ''
       }
-      this.getAllClass()
-    }
+      this.getAllClass();
+    },
   },
   computed: {
     validClassName(){ //验证班级名称是否已存在
@@ -224,7 +312,10 @@ export default {
     this.classRoomArr = this.$store.state.teacherModules.classroom;
     this.getTotalClassData() //获取所有班级的信息
     this.getHeaderTeacher() //获取所有不是班主任的老师
-    this.headerteacherArr = this.$store.state.teacherModules.classroom;
+    this.headerteacherArr = this.$store.state.teacherModules.headerTeacher;
+    this.subjectArr = this.$store.state.teacherModules.subject;
+    this.getTeacherBySubject();
+    
   }
 };
 </script>

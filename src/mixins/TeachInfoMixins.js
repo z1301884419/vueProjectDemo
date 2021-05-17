@@ -45,6 +45,7 @@ export default {
         type: 'warning'
       }).then(() => {
         return api[obj.name](obj.data).then(data => {
+          console.log('删除', data);
           if (data.data.code == 200) {
             this.openSuccess('删除成功', '该数据已成功移出!');
             return 200

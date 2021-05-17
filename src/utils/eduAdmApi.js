@@ -40,6 +40,11 @@ export default {
     method: 'post',
     data: data
   }),
+  SELECT_DELETE: data => http({ // 删除班级
+    url: SELECT_DELETE,
+    method: 'post',
+    data: data
+  }),
 }
 const SUBJECT_ALL = 'subject/all';
 const CLASS_ALL = '/clazz/selectAll';
@@ -49,3 +54,4 @@ const CLASSROOM_NOTUSE= '/classroom/notUse';
 const CLASS_TOTALDATA= '/clazz/all';
 const CLASS_ADD= '/clazz/add';
 const SELECT_HEADERTEACHER= '/staff/headTeacher';
+const SELECT_DELETE= '/clazz/del';

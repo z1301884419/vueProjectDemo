@@ -19,7 +19,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-input v-model="searchForm.code" placeholder="请输入教师编号"></el-input>
+        <el-input v-model="searchForm.staffNumber" placeholder="请输入教师编号"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button plain class="plainBtn" @click="searchFn">查询</el-button>
@@ -130,8 +130,8 @@ export default {
       totalLength: 20, //一共有多少条数据
       page: 1,
       searchForm: {
-        course: "",
-        code: ""
+        subjectId: "",
+        staffNumber: ""
       },
       addTeacher: false, //控制添加老师的弹框显示隐藏
       addTeachForm: {
@@ -257,13 +257,27 @@ export default {
       });
     },
     searchFn(){ //搜索的方法
-      console.log(this.searchForm);
+      // console.log(this.searchForm);  
+      // page: this.page,
+      // limit: this.pageSize
+      this.searchForm.limit = this.pageSize;
+      this.searchForm.page = this.page;
+      this.getAllDataT({
+        name: "STAFF_SELECT",
+        data: this.searchForm
+      }).then(data=>{
+        console.log(data);
+          data.data.map(item=> item.roleId = item.roleId == 3 ? '班主任' : '任课教师');
+          this.tableData = data.data;
+          this.totalLength = data.count;
+      });
     },
     resetFn(){ //重置的方法
       this.searchForm = {
-        course: "",
-        code: ""
+        subjectId: "",
+        staffNumber: ""
       }
+      this.getAllTeacher();
     },
     getAllSubject(){ //获取科目
       this["teacherModules/SearchAllDataAction"]({

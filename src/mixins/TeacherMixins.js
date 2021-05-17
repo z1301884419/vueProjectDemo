@@ -18,14 +18,13 @@ export default {
     },
     // 删除数据的方法
     DeleteData(obj) {
+      
       return this.$confirm('此操作将永久删除该信息, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        console.log(123,obj);
         return api[obj.name](obj.data).then(data => {
-          console.log(12333,data);
           if (data.data.code == 200) {
             this.openSuccess('删除成功', '该数据已成功移出!');
             return 200

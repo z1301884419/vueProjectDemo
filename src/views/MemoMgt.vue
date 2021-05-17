@@ -11,21 +11,27 @@
 
     <div class="liuyanMain">
       <el-card shadow="never">
-        <el-input type="textarea" v-model="input"></el-input>
-        <el-button size="mini" class="successBtn">选择老师</el-button>
-        <el-button size="mini" class="successBtn">发表</el-button>
+        <el-input type="textarea" v-model="form.input"></el-input>
+        <el-select  v-model="form.region1" value-key="id" placeholder="请选择">
+          <!-- @change="selectSublist($event)" -->
+          <!-- :value="{aa:item.id,bb:item.type}" -->
+        <el-option :label="item.name" :value="item" v-for="item in tableData1" :key="item.id"></el-option>
+        </el-select>
+        <!-- <el-button size="mini" class="successBtn">选择老师</el-button> -->
+        <el-button size="mini" class="successBtn fabiaoBtn" @click="sendMessage()">发表</el-button>
       </el-card>
       <el-tabs v-model="activeName" @tab-click="handleClick">
+        <!-- ,getData2() -->
         <el-tab-pane label="我的留言板" name="first">
           <el-card shadow="hover" v-for="item in tableData" :key="item.id">
             <div class="contentCard">
               <div class="content">
                 <span class="contentTitle"
-                  >{{ item.teacher }}({{ item.subject }}老师):</span
+                  >{{ item.receivePersonName}}老师:</span
                 >
-                <span>{{ item.content }}</span>
+                <span>{{ item.messageContent }}</span>
                 <p
-                  v-for="subItem in item.subList"
+                  v-for="subItem in item.replayList"
                   :key="subItem.id"
                   class="repalyBox"
                 >
@@ -42,8 +48,15 @@
                   >回复</el-button
                 >
               </div>
+          <!-- <template slot-scope="scope"> -->
+
               <div class="caozuoBox">
-                <el-button size="mini" round>删除</el-button>
+
+                <el-button 
+                size="mini" 
+                round 
+              @click="deleteUser(item.messageId)"
+                >删除</el-button>
                 <el-button
                   size="mini"
                   v-if="item.id != id"
@@ -51,11 +64,18 @@
                   @click="replyClick(item.id)"
                   >回复</el-button
                 >
+
               </div>
+          <!-- </template> -->
+
             </div>
+            
           </el-card>
+           <div class="block">
+          <el-pagination layout="prev, pager, next" :total="pageTotal" :page-size="pageSize" @current-change="changePage"></el-pagination>
+          </div>
         </el-tab-pane>
-        <el-tab-pane label="我收到的回复" name="second">
+        <el-tab-pane label="我收到的回复" name="second" >
           <el-card shadow="hover" v-for="item in tableData" :key="item.id">
             <div class="contentCard">
               <div class="content">
@@ -93,6 +113,9 @@
               </div>
             </div>
           </el-card>
+          <!-- <div class="block">
+          <el-pagination layout="prev, pager, next" :total="pageTotal" :page-size="pageSize" @current-change="changePage"></el-pagination>
+          </div> -->
         </el-tab-pane>
       </el-tabs>
       <!-- <h3>
@@ -104,11 +127,26 @@
   </div>
 </template>
 <script>
+import liuYan from "../mixins/liuYan";
+
 export default {
+  mixins: [liuYan],
+
   data() {
     return {
-      activeName: "second",
-      input: "",
+      // id:"",
+       pageTotal:20,
+      pageSize:5,
+      nowPage:1,
+      form:{
+        region1:"",
+        input: "",
+        id:"",
+        type:""
+
+      },
+      tableData1:"",
+      activeName: "first",
       input2: "",
       id: 0,
       tableData: [
@@ -143,12 +181,119 @@ export default {
       ],
     };
   },
+  created(){
+this.getData()
+// this.handleClick(tab, event)
+this.getData1()
+
+  },
   methods: {
+    
+     deleteUser(obj){
+console.log(obj);
+this.LoginAction11({
+        name: "DELETE_API",
+        data: {messageId:obj},
+      }).then((data) => {
+        console.log(data);
+        this.getData1()
+        // this.KeyWordTableData=data.data
+        // this.pageTotal=data.count
+      });
+    },
+    selectSublist(event){
+console.log(event);
+this.form.id=event.aa
+this.form.type=event.bb
+
+    },
+    sendMessage(){
+       this.LoginAction9({
+        name: "SENDMESSAGE_API",
+        data: {
+          messageContent:this.form.input,
+          messageReceiveId:this.form.region1.id,
+          messageReceiveType:this.form.region1.type
+        },
+      }).then((data) => {
+        console.log(data);
+        // this.tableData1=data.data
+        // this.pageTotal=data.count
+      });
+    },
+     changePage(val){
+      this.nowPage=val
+      this.getData()
+    },
+    getData() {
+      // console.log(this.form1.parentPhone);
+      this.LoginAction7({
+        name: "LIUYAN_API",
+        data: {
+          // limit:this.pageSize,
+          // page:this.nowPage
+        },
+      }).then((data) => {
+        console.log(data);
+        this.tableData1=data.data
+        // this.pageTotal=data.count
+      });
+    },
+     getData1() {
+      // console.log(this.form1.parentPhone);
+      this.LoginAction8({
+        name: "MYFABIAO_API",
+        data: {
+          limit:this.pageSize,
+          page:this.nowPage,
+          type:"2"
+        },
+      }).then((data) => {
+        console.log(data);
+        this.tableData=data.data
+        this.pageTotal=data.count
+      });
+    },
+    // getData2(){
+    //   console.log("236");
+    //   this.LoginAction8({
+    //     name: "MYJIESHOU_API",
+    //     data: {
+    //       limit:this.pageSize,
+    //       page:this.nowPage,
+    //       // type:"1"
+    //     },
+    //   }).then((data) => {
+    //     console.log(data);
+    //     this.tableData=data.data
+    //     this.pageTotal=data.count
+    //   });
+    // },
     replyClick(id) {
       this.id = id;
     },
     handleClick(tab, event) {
-      console.log(tab, event);
+      console.log(tab._uid,event);
+       
+      // console.log(this.form1.parentPhone);
+      if(tab._uid==61){
+        var  aa="2"
+      }else {
+        aa="1"
+      }
+      this.LoginAction8({
+        name: "MYFABIAO_API",
+        data: {
+          limit:this.pageSize,
+          page:this.nowPage,
+          type:aa
+        },
+      }).then((data) => {
+        console.log(data);
+        this.tableData=data.data
+        this.pageTotal=data.count
+      });
+    
     },
   },
 };
@@ -230,5 +375,12 @@ export default {
 .selectHuiFu,
 .selectMyMemo {
   cursor: pointer;
+}
+/deep/.el-input__inner{
+  height: 33px;
+  line-height: 33px;
+}
+.fabiaoBtn{
+  margin-left: 10px;
 }
 </style>

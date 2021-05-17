@@ -46,7 +46,7 @@
                           @filteredData="filteredByXuehaoFn"/>
 
         <!--联级班级选择-->
-        <yy_FilterByClass/>
+        <yy_FilterByClass @getClassId="checkedClassID"/>
         <!--姓名-->
         <yy_FilterByInput :filterData="{data:AllStuXiangData,text:'请输入姓名',filterProperty:'student_name'}"
                           @filteredData="filteredByNameFn"/>
@@ -57,17 +57,22 @@
         text:'请选择性别',
         filterProperty:'student_gender'
         }" @filteredData="filteredBySexFn"/>
-        <!--出生日期-->
-        <yy_FilterByBirthday/>
       </div>
+      <!--添加学生-->
       <div class="add-student">
         <el-button style="padding:0 1rem;margin: 0 0.5rem;" size="small" plain>
-          <yy_AddOrSetStudentDialog :stuData="{text:'添加学生',title:'添加学生信息'}"/>
+          <yy_AddOrSetStudentDialog :stuData="{text:'添加学生',title:'添加学生信息',nowPage}"/>
+        </el-button>
+      </div>
+      <!--给学生群发通告-->
+      <div class="send-message-stu">
+        <el-button style="padding:0 1rem;margin: 0 0.5rem;" size="small" plain>
+          <yy_ReleaseMessage/>
         </el-button>
       </div>
       <!--    学生信息表-->
       <div class="stu-table">
-        <yy_StudentInfoTable :tableData="renderData"/>
+        <yy_StudentInfoTable :tableData="renderData" :nowPage="nowPage"/>
       </div>
       <!--分页-->
       <div class="fenye">
@@ -76,7 +81,8 @@
                 :page-size="5"
                 :pager-count="9"
                 layout="prev, pager, next"
-                :total="renderData.length">
+                @current-change="currentChange"
+                :total="dataLength">
         </el-pagination>
       </div>
     </div>
@@ -84,13 +90,11 @@
 </template>
 <script>
   import { getStorage } from "../utils/storage";
-  // import formatDate from '../utils/formatDate'
-
   import yy_FilterBySelect from '@/components/yy_FilterBySelect'
   import yy_FilterByInput from '@/components/yy_FilterByInput'
   import yy_FilterByClass from '@/components/yy_FilterByClass'
 
-  import yy_FilterByBirthday from '@/components/yy_FilterByBirthday'
+  import yy_ReleaseMessage from '@/components/yy_ReleaseMessage'
   import yy_StudentInfoTable from '@/components/yy_StudentInfoTable'
   import yy_AddOrSetStudentDialog from '@/components/yy_AddOrSetStudentDialog'
 
@@ -101,24 +105,25 @@
       yy_FilterBySelect,
       yy_FilterByInput,
       yy_FilterByClass,
-      yy_FilterByBirthday,
+      yy_ReleaseMessage,
       yy_StudentInfoTable,
       yy_AddOrSetStudentDialog,
     },
     data(){
       return{
         renderData:[],//表格数据
+        dataLength:0,//数据总长度
         filteredByNameData:[],//通过名字筛选出的数据
         filteredBySexData:[],//通过性别筛选出的数据
-        filteredByBirthdayData:[],//通过出生日期筛选出的数据
-        filteredByDescData:[],//通过备注筛选出的数据
         filteredByXuehaoData:[],//通过学号筛选出的数据
         filteredByClassData:[],//通过班级筛选出的数据
         checkedClass: [],//联级菜单选的班级
+        nowClassId:"",//选择班的id
+        nowPage:1,//当前页
       }
     },
     computed:{
-      ...mapState('yy_module',['AllStuXiangData']),
+      ...mapState('yy_module',['AllStuXiangData','AllStuXiangDataLength']),
       shenfen(){
         return getStorage('shenfen')
       },
@@ -127,9 +132,11 @@
       },
       //生成新的学生信息
       newStuData(){
-
         return this.AllStuXiangData.map(v=>{
-          this.$set(v,'calssFullName',v.grade.gradeName+v.clazz.className)
+          console.log(v.grade.gradeName);
+          console.log(v.clazz.className);
+          this.$set(v,'calssFullName',v.grade.gradeName?
+              v.clazz.className?v.grade.gradeName+v.clazz.className:'暂无':'暂无')
           let listNotNull = v.parentList.length>0? v.parentList.reduce((prev,cur)=>{
                 prev += cur.parentName+','
                 return prev
@@ -138,45 +145,19 @@
           return v
         })
       },
-
-      // //生成新的联级班级选择
-      // newClassList(){
-      //   //生成新的班级列表
-      //   let newClassArr = [];
-      //   this.AllClass.map(v=>{
-      //     newClassArr.push({value:v.classGradeId,label:v.gradeName,children:[]})
-      //     return
-      //   })
-      //   newClassArr = newClassArr.map((v)=>{
-      //     return JSON.stringify(v)
-      //   })
-      //   newClassArr =[...new Set(newClassArr)]
-      //   newClassArr = newClassArr.map(v=>{
-      //     return JSON.parse(v)
-      //   })
-      //   //生成新的年级列表结束
-      //   //根据年级取该年纪的班级列表
-      //   this.AllClass.forEach(v=>{
-      //     newClassArr.forEach((vG,vI)=>{
-      //       if(v.classGradeId==vG.value){
-      //         newClassArr[vI].children.push({value:v.classId,label:v.className})
-      //       }
-      //     })
-      //   })
-      //   //根据年级取该年纪的班级列表结束
-      //   return newClassArr
-      // }
     },
-    created() {
-      // this.getAllClass()//获取待所有班级
-      // console.log(this.AllClass);
-
+    updated() {
       if(this.AllStuXiangData.length==0){
-        this.getAllStuXiangData().then(()=>{
+        this.getAllStuXiangData({
+          limit:5,
+          page:1,
+        }).then(res=>{
           this.renderData = this.newStuData//初始化表格数据
+          this.dataLength = parseInt(res.count)//初始化表格数据
         })
       }else {
         this.renderData = this.newStuData//初始化表格数据
+        this.dataLength = this.AllStuXiangDataLength
       }
       this.filteredByNameData = this.allStuData//初始化通过名字筛选出的数据
       this.filteredBySexData = this.allStuData//性别
@@ -204,19 +185,8 @@
         this.filterFn()
       },
       //筛选班级
-      // selectClass(value) {
-      //   console.log(value);
-      //   console.log(value[1]);//班级id
-      // },
-      //筛选出生日期
-      filteredByBirthdayFn(data){
-        this.filteredByXuehaoData = data
-        this.filterFn()
-      },
-      //筛选备注
-      filteredByDescFn(data){
-        this.filteredByXuehaoData = data
-        this.filterFn()
+      checkedClassID(value) {
+        console.log(value);//班级id
       },
       //筛选函数
       filterFn(){
@@ -226,6 +196,18 @@
             .filter(item=>this.filteredByBirthdayData.includes(item))
             .filter(item=>this.filteredByDescData.includes(item))
       },
+
+      //分页
+      currentChange(value){
+        console.log(value);
+        this.nowPage = value
+        this.getAllStuXiangData({
+          limit:5,
+          page:value,
+        }).then(()=>{
+          this.renderData = this.newStuData//初始化表格数据
+        })
+      }
     },
   }
 </script>
@@ -305,14 +287,23 @@
   .el-main{
     overflow: hidden!important;
   }
-  .add-student>.el-button{
+  .add-student>.el-button,.send-message-stu>.el-button{
     background-color: #16B387;
     border: 1px solid #16B387;
   }
   .add-student>.el-button .add-btn span{
     color: #fff!important;
   }
+  .send-message-stu>.el-button .message-btn span{
+    color: #fff!important;
+  }
   .add-student>.el-button:hover .add-btn span{
+    color: #16B387!important;
+  }
+  .add-student,.send-message-stu{
+    display: inline-block;
+  }
+  .send-message-stu>.el-button:hover .message-btn span{
     color: #16B387!important;
   }
   .el-divider--horizontal{

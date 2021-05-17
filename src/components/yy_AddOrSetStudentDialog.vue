@@ -10,32 +10,26 @@
             @close="closeDialog('form')"
             :visible.sync="dialogFormVisible">
       <el-form :model="form" :rules="addrule" ref="form" status-icon>
-        <el-form-item label="学号" required label-width="100px" prop="studentNumber">
-          <el-input v-model="form.studentNumber" autocomplete="off"></el-input>
+        <el-form-item v-if="stuData.data" label="学号" required label-width="100px">
+          <el-input v-model="form.studentNumber" readonly="" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="密码" required label-width="100px" prop="studentPassword">
-          <el-input v-model="form.studentPassword" autocomplete="off"></el-input>
+        <el-form-item v-if="!stuData.data" label="密码" required label-width="100px" prop="studentPassword">
+          <el-input v-model="form.studentPassword" type="password" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item v-if="stuData.data" label="密码" label-width="100px">
+          <el-input v-model="form.studentPassword" type="password" readonly="" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item v-if="stuData.data" label="新密码" label-width="100px" prop="newPassword">
+          <el-input v-model="form.newPassword" type="password" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item v-if="stuData.data" label="确认新密码" label-width="100px" prop="sureNewPassword">
+          <el-input v-model="form.sureNewPassword" type="password" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="班级" required label-width="100px" prop="classId">
           <yy_FilterByClass @getClassId="getClassId" :nowClass="[form.gradeId,form.classId]"/>
         </el-form-item>
         <el-form-item label="姓名" required label-width="100px" prop="studentName">
           <el-input v-model="form.studentName" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="性别" required label-width="100px" prop="studentGender">
-          <el-select v-model="form.studentGender" placeholder="请选择性别">
-            <el-option label="男" value="男"></el-option>
-            <el-option label="女" value="女"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="出生日期" required label-width="100px" prop="studentDate">
-          <el-date-picker
-                  v-model="form.studentDate"
-                  type="date"
-                  placeholder="选择日期"
-                  format="yyyy 年 MM 月 dd 日"
-                  value-format="yyyy-MM-dd">
-          </el-date-picker>
         </el-form-item>
         <el-form-item label="身份证号" required label-width="100px" prop="studentIdcardno">
           <el-input v-model="form.studentIdcardno" autocomplete="off"></el-input>
@@ -51,7 +45,7 @@
           </el-select>
         </el-form-item>
         <!--班主任修改在读状态-->
-        <el-form-item v-if="'班主任'" label="在读状态" required label-width="100px" prop="studentState">
+        <el-form-item v-if="stuData.data" label="在读状态" required label-width="100px" prop="studentState">
           <el-select :value="form.studentState==1?'在读':form.studentState==2?'休学':'退学'" @change="stateChange">
             <el-option label="在读" :value=1></el-option>
             <el-option label="休学" :value=2></el-option>
@@ -88,7 +82,9 @@
 </template>
 
 <script>
+  import {mapActions} from 'vuex'
   import sureAgainBox from '@/utils/sureAgainBox'
+  import yy_request from '@/utils/yy_request'
   import yy_FilterByClass from '@/components/yy_FilterByClass'
   export default {
     name: "yy_AddOrSetStudentDialog",
@@ -103,9 +99,9 @@
         nullform: {
           studentNumber: '',
           studentPassword:'',
-          classId: '',
+          classId:'',
+          gradeId:'',
           studentName: '',
-          studentDate: '',
           studentIdcardno:'',
           studentNation:'',
           studentPolitics:'',
@@ -115,17 +111,25 @@
           studentGender: '',
           studentExperience:'',
           studentDesc: '',
+          newPassword:'',
+          sureNewPassword:''
         },
         //表单验证规则
         addrule:{
-          studentNumber:[{ validator: this.test_student_number, trigger: 'blur' }],//学号
           studentPassword:[
             { required: true, message: '请输入密码', trigger: 'blur' },
-            { min: 8, max: 16, message: '长度在 8 到 16 个字符', trigger: 'blur' }
+            { min: 8, max: 16, message: '长度在 8 到 16 个字符', trigger: 'blur'}
             ],//密码
+          newPassword:[
+            { validator: this.test_newPassword, trigger: 'blur' },
+            { min: 8, max: 16, message: '长度在 8 到 16 个字符', trigger: 'blur'}
+            ],
+          sureNewPassword:[
+            { validator: this.test_sureNewPassword, trigger: 'blur' },
+            { min: 8, max: 16, message: '长度在 8 到 16 个字符', trigger: 'blur'}
+              ],
           classId:[{required: true, message: '请选择班级', trigger: 'change'}],//班级
           studentName:[{ validator: this.test_student_name, trigger: 'blur' }],//姓名
-          studentGender:[{required: true, message: '请选择性别', trigger: 'change'}],//性别
           studentDate:[{required: true, message: '请选择日期', trigger: 'change'}],//出生日期
           studentIdcardno:[{ validator: this.test_student_idcardno, trigger: 'blur' }],//身份证号
           studentNation:[{ validator: this.test_student_nation, trigger: 'blur' }],//民族
@@ -135,17 +139,19 @@
       }
     },
     methods:{
+      ...mapActions('yy_module',['getAllStuXiangData']),
       //获取选择班级子组件传来的id
-      getClassId(id){
-        this.form.classId = id
+      getClassId(value){
+        this.form.gradeId = value[0]
+        this.form.classId = value[1]
       },
       //打开模态框
       openDialog(){
         this.dialogFormVisible = true
         if(this.stuData.data){
-          this.form = {...this.stuData.data}
+          this.form = {...this.nullform,...this.stuData.data}
         }else{
-          this.form = this.nullform
+          this.form = {...this.nullform}
         }
       },
       //取消关闭模态框
@@ -158,21 +164,37 @@
         console.log(this.form);
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            //判断newpassword是否为空，判断是否修改密码
+            this.form.studentPassword = this.form.newPassword?this.form.newPassword:this.form.studentPassword
             //调用确定操作的函数
             if(this.stuData.data){
               sureAgainBox.bind(this)({
                 text:'修改',
+                requestFn:yy_request.SetStudentFn,
+                requestData:this.form,
               }).then(()=>{
+                this.getAllStuXiangData({
+                  limit:5,
+                  page:this.stuData.nowPage,
+                })
+                this.$refs[formName].resetFields();
                 this.dialogFormVisible = false
               })
 
             }else {
               sureAgainBox.bind(this)({
                 text:'添加',
+                requestFn:yy_request.AddStudentFn,
+                requestData:this.form,
               }).then(()=>{
+                this.getAllStuXiangData({
+                  limit:5,
+                  page:this.stuData.nowPage,
+                })
+                this.form = {...this.nullform}
+                console.log(this.form);
                 this.dialogFormVisible = false
               })
-
             }
           } else {
             this.$message({
@@ -188,13 +210,6 @@
         this.form.studentState=e
       },
       //表单验证规则
-      test_student_number(rule, value, callback){
-        if (/\D/gim.test(value)||value.length!=9) {
-          callback(new Error('学号只能是纯数字且为9位数'));
-        } else {
-          callback();
-        }
-      },//验证学号
       test_student_name(rule, value, callback){
         if(value===''){
           callback(new Error('姓名不能为空'));
@@ -224,6 +239,23 @@
           callback();
         }
       },//验证民族
+      test_newPassword(rule, value, callback){
+        if(value&&this.form.sureNewPassword){
+          this.$refs.form.validateField('sureNewPassword');
+        }
+        callback();
+      },//验证新密码
+      test_sureNewPassword(rule, value, callback){
+        if(this.form.newPassword&&value===""){
+          callback(new Error('请再次输入密码!'));
+        }
+        if (value&&value !== this.form.newPassword){
+          callback(new Error('两次输入密码不一致!'));
+        }else {
+          callback();
+        }
+      },//验证确认新密码
+
     },
 
   }

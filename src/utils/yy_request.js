@@ -8,9 +8,21 @@ const yy_axios=axios.create({
   timeout: 10000 // 请求超时时间
 })
 
-//学生的端口号
+//查询学生的端口号
 const yy_axiosStu=axios.create({
-  baseURL:'http://172.16.14.46:8081', // api的base_url
+  baseURL:'http://172.16.14.46:8191', // api的base_url
+  timeout: 10000 // 请求超时时间
+})
+
+//添加学生的端口号
+const yy_axiosAddStu=axios.create({
+  baseURL:'http://172.16.14.46:8191', // api的base_url
+  timeout: 10000 // 请求超时时间
+})
+
+//删除学生的端口号
+const yy_axiosDelStu=axios.create({
+  baseURL:'http://172.16.14.46:8191', // api的base_url
   timeout: 10000 // 请求超时时间
 })
 
@@ -32,13 +44,47 @@ export default {
       return data.data
     })
   },
-  SelectAllStuXiangFn(){
+  SelectAllStuXiangFn(data){
     return yy_axiosStu({
       url:yy_api.SelectAllStuXiang,
       method:'post',
+      params:data,
+      data
     }).then(data=>{
       return data.data
     })
   },
-
+  AddStudentFn(stuData){
+    return yy_axiosAddStu({
+      url:yy_api.AddStudent,
+      method:'post',
+      data:stuData
+    }).then(res=>{
+      return res.data
+    })
+  },
+  DelStudentFn(id){
+    console.log(id);
+    return yy_axiosDelStu({
+      url:yy_api.DelStudent,
+      method:'post',
+      data:{
+        ids:id,
+      }
+    }).then(data=>{
+      console.log(data);
+      return data.data
+    })
+  },
+  SetStudentFn(data){
+    console.log(data);
+    return yy_axiosStu({
+      url:yy_api.SetStudent,
+      method:'post',
+      data
+    }).then(data=>{
+      console.log(data);
+      return data.data
+    })
+  },
 }

@@ -26,8 +26,10 @@
       </el-table-column>
       <el-table-column
               align="center"
-              prop="studentGender"
               label="性别">
+        <template slot-scope="scope">
+          {{scope.row.studentGender=='男'||scope.row.studentGender=='m'?'男':'女'}}
+        </template>
       </el-table-column>
       <el-table-column
               align="center"
@@ -82,7 +84,7 @@
                   type="text"
                   size="small">
             <yy_AddOrSetStudentDialog
-                    :stuData="{data:scope.row,text:'修改学生',title:'修改学生信息'}"/>
+                    :stuData="{data:scope.row,text:'修改学生',title:'修改学生信息',nowPage}"/>
           </el-button>
           <el-button
                   type="text"
@@ -97,9 +99,11 @@
 </template>
 
 <script>
+  import {mapActions} from 'vuex'
   import yy_StudentInfoDialog from '@/components/yy_StudentInfoDialog'
   import yy_AddOrSetStudentDialog from '@/components/yy_AddOrSetStudentDialog'
   import delAgain from '@/utils/sureAgainBox'
+  import yy_request from '@/utils/yy_request'
   export default {
     name: "yy_StudentInfoTable",
     components:{
@@ -110,13 +114,22 @@
       return {
       }
     },
-    props:['tableData'],
+    props:['tableData','nowPage'],
+    updated(){
+      console.log(this.tableData);
+    },
     methods:{
+      ...mapActions('yy_module',['getAllStuXiangData']),
       delStu(index,row){
-        console.log(index);
-        console.log(row);
         delAgain.bind(this)({
-          text: "删除"
+          text: "删除",
+          requestFn:yy_request.DelStudentFn,
+          requestData:[row.studentId],
+        }).then(()=>{
+          this.getAllStuXiangData({
+            limit:5,
+            page:this.nowPage,
+          })
         })
       }
     }

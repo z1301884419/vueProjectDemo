@@ -20,26 +20,26 @@
         <div class="beizhu">
           <h3>备注信息</h3>
           <div class="beizhu-text">
-            {{stuData.student_desc}}
+            {{stuData.studentDesc}}
           </div>
         </div>
       </div>
       <div class="xinxi right">
         <ul>
-          <li>学号：<span>{{stuData.student_number}}</span></li>
-          <li>姓名：<span>{{stuData.student_name}}</span></li>
-          <li>性别：<span>{{stuData.student_gender}}</span></li>
-          <li>年龄：<span>{{stuData.student_age}}</span></li>
-          <li>名族：<span>{{stuData.student_nation}}</span></li>
-          <li>政治面貌：<span>{{stuData.student_politics}}</span></li>
-          <li>获奖情况：<span>{{stuData.student_experience}}</span></li>
-          <li>在读状态：<span>{{stuData.student_state==1?'在读':stuData.student_state==2?'休学':'退学'}}</span></li>
-          <li>班主任：<span>{{stuData.student_number}}</span></li>
-          <li>班级：<span>{{stuData.class_name}}</span></li>
-          <li>身份证号：<span>{{stuData.student_idcardno}}</span></li>
-          <li>住址：<span>{{stuData.student_home}}</span></li>
-          <li>联系方式：<span>{{stuData.student_contact}}</span></li>
-          <li>入学日期：<span>{{stuData.student_date}}</span></li>
+          <li>学号：<span>{{stuData.studentNumber}}</span></li>
+          <li>姓名：<span>{{stuData.studentName}}</span></li>
+          <li>性别：<span>{{stuData.studentGender}}</span></li>
+          <li>年龄：<span>{{stuData.studentAge}}</span></li>
+          <li>名族：<span>{{stuData.studentNation}}</span></li>
+          <li>政治面貌：<span>{{stuData.studentPolitics}}</span></li>
+          <li>获奖情况：<span>{{stuData.studentExperience}}</span></li>
+          <li>在读状态：<span>{{stuData.studentState==1?'在读':stuData.student_state==2?'休学':'退学'}}</span></li>
+          <li>班主任：<span>{{stuData.studentNumber}}</span></li>
+          <li>班级：<span>{{stuData.calssFullName}}</span></li>
+          <li>身份证号：<span>{{stuData.studentIdcardno}}</span></li>
+          <li>住址：<span>{{stuData.studentHome}}</span></li>
+          <li>联系方式：<span>{{stuData.studentContact}}</span></li>
+          <li>入学日期：<span>{{stuData.studentDate}}</span></li>
         </ul>
       </div>
     </el-dialog>
@@ -57,13 +57,11 @@
     },
     methods:{
       openDialog(){
+        console.log(this.stuData);
         this.dialogFormVisible = true
       },
       closeDialog(){
         this.dialogFormVisible = false
-      },
-      sureAdd(){
-        console.log(this.form);
       },
     },
   }

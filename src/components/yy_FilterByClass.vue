@@ -18,6 +18,11 @@
       }
     },
     props:['nowClass'],
+    watch:{
+      nowClass(data){
+        this.checkedClass = [...data]
+      }
+    },
     computed:{
       ...mapState('yy_module',['AllClass']),
       //生成新的联级班级选择
@@ -50,14 +55,14 @@
     },
     created(){
       this.AllClass.length>0?"":this.getAllClass();
-      this.nowClass?this.checkedClass=this.nowClass:''
+      this.nowClass?this.checkedClass=this.nowClass:this.checkedClass=""
     },
     methods:{
       ...mapActions('yy_module',['getAllClass']),
       selectClass(value){
-        console.log(value);
+        console.log(value);//班级和年级
         console.log(value[1]);//班级id
-        this.$emit('getClassId',value[1])
+        this.$emit('getClassId',value)
       },
     }
   }

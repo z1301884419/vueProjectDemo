@@ -32,5 +32,11 @@ DELETE_API:data=>http({
     data: data
     // console.log(data);
 }),
+LIUYANHUIFU_API:data=>http({
+  url: '/replay/replayMessage',
+  method: 'post',
+  data: data
+  // console.log(data);
+}),
     
   }

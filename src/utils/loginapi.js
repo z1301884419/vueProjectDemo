@@ -9,13 +9,13 @@ export default {
       data: data
     }),
     HUOQU_API:data=>http({
-        url: '/register/send/message',
+        url: '/loginOrRegist/register/send/message',
         method: 'post',
         data: data
         // console.log(data);
     }),
     ZHUCE_API:data=>http({
-      url: '/register/regist',
+      url: '/loginOrRegist/register/regist',
       method: 'post',
       data: data
       // console.log(data);

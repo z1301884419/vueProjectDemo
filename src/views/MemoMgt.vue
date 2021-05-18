@@ -27,6 +27,12 @@
             <div class="contentCard">
               <div class="content">
                 <span class="contentTitle"
+                v-if="$store.state.loginModules.userShenfen == '班主任'||$store.state.loginModules.userShenfen =='老师'"
+                  >{{ item.receivePersonName}}学生:</span
+                >
+                 <span class="contentTitle"
+          v-else
+
                   >{{ item.receivePersonName}}老师:</span
                 >
                 <span>{{ item.messageContent }}</span>
@@ -35,16 +41,16 @@
                   :key="subItem.id"
                   class="repalyBox"
                 >
-                  <span class="replyTitle">{{ subItem.repalyName }}：</span>
-                  <span>{{ subItem.content }}</span>
+                  <span class="replyTitle">{{ subItem.receivePersonName }}：</span>
+                  <span>{{ subItem.replayContent }}</span>
                 </p>
                 <el-input
-                  v-if="item.id == id"
+                  v-if="item.messageId == id"
                   class="inputBox"
                   type="textarea"
-                  v-model="input2"
+                  v-model="form.input2"
                 ></el-input>
-                <el-button v-if="item.id == id" size="mini" class="successBtn"
+                <el-button v-if="item.messageId == id" size="mini" class="successBtn"
                   >回复</el-button
                 >
               </div>
@@ -59,9 +65,9 @@
                 >删除</el-button>
                 <el-button
                   size="mini"
-                  v-if="item.id != id"
+                  v-if="item.messageId != id"
                   round
-                  @click="replyClick(item.id)"
+                  @click="replyClick(item.messageId)"
                   >回复</el-button
                 >
 
@@ -80,24 +86,31 @@
             <div class="contentCard">
               <div class="content">
                 <span class="contentTitle"
-                  >{{ item.teacher }}({{ item.subject }}老师)123:</span
+          v-if="$store.state.loginModules.userShenfen == '班主任'||$store.state.loginModules.userShenfen =='老师'"
+
+                  >{{ item.sendPersonName}}学生:</span
                 >
-                <span>{{ item.content }}</span>
+                <span class="contentTitle"
+          v-else
+
+                  >{{ item.sendPersonName}}老师:</span
+                >
+                <span>{{ item.messageContent }}</span>
                 <p
-                  v-for="subItem in item.subList"
-                  :key="subItem.id"
+                  v-for="subItem in item.replayList"
+                  :key="subItem.replayId"
                   class="repalyBox"
                 >
-                  <span class="replyTitle">{{ subItem.repalyName }}：</span>
-                  <span>{{ subItem.content }}</span>
+                  <span class="replyTitle">{{ subItem.receivePersonName }}：</span>
+                  <span>{{ subItem.replayContent }}</span>
                 </p>
                 <el-input
-                  v-if="item.id == id"
+                  v-if="item.messageId == id"
                   class="inputBox"
                   type="textarea"
-                  v-model="input2"
+                  v-model="form.input2"
                 ></el-input>
-                <el-button v-if="item.id == id" size="mini" class="successBtn"
+                <el-button @click="replyliuyanClick()" v-if="item.messageId == id" size="mini" class="successBtn"
                   >回复</el-button
                 >
               </div>
@@ -105,17 +118,17 @@
                 <el-button size="mini" round>删除</el-button>
                 <el-button
                   size="mini"
-                  v-if="item.id != id"
+                  v-if="item.messageId != id"
                   round
-                  @click="replyClick(item.id)"
+                  @click="replyClick(item.messageId)"
                   >回复</el-button
                 >
               </div>
             </div>
           </el-card>
-          <!-- <div class="block">
+          <div class="block">
           <el-pagination layout="prev, pager, next" :total="pageTotal" :page-size="pageSize" @current-change="changePage"></el-pagination>
-          </div> -->
+          </div>
         </el-tab-pane>
       </el-tabs>
       <!-- <h3>
@@ -142,12 +155,13 @@ export default {
         region1:"",
         input: "",
         id:"",
-        type:""
+        type:"",
+      input2: "",
+
 
       },
       tableData1:"",
       activeName: "first",
-      input2: "",
       id: 0,
       tableData: [
         {
@@ -188,6 +202,17 @@ this.getData1()
 
   },
   methods: {
+    replyliuyanClick(){
+      this.LoginAction12({
+        name: "LIUYANHUIFU_API",
+        data: {messageId:this.id,replayContent:this.form.input2},
+      }).then((data) => {
+        console.log(data);
+        this.getData1()
+        // this.KeyWordTableData=data.data
+        // this.pageTotal=data.count
+      });
+    },
     
      deleteUser(obj){
 console.log(obj);
@@ -217,6 +242,24 @@ this.form.type=event.bb
         },
       }).then((data) => {
         console.log(data);
+        if(data.data.code==1006){
+           this.$confirm('您输入的词语带有敏感词！', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          // this.$message({
+          //   type: 'success',
+          //   message: '删除成功!'
+          // });
+          this.form.input=""
+        }).catch(() => {
+          // this.$message({
+          //   type: 'info',
+          //   message: '已取消删除'
+          // });          
+        });
+        }
         // this.tableData1=data.data
         // this.pageTotal=data.count
       });

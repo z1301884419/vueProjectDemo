@@ -177,7 +177,7 @@
             <el-radio v-model="form1.parentSex" label="w">女</el-radio>
           </el-form-item>
           <el-upload
-            action="http://172.16.14.8:8091/register/upload"
+            action="http://172.16.14.46:8410/loginOrRegist/register/upload"
             list-type="picture-card"
             :on-success="handlePictureCardPreview"
             :on-remove="handleRemove"

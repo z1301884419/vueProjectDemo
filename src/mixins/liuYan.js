@@ -41,6 +41,7 @@ export default {
         console.log(obj);
         return api[obj.name](obj.data).then(data=>{
           console.log(data);
+          return data
   
         })
       },
@@ -54,6 +55,15 @@ export default {
         })
       },
       LoginAction11(obj){
+        console.log(obj);
+        return api[obj.name](obj.data).then(data=>{
+          console.log(data);
+          return data.data
+
+  
+        })
+      },
+      LoginAction12(obj){
         console.log(obj);
         return api[obj.name](obj.data).then(data=>{
           console.log(data);

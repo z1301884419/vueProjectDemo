@@ -67,9 +67,19 @@
             </el-badge>
           </div>
           <router-link :to="{ path: '/Home/PersonalCenter' }">
-            <el-avatar class="headerSpan" :size="50"
+            <el-avatar v-if="$store.state.loginModules.userShenfen == '学生'"
+ class="headerSpan" :size="50"
+              ><img :src="user1" alt=""
+            /></el-avatar>
+          <el-avatar v-else-if="$store.state.loginModules.userShenfen == '家长'" class="headerSpan" :size="50"
               ><img :src="user" alt=""
             /></el-avatar>
+
+            <el-avatar v-else class="headerSpan" :size="50"
+              ><img :src="user2" alt=""
+            /></el-avatar>
+
+
             <!-- :src="{{user.parentImg}}" -->
           </router-link>
           <div class="exitBox" @click="tuichu">
@@ -77,7 +87,7 @@
           </div>
         </div>
       </el-header>
-      <el-main>
+      <el-main class="asideLeft">
         <div class="contentBox">
           <router-view></router-view>
         </div>
@@ -92,6 +102,8 @@ export default {
   data() {
     return {
       user: this.$store.state.loginModules.user.parentImg,
+      user1:this.$store.state.loginModules.user.studentPhoto,
+       user2:this.$store.state.loginModules.user.staffImg,
       bodyHeight: window.innerHeight,
       currentIndex: 0,
       navList: [
@@ -521,4 +533,5 @@ body > .el-container {
   border-radius: 0;
   background-color: rgb(189, 189, 189);
 }
+
 </style>

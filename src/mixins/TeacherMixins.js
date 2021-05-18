@@ -58,29 +58,5 @@ export default {
         return data.data.code
       })
     },
-    // // 查询
-    // getDiaLogData(obj) {
-    //   return api[obj.name](obj.data).then(data => {
-    //     if (data.data.code == 200) {
-    //       console.log(data.data);
-    //       return data.data.list || data.data.obj
-    //     }
-    //     return data.data.msg
-    //   })
-    // },
   },
-  computed: {
-    // 显示一页数据
-    // getOnePage() {
-    //   let begin = (this.nowPage - 1) * this.pageSize;
-    //   this.onePage = this.dataList.slice(begin, begin + this.pageSize);
-    //   return { onePageData: this.onePage, totalPages: this.dataList.length }
-    // },
-    // // 显示一页数据
-    // getOnePage2() {
-    //   let begin = (this.nowPage2 - 1) * this.pageSize;
-    //   this.onePage2 = this.dataList2.slice(begin, begin + this.pageSize);
-    //   return { onePageData: this.onePage2, totalPages: this.dataList2.length }
-    // }
-  }
 }

@@ -257,17 +257,13 @@ export default {
       });
     },
     searchFn(){ //搜索的方法
-      // console.log(this.searchForm);  
-      // page: this.page,
-      // limit: this.pageSize
       this.searchForm.limit = this.pageSize;
       this.searchForm.page = this.page;
       this.getAllDataT({
         name: "STAFF_SELECT",
         data: this.searchForm
       }).then(data=>{
-        console.log(data);
-          data.data.map(item=> item.roleId = item.roleId == 3 ? '班主任' : '任课教师');
+          data.data.map(item=> item.roleId = item.roleList.length > 0 ? '班主任' : '任课教师');
           this.tableData = data.data;
           this.totalLength = data.count;
       });
@@ -294,14 +290,11 @@ export default {
           limit: this.pageSize
         }
       }).then(data => {
-        data.data.map(item=> item.roleId = item.roleId == 3 ? '班主任' : '任课教师');
+        data.data.map(item=> item.roleId = item.roleList.length > 0 ? '班主任' : '任课教师');
         this.tableData = data.data;
         this.totalLength = data.count;
       })
     }
-    
-    
-    
   },
   created(){
     this.getAllSubject(); //获取所有学科

@@ -32,7 +32,8 @@ export default {
     getAllData(obj) {
       return api[obj.name](obj.data).then(data => {
         if (data.data.code == 200) {
-          return data.data.data;
+          console.log(data);
+          return {data: data.data.data, count: data.data.count};
         }
         return data.data.msg
       })
@@ -58,16 +59,17 @@ export default {
         this.openInfo('提示', "操作已取消!");
       });
     },
-    // // 修改数据的方法
-    // ModifyDate(obj) {
-    //   return api[obj.name](obj.data).then(data => {
-    //     console.log(data);
-    //     if (data.data.code == 200) {
-    //       this.openSuccess("修改成功", "该信息已修改成功!")
-    //     }
-    //     return data.data.code
-    //   })
-    // },
+    // 修改数据的方法
+    ModifyDateT(obj) {
+      console.log(obj);
+      return api[obj.name](obj.data).then(data => {
+        console.log('修改', data);
+        if (data.data.code == 200) {
+          this.openSuccess("修改成功", "该信息已修改成功!")
+        }
+        return data.data.code
+      })
+    },
     // 新增数据的方法
     InsertDate(obj) {
       console.log(obj);

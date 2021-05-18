@@ -40,8 +40,23 @@ export default {
     method: 'post',
     data: data
   }),
-  SELECT_DELETE: data => http({ // 删除班级
-    url: SELECT_DELETE,
+  SELECT_UPDATE: data => http({ // 修改班级
+    url: SELECT_UPDATE,
+    method: 'post',
+    data: data
+  }),
+  SELECT_UPDATETEACHER: data => http({ // 分配任课教师
+    url: SELECT_UPDATETEACHER,
+    method: 'post',
+    data: data
+  }),
+  SELECT_UPDATEHEADERTEACHER: data => http({ // 分配班主任
+    url: SELECT_UPDATEHEADERTEACHER,
+    method: 'post',
+    data: data
+  }),
+  SELECT_CLASSROOMALL: data => http({ // 查询所有教是
+    url: SELECT_CLASSROOMALL,
     method: 'post',
     data: data
   }),
@@ -54,4 +69,7 @@ const CLASSROOM_NOTUSE= '/classroom/notUse';
 const CLASS_TOTALDATA= '/clazz/all';
 const CLASS_ADD= '/clazz/add';
 const SELECT_HEADERTEACHER= '/staff/headTeacher';
-const SELECT_DELETE= '/clazz/del';
+const SELECT_UPDATE= '/clazz/update';
+const SELECT_UPDATETEACHER= '/clazz/update/Teacher';
+const SELECT_UPDATEHEADERTEACHER= '/clazz/update/headTeacher';
+const SELECT_CLASSROOMALL= '/classroom/all';

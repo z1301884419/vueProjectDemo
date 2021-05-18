@@ -13,6 +13,27 @@ export default{
     method:'post',
     data:data
   }),
+  // 添加考试信息
+  ADDEXAM:data=>http({
+    url:ADDEXAM,
+    method:'post',
+    data:data
+  }),
+  // 取消考试信息
+  DELEXAM:data=>http({
+    url:DELEXAM,
+    method:'post',
+    data:data
+  }),
+  // 查看考试班级
+  SELECTCLASSLIST:data=>http({
+    url:SELECTCLASSLIST,
+    method:'post',
+    data:data
+  }),
 }
 const SELECTEXAMALL = '/exam/find'
 const SELECTEXAMCLASS='/exam/GradeClass'
+const ADDEXAM='/exam/add'
+const DELEXAM='/exam/del'
+const SELECTCLASSLIST='/exam/lookGradeClass'

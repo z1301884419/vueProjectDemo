@@ -42,7 +42,11 @@
     <div class="mainbox">
       <!-- 表格 -->
       <div class="checkInTable">
-        <el-table :data="checkInTableData" style="width: 100%" :header-cell-style="{background:'#D4EDF9',color:'#000'}">
+        <el-table
+          :data="checkInTableData"
+          style="width: 100%"
+          :header-cell-style="{ background: '#D4EDF9', color: '#000' }"
+        >
           <el-table-column
             prop="student.studentId"
             label="学生id"
@@ -72,14 +76,14 @@
           >
           </el-table-column>
           <el-table-column label="操作" align="center">
-            <template>
-              <!--  slot-scope="scope" -->
+            <template slot-scope="scope">
               <el-button
                 size="mini"
                 type="primary"
-                icon="el-icon-edit"
-                circle
-              ></el-button>
+                round
+                v-if="scope.row"
+                @click="modifyStatus(scope.row), (dialogModifyAtt = true)"
+              >修改</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -100,6 +104,52 @@
         style="width: 600px; height: 400px"
       ></div>
     </div>
+    <!-- 修改考勤信息模态框 -->
+    <el-dialog title="修改考勤状态" :visible.sync="dialogModifyAtt">
+      <el-form :model="attDataform">
+        <el-form-item label="学生ID" :label-width="formLabelWidth">
+          <el-input v-model="attDataform.student.studentId" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="学生姓名" :label-width="formLabelWidth">
+          <el-input v-model="attDataform.student.studentName" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="当前签到状态" :label-width="formLabelWidth">
+          <el-input v-model="attDataform.attendabnceAmStatus" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="当前签退状态" :label-width="formLabelWidth">
+          <el-input v-model="attDataform.attendabncePmStatus" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="修改状态" :label-width="formLabelWidth">
+          <el-select v-model="attDataform.status" placeholder="请选择修改状态">
+            <el-option label="正常" value="0"></el-option>
+            <el-option label="迟到" value="1"></el-option>
+            <el-option label="待考勤" value="2"></el-option>
+            <el-option label="早退" value="3"></el-option>
+            <el-option label="请假" value="4"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="添加记录时间" :label-width="formLabelWidth">
+          <div class="block">
+            <el-date-picker v-model="value1" type="date" placeholder="选择日期">
+            </el-date-picker>
+            <el-time-picker
+              v-model="time1"
+              :picker-options="{
+                selectableRange: '18:30:00 - 20:30:00',
+              }"
+              placeholder="任意时间点"
+            >
+            </el-time-picker>
+          </div>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogModifyAtt = false">取 消</el-button>
+        <el-button type="primary" @click="dialogModifyAtt = false"
+          >确 定</el-button
+        >
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -142,9 +192,17 @@ export default {
       CheckInDateStart: "", //开始日期
       CheckInDateEnd: "", //查询结束日期
       checkInTableData: [], //表格数据
-      pageTotal: 20,//表格页码----最大条数
-      pageSize: 8,//表格页码----一页显示多少条
-      nowPage: 1,//表格页码----当前页
+      pageTotal: 20, //表格页码----最大条数
+      pageSize: 8, //表格页码----一页显示多少条
+      nowPage: 1, //表格页码----当前页
+      dialogModifyAtt: false, //修改考勤信息模态框
+      attDataform: {
+        student:{},
+        status:''
+      },
+      formLabelWidth: "100px",
+      value1: "",
+      time1: new Date(2016, 9, 10, 18, 40),
     };
   },
   mixins: [checkInMixins],
@@ -163,8 +221,8 @@ export default {
         },
         tooltip: {},
         legend: {
-           orient: 'vertical',
-           right: '20',
+          orient: "vertical",
+          right: "20",
         },
         series: [
           {
@@ -203,7 +261,18 @@ export default {
         }
       });
     },
+    // 修改考勤信息
+    modifyStatus(obj) {
+      console.log(obj);
+      this.attDataform={...obj};
+      // for (let key in this.attDataform){
+      //   // if(key==attendabnceAmStatus){
+      //   //   // 0 正常 1 迟到 默认2 2 待考勤 4 请假
+          
+      //   // }
+      // }
 
+    },
   },
   mounted() {
     this.drawChart();

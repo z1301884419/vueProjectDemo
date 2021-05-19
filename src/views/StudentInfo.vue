@@ -95,7 +95,7 @@
         <el-pagination
                 :hide-on-single-page="true"
                 :page-size="5"
-                :pager-count="9"
+                :pager-count="7"
                 layout="prev, pager, next"
                 :current-page="nowPage"
                 @current-change="currentChange"

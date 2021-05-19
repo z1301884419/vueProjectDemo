@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-select v-model="value" @change="changeValue" clearable placeholder="请输入学科">
+    <el-select v-model="value" @change="changeValue" clearable placeholder="请选择学科">
       <el-option
               v-for="item in AllSubject"
               :key="item.subjectId"

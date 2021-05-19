@@ -1,6 +1,8 @@
 <template>
   <div class="add-stus">
-    <el-button type="text" class="add-btn" size="small" @click="openDialog">批量添加学生</el-button>
+    <el-button type="text"
+               class="add-btn" size="small"
+               @click="openDialog">批量添加学生</el-button>
 
     <el-dialog
             :modal-append-to-body="false"

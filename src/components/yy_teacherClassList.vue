@@ -10,27 +10,27 @@
 </template>
 
 <script>
-  import { mapState,mapActions } from 'vuex'
+  import yy_request from '@/utils/yy_request'
   export default {
-    name: "yy_FilterByClass",
+    name: "yy_teacherClassList",
     data(){
       return{
         checkedClass:[],
+        teacherClassList:[],
       }
     },
-    props:['nowClass',],
+    props:['nowClass'],
     watch:{
       nowClass(data){
         this.checkedClass = [...data]
       }
     },
     computed:{
-      ...mapState('yy_module',['AllClass']),
       //生成新的联级班级选择
       newClassList(){
         //生成新的班级列表
         let newClassArr = [];
-        this.AllClass.map(v=>{
+        this.teacherClassList.map(v=>{
           newClassArr.push({value:v.classGradeId,label:v.gradeName,children:[]})
           return
         })
@@ -43,7 +43,7 @@
         })
         //生成新的年级列表结束
         //根据年级取该年纪的班级列表
-        this.AllClass.forEach(v=>{
+        this.teacherClassList.forEach(v=>{
           newClassArr.forEach((vG,vI)=>{
             if(v.classGradeId==vG.value){
               newClassArr[vI].children.push({value:v.classId,label:v.className})
@@ -55,14 +55,12 @@
       }
     },
     created(){
-      this.AllClass.length>0?"":this.getAllClass();
-      this.nowClass?this.checkedClass=this.nowClass:this.checkedClass=""
+      yy_request.SelectClassByTeacherFn().then(res=>{
+        this.teacherClassList = res.data
+      })
     },
     methods:{
-      ...mapActions('yy_module',['getAllClass']),
       selectClass(value){
-        //console.log(value);//班级和年级
-        //console.log(value[1]);//班级id
         this.$emit('getClassId',value)
       },
     }

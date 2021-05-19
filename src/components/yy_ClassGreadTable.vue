@@ -6,19 +6,19 @@
             :default-sort = "{prop: 'total', order: 'descending'}"
             style="width: 100%">
       <el-table-column
-              align="center"
-              prop="class_name"
-              label="班级">
-      </el-table-column>
-      <el-table-column
               fixed
               align="center"
-              prop="name"
+              prop="studentName"
               label="姓名">
       </el-table-column>
       <el-table-column
               align="center"
-              prop="yuwen"
+              prop="className"
+              label="班级">
+      </el-table-column>
+      <el-table-column
+              align="center"
+              prop="subjectScore[0][scoreScore]"
               sortable
               label="语文">
       </el-table-column>
@@ -54,7 +54,7 @@
       </el-table-column>
       <el-table-column
               align="center"
-              prop="total"
+              prop="sumScore"
               sortable
               label="总分">
       </el-table-column>

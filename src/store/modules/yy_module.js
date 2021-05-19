@@ -9,9 +9,7 @@ export default{
     //所有学生数据
     AllStuXiangData:[],
     //学生信息总长度
-    AllStuXiangDataLength:'',
-    //学生成绩表数据
-    classGreadData:[],
+    AllStuXiangDataLength:0,
     //所有学科信息
     AllSubject:[],
     //所有班级信息
@@ -19,7 +17,11 @@ export default{
     //家长信息
     StuParentData:[],
     //家长信息长度
-    StuParentDataLength:'',
+    StuParentDataLength:0,
+    //该班学生的成绩信息
+    AllStuScores:[],
+    //学生成绩的长度
+    AllStuScoresLength:0,
   },
   mutations: {
     setAllSubject(state,data){
@@ -41,6 +43,14 @@ export default{
     //保存家长信息的总长度
     setStuParentDataLength(state,value){
       state.StuParentDataLength = value
+    },
+    //保存该班学生成绩信息
+    setAllStuScores(state,value){
+      state.AllStuScores = value
+    },
+    //保存该班学生成绩信息的总长度
+    setAllStuScoresLength(state,value){
+      state.AllStuScoresLength = value
     },
 
 
@@ -71,5 +81,16 @@ export default{
         return res
       })
     },
+    //获取该班学生成绩信息
+    getAllStuScores(context,pageData){
+      console.log(pageData);
+      return yy_request.SelsectAllStuScoresFn(pageData).then(res=>{
+        console.log(res);
+        context.commit('setAllStuScores',res.data)
+        context.commit('setAllStuScoresLength',res.count)
+        return res
+      })
+    },
+
   },
 }

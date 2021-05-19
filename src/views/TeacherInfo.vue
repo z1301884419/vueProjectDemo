@@ -43,7 +43,6 @@
           <el-button class="editBtn" icon="el-icon-edit" circle  @click="modifyDialogShow(scope.row)"></el-button>
           <el-button class="deleteBtn" type="danger" icon="el-icon-delete" circle @click="deleteTeacherRequest(scope.row)"></el-button>
         </template>
-        
       </el-table-column>
     </el-table>
 
@@ -251,9 +250,7 @@ export default {
         data: {staffIds: [row.staffId]}
       }).then(data=>{
         console.log(data);
-        if(data === 200){
-          this.getAllTeacher();
-        }
+        this.getAllTeacher();
       });
     },
     searchFn(){ //搜索的方法

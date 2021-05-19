@@ -8,12 +8,28 @@
     </el-breadcrumb>
     <el-divider></el-divider>
 
+    <!-- 搜索框 -->
+    <el-form :inline="true" :model="searchForm" class="demo-form-inline">
+      <el-form-item>
+        <el-input v-model="searchForm.studentName" placeholder="请输入学生姓名"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button plain class="plainBtn" @click="searchInfo">查询</el-button>
+        <el-button type="info" plain @click="resizeFn">重置</el-button>
+      </el-form-item>
+    </el-form>
+
     <!-- 表格部分 -->
     <el-table :data="tableData" style="width: 96%" >
       <el-table-column prop="parentId" label="家长编号" align="center"></el-table-column>
       <el-table-column prop="parentName" label="家长姓名" align="center"></el-table-column>
-      <el-table-column prop="studentList.studentName" label="孩子姓名" align="center"></el-table-column>
+      <el-table-column prop="childrenName" label="孩子姓名" align="center"></el-table-column>
       <el-table-column prop="parentPhone" label="电话" align="center"></el-table-column>
+      <el-table-column label="操作" align="center">
+        <template slot-scope="scope">
+          <el-button class="deleteBtn" type="danger" icon="el-icon-delete" circle @click="deleteTeacherRequest(scope.row)"></el-button>
+        </template>
+      </el-table-column>
     </el-table>
 
     <!-- 页码 -->
@@ -22,19 +38,94 @@
 </template>
 
 <script>
+import stuParentsMixins from '../mixins/stuParentsMixins'
 export default {
   data() {
     return {
       tableData: [], //总数据
       pageSize: 10, //一页显示多少条
       totalLength: 0, //一共有多少条数据
-      page: 1,
       searchForm: {
-        subjectId: "",
-        staffNumber: ""
+        studentName: "",
       },
     }
   },
+  mixins: [stuParentsMixins],
+  methods: {
+    getAllParents(){ //获取第一页数据
+      this.getAllData({
+        name: 'SELETE_PARENTS',
+        data:{},
+        pageSize: this.pageSize,
+      }).then(data=>{
+        console.log(data);
+        data.onePageData.map(item=>{
+          item.childrenName = ''
+          for(let i = 0; i < item.studentList.length; i++){
+            if(item.studentList.length > 1){
+              item.childrenName += item.studentList[i].studentName + '、'
+            
+            } else {
+              item.childrenName = item.studentList[0].studentName + '、'
+            }
+          }
+          item.childrenName = item.childrenName.substr(0, item.childrenName.length - 1);
+        })
+        this.tableData = data.onePageData;
+        this.totalLength = data.totalPages;
+      })
+    },
+    handleCurrentChange(val) {
+      let data = this.Paging(val);
+      this.tableData = data.onePageData;
+    },
+    searchInfo(){
+      console.log(this.searchForm);
+      this.getAllData({
+        name: 'SELETE_PARENTS',
+        data: this.searchForm,
+        pageSize: this.pageSize,
+      }).then(data=>{
+        console.log(data);
+        data.onePageData.map(item=>{
+          item.childrenName = ''
+          for(let i = 0; i < item.studentList.length; i++){
+            if(item.studentList.length > 1){
+              item.childrenName += item.studentList[i].studentName + '、'
+            
+            } else {
+              item.childrenName = item.studentList[0].studentName + '、'
+            }
+          }
+          item.childrenName = item.childrenName.substr(0, item.childrenName.length - 1);
+        })
+        this.tableData = data.onePageData;
+        this.totalLength = data.totalPages;
+      })
+    },
+    resizeFn(){
+      this.getAllParents()
+    },
+    deleteTeacherRequest(row){
+      console.log(row.parentId);
+      this.DeleteData({
+        name: 'DELETE_PARENT',
+        data:{
+          parentId: row.parentId
+        }
+      }).then(data=>{
+        if(data === 200){
+          this.getAllParents();
+        }
+      });
+    }
+  },
+  created(){
+    this.searchForm = {
+      studentName: "",
+    },
+    this.getAllParents()
+  }
 }
 </script>
 
@@ -113,5 +204,14 @@ export default {
       margin-right: 0;
     }
   }
+}
+.deleteBtn {
+  background-color: #F9D789;
+  border: 1px solid #F9D789;
+  color: #08ac7e;
+}
+.deleteBtn:hover {
+  background-color: #f7db9a;
+  border: 1px solid #f7db9a;
 }
 </style>

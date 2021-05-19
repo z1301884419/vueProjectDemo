@@ -16,24 +16,24 @@
           @open="handleOpen"
           @close="handleClose"
         >
-          <div v-for="item in navList" :key="item.id">
-            <el-submenu :index="item.path" v-if="item.children">
+          <div v-for="item in menuList" :key="item.menuId">
+            <el-submenu :index="item.componentPath" v-if="item.subMenu.length>0">
               <template slot="title">
-                <i :class="item.icon"></i>
-                <span>{{ item.name }}</span>
+                <i :class="item.menuIcon"></i>
+                <span>{{ item.menuName }}</span>
               </template>
               <el-menu-item-group
-                v-for="subItem in item.children"
-                :key="subItem.id"
+                v-for="subItem in item.subMenu"
+                :key="subItem.menuId"
               >
-                <el-menu-item :index="subItem.path">{{
-                  subItem.name
+                <el-menu-item :index="subItem.componentPath">{{
+                  subItem.menuName
                 }}</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
-            <el-menu-item :index="item.path" v-else>
-              <i :class="item.icon"></i>
-              <span slot="title">{{ item.name }}</span>
+            <el-menu-item :index="item.componentPath" v-else>
+              <i :class="item.menuIcon"></i>
+              <span slot="title">{{ item.menuName }}</span>
             </el-menu-item>
           </div>
         </el-menu>
@@ -59,10 +59,10 @@
         </div>
         <div class="userBox">
           <div class="messageBox">
-            <el-badge :value="3" class="item">
+            <!-- <el-badge :value="3" class="item">
               <span class="iconfont icon-lingdang"></span>
-            </el-badge>
-            <el-badge :value="4" class="item">
+            </el-badge> -->
+            <el-badge :value="$store.state.loginModules.liuyanNum" class="item">
               <span class="iconfont icon-xinfeng"></span>
             </el-badge>
           </div>
@@ -97,6 +97,8 @@
 </template>
 <script>
 import { mapMutations } from "vuex";
+import { mapActions } from "vuex";
+
 import homeMixins from "../mixins/homeMixins";
 export default {
   data() {
@@ -106,130 +108,147 @@ export default {
        user2:this.$store.state.loginModules.user.staffImg,
       bodyHeight: window.innerHeight,
       currentIndex: 0,
-      navList: [
-        {
-          id: 1,
-          index: "1",
-          name: "首页",
-          path: "/Home/HomePage",
-          icon: "el-icon-dish",
-          children: "",
-        },
-        {
-          id: 2,
-          index: "2",
-          name: "学生管理",
-          icon: "el-icon-knife-fork",
-          path: "/Home/StudentMgt",
-          children: [
-            {
-              id: 2 - 1,
-              index: "2-1",
-              name: "学生信息管理",
-              icon: "el-icon-knife-fork",
-              path: "/Home/StudentInfo",
-            },
-            {
-              id: 2 - 2,
-              index: "2-2",
-              name: "学生家长管理",
-              icon: "el-icon-knife-fork",
-              path: "/Home/StuParentMgt",
-            },
-            {
-              id: 2 - 3,
-              index: "2-3",
-              name: "学生成绩管理",
-              icon: "el-icon-knife-fork",
-              path: "/Home/StudentScore",
-            },
-          ],
-        },
-        {
-          id: 3,
-          index: "3",
-          name: "教学管理",
-          path: "/Home/EduMgt",
-          icon: "el-icon-food",
-          children: [
-            {
-              id: 3 - 1,
-              index: "3-1",
-              name: "考试管理",
-              icon: "el-icon-knife-fork",
-              path: "/Home/ExamMgt",
-            },
-            {
-              id: 3 - 2,
-              index: "3-2",
-              name: "考勤管理",
-              icon: "el-icon-knife-fork",
-              path: "/Home/CheckInMgt",
-            },
-            {
-              id: 3 - 3,
-              index: "3-3",
-              name: "课程管理",
-              icon: "el-icon-knife-fork",
-              path: "/Home/CourseMgt",
-            },
-          ],
-        },
-        {
-          id: 4,
-          index: "4",
-          name: "师资管理",
-          path: "/Home/TeaInfo",
-          icon: "el-icon-food",
-          children: [
-            {
-              id: 4 - 1,
-              index: "4-1",
-              name: "教师信息管理",
-              icon: "el-icon-knife-fork",
-              path: "/Home/TeacherInfo",
-            },
-            {
-              id: 4 - 2,
-              index: "4-2",
-              name: "教务管理",
-              icon: "el-icon-knife-fork",
-              path: "/Home/EduAdminiStration",
-            },
-          ],
-        },
-        {
-          id: 5,
-          index: "5",
-          name: "留言板",
-          path: "/Home/MemoMgt",
-          icon: "el-icon-dish",
-          children: "",
-        },
-        {
-          id: 6,
-          index: "6",
-          name: "教室管理",
-          path: "/Home/ClassRoomMgt",
-          icon: "iconfont icon-jiaoshiguanli1",
-          children: "",
-        },
-        {
-          id: 7,
-          index: "7",
-          name: "关键字管理",
-          path: "/Home/AddMemoMgt",
-          icon: "iconfont icon-minganguanjianzi",
-          children: "",
-        },
-      ],
+      // navList: [
+      //   {
+      //     id: 1,
+      //     index: "1",
+      //     name: "首页",
+      //     path: "/Home/HomePage",
+      //     icon: "el-icon-dish",
+      //     children: "",
+      //   },
+      //   {
+      //     id: 2,
+      //     index: "2",
+      //     name: "学生管理",
+      //     icon: "el-icon-knife-fork",
+      //     path: "/Home/StudentMgt",
+      //     children: [
+      //       {
+      //         id: 2 - 1,
+      //         index: "2-1",
+      //         name: "学生信息管理",
+      //         icon: "el-icon-knife-fork",
+      //         path: "/Home/StudentInfo",
+      //       },
+      //       {
+      //         id: 2 - 2,
+      //         index: "2-2",
+      //         name: "学生家长管理",
+      //         icon: "el-icon-knife-fork",
+      //         path: "/Home/StuParentMgt",
+      //       },
+      //       {
+      //         id: 2 - 3,
+      //         index: "2-3",
+      //         name: "学生成绩管理",
+      //         icon: "el-icon-knife-fork",
+      //         path: "/Home/StudentScore",
+      //       },
+      //     ],
+      //   },
+      //   {
+      //     id: 3,
+      //     index: "3",
+      //     name: "教学管理",
+      //     path: "/Home/EduMgt",
+      //     icon: "el-icon-food",
+      //     children: [
+      //       {
+      //         id: 3 - 1,
+      //         index: "3-1",
+      //         name: "考试管理",
+      //         icon: "el-icon-knife-fork",
+      //         path: "/Home/ExamMgt",
+      //       },
+      //       {
+      //         id: 3 - 2,
+      //         index: "3-2",
+      //         name: "考勤管理",
+      //         icon: "el-icon-knife-fork",
+      //         path: "/Home/CheckInMgt",
+      //       },
+      //       {
+      //         id: 3 - 3,
+      //         index: "3-3",
+      //         name: "课程管理",
+      //         icon: "el-icon-knife-fork",
+      //         path: "/Home/CourseMgt",
+      //       },
+      //     ],
+      //   },
+      //   {
+      //     id: 4,
+      //     index: "4",
+      //     name: "师资管理",
+      //     path: "/Home/TeaInfo",
+      //     icon: "el-icon-food",
+      //     children: [
+      //       {
+      //         id: 4 - 1,
+      //         index: "4-1",
+      //         name: "教师信息管理",
+      //         icon: "el-icon-knife-fork",
+      //         path: "/Home/TeacherInfo",
+      //       },
+      //       {
+      //         id: 4 - 2,
+      //         index: "4-2",
+      //         name: "教务管理",
+      //         icon: "el-icon-knife-fork",
+      //         path: "/Home/EduAdminiStration",
+      //       },
+      //     ],
+      //   },
+      //   {
+      //     id: 5,
+      //     index: "5",
+      //     name: "留言板",
+      //     path: "/Home/MemoMgt",
+      //     icon: "el-icon-dish",
+      //     children: "",
+      //   },
+      //   {
+      //     id: 6,
+      //     index: "6",
+      //     name: "教室管理",
+      //     path: "/Home/ClassRoomMgt",
+      //     icon: "iconfont icon-jiaoshiguanli1",
+      //     children: "",
+      //   },
+      //   {
+      //     id: 7,
+      //     index: "7",
+      //     name: "关键字管理",
+      //     path: "/Home/AddMemoMgt",
+      //     icon: "iconfont icon-minganguanjianzi",
+      //     children: "",
+      //   },
+      // ],
       signInFlag: false,
       signInText: "",
+      menuList:this.$store.state.loginModules.userMenulist
     };
   },
   mixins: [homeMixins],
   methods: {
     ...mapMutations(["loginModules/mutationsLoginOut"]),
+    ...mapActions(["loginModules/LoginAction1"]),
+
+    //获取留言未读数量
+    liuyanshuliang(){
+        this["loginModules/LoginAction1"]({
+        name: "LIUYANNUM_API",
+        data: {},
+      }).then((data) => {
+        console.log(data);
+        // if(data==200){
+        //   console.log('chengg');
+        //   this.$router.push("/Home");
+          
+        // }
+      });
+    },
     // 退出登录
     tuichu() {
       this.$confirm("您确定要退出登录吗？", "温馨提示", {
@@ -349,6 +368,8 @@ export default {
   },
   created() {
     this.selectSignIn();
+    this.liuyanshuliang();
+    console.log(this.menuList);
   },
 };
 </script>

@@ -43,16 +43,25 @@
                 >
                   <span class="replyTitle">{{ subItem.receivePersonName }}：</span>
                   <span>{{ subItem.replayContent }}</span>
-                </p>
+                  <el-button
+                  size="mini"
+                  v-if="subItem.replayId != id"
+                  round
+                  @click="replyClick(subItem.replayId)"
+                  >回复</el-button
+                >
+                <!-- </p> -->
                 <el-input
-                  v-if="item.messageId == id"
+                  v-if="subItem.replayId == id"
                   class="inputBox"
                   type="textarea"
                   v-model="form.input2"
                 ></el-input>
-                <el-button v-if="item.messageId == id" size="mini" class="successBtn"
+                <el-button @click="replyliuyanClick1()" v-if="subItem.replayId == id" size="mini" class="successBtn"
                   >回复</el-button
                 >
+                </p>
+
               </div>
           <!-- <template slot-scope="scope"> -->
 
@@ -63,13 +72,13 @@
                 round 
               @click="deleteUser(item.messageId)"
                 >删除</el-button>
-                <el-button
+                <!-- <el-button
                   size="mini"
                   v-if="item.messageId != id"
                   round
                   @click="replyClick(item.messageId)"
                   >回复</el-button
-                >
+                > -->
 
               </div>
           <!-- </template> -->
@@ -213,6 +222,17 @@ this.getData1()
         // this.pageTotal=data.count
       });
     },
+    replyliuyanClick1(){
+      this.LoginAction13({
+        name: "LIUYANPINGLUN_API",
+        data: {replayId:this.id,replayContent:this.form.input2},
+      }).then((data) => {
+        console.log(data);
+        this.getData1()
+        // this.KeyWordTableData=data.data
+        // this.pageTotal=data.count
+      });
+    },
     
      deleteUser(obj){
 console.log(obj);
@@ -314,12 +334,13 @@ this.form.type=event.bb
     // },
     replyClick(id) {
       this.id = id;
+      console.log(id);
     },
     handleClick(tab, event) {
-      console.log(tab._uid,event);
+      console.log(tab.name,event);
        
       // console.log(this.form1.parentPhone);
-      if(tab._uid==61){
+      if(tab.name=='first'){
         var  aa="2"
       }else {
         aa="1"

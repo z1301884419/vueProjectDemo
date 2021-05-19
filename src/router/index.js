@@ -73,8 +73,8 @@ const routes = [
         }
       },
       {
-        path: 'EduAdminiStration',
-        name: 'EduAdminiStration',
+        path: 'EdAdminiStration',
+        name: 'EdAdminiStration',
         component: EduAdminiStration,
         meta: {
           isLogin: true,
@@ -89,8 +89,8 @@ const routes = [
         }
       },
       {
-        path: 'MemoMgt',
-        name: 'MemoMgt',
+        path: '/Home/MmeoMgt',
+        name: '/Home/MmeoMgt',
         component: MemoMgt,
         meta: {
           isLogin: true,
@@ -123,8 +123,8 @@ const routes = [
         }
       },
       {
-        path: 'StudentScore',
-        name: 'StudentScore',
+        path: '/Home/Student/Score',
+        name: '/Home/Student/Score',
         component: StudentScore,
         meta: {
           isLogin: true,

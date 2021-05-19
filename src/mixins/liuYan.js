@@ -71,6 +71,15 @@ export default {
 
   
         })
+      },
+      LoginAction13(obj){
+        console.log(obj);
+        return api[obj.name](obj.data).then(data=>{
+          console.log(data);
+          return data.data
+
+  
+        })
       }
     },
     computed: {

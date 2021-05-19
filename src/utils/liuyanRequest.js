@@ -2,7 +2,7 @@ import axios from 'axios'
 import {getStorage}from './storage'
 
 const http=axios.create({
-  baseURL:'http://172.16.14.46:8085/', // api的base_url
+  baseURL:'http://172.16.14.46:8410/', // api的base_url
   timeout: 10000 // 请求超时时间
 })
 http.interceptors.request.use(req=>{

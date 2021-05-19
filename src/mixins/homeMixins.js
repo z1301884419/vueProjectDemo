@@ -23,6 +23,14 @@ export default {
         }
         return data.data.msg
       })
-    }
+    },
+    LoginAction1(obj){
+      console.log(obj);
+      return api[obj.name](obj.data).then(data=>{
+        console.log(data);
+        return data.data
+
+      })
+    },
   }
 }

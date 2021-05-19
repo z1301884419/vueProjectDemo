@@ -12,7 +12,7 @@ export default{
     url:ADDSIGNIN,
     method:'post',
     data:data
-  }),
+  })
 }
 
 const SELECTSIGNIN = 'student/attendance/get/status'//查询打卡状态

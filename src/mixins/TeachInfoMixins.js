@@ -30,6 +30,7 @@ export default {
     },
     // 获取总数据
     getAllData(obj) {
+      console.log(obj);
       return api[obj.name](obj.data).then(data => {
         if (data.data.code == 200) {
           console.log(data);
@@ -39,7 +40,7 @@ export default {
       })
     },
     // 删除数据的方法
-    DeleteData(obj) {
+    DeleteDataT(obj) {
       return this.$confirm('此操作将永久删除该信息, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -71,7 +72,7 @@ export default {
       })
     },
     // 新增数据的方法
-    InsertDate(obj) {
+    InsertDateT(obj) {
       console.log(obj);
       return api[obj.name](obj.data).then(data => {
         console.log(data);

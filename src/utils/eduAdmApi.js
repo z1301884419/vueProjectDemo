@@ -55,8 +55,13 @@ export default {
     method: 'post',
     data: data
   }),
-  SELECT_CLASSROOMALL: data => http({ // 查询所有教是
+  SELECT_CLASSROOMALL: data => http({ // 查询所有教室
     url: SELECT_CLASSROOMALL,
+    method: 'post',
+    data: data
+  }),
+  SELECT_CLASSROOMADD: data => http({ // 添加教室
+    url: SELECT_CLASSROOMADD,
     method: 'post',
     data: data
   }),
@@ -73,3 +78,4 @@ const SELECT_UPDATE= '/clazz/update';
 const SELECT_UPDATETEACHER= '/clazz/update/Teacher';
 const SELECT_UPDATEHEADERTEACHER= '/clazz/update/headTeacher';
 const SELECT_CLASSROOMALL= '/classroom/all';
+const SELECT_CLASSROOMADD= '/classroom/add';

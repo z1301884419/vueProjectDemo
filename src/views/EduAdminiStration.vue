@@ -217,7 +217,7 @@ export default {
       this.addClass = false;
       if(this.validClassName == 0){
         // 名字不重复时提交请求 CLASS_ADD
-        this.InsertDate({
+        this.InsertDateT({
           name: 'CLASS_ADD',
           data: this.addClassForm
         }).then(data=>{
@@ -458,5 +458,28 @@ export default {
 // 分页
 .el-pagination {
   text-align: center;
+}
+// 模态框
+/deep/.el-dialog{
+  border-radius: 1rem;
+}
+.demo-ruleForm{
+  padding-left: 0;
+  /deep/.el-form-item__content{
+    margin: 1rem;
+  }
+  /deep/.el-form-item__label{
+    margin-top: 10px;
+  }
+  .el-form-item{
+    text-align: left;
+  }
+  .btnBox{
+    margin-top: 3rem;
+    text-align: right;
+    .successBtn{
+      margin-right: 0;
+    }
+  }
 }
 </style>

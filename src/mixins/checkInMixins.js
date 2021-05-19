@@ -46,6 +46,13 @@ export default {
         }
         return data.data
       })
+    },
+    // 修改数据的方法
+    modifydata(obj){
+      return api[obj.name](obj.data).then(data => {
+        console.log(data);
+        return data.data
+      })
     }
   }
 }

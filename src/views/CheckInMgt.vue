@@ -24,6 +24,7 @@
           align="right"
           type="date"
           placeholder="选择开始日期"
+          value-format="yyyy-MM-dd"
           :picker-options="pickerCheckInDate"
         >
         </el-date-picker>
@@ -32,11 +33,12 @@
           align="right"
           type="date"
           placeholder="选择结束日期"
+          value-format="yyyy-MM-dd"
           :picker-options="pickerCheckInDate"
         >
         </el-date-picker>
-        <el-button plain class="selectAbsenceBtn">查看考勤信息</el-button>
-        <el-button type="info" plain>重置</el-button>
+        <el-button plain class="selectAbsenceBtn" @click="searchAttData">查看考勤信息</el-button>
+        <el-button type="info" plain @click="resetAttData">重置</el-button>
       </div>
     </div>
     <div class="mainbox">
@@ -51,14 +53,14 @@
             prop="student.studentId"
             label="学生id"
             align="center"
-            width="100"
+            width="80"
           >
           </el-table-column>
           <el-table-column
             prop="student.studentName"
             label="学生姓名"
             align="center"
-            width="150"
+            width="100"
           >
           </el-table-column>
           <el-table-column
@@ -72,18 +74,29 @@
             prop="attendabncePmTime"
             label="放学打卡时间"
             align="center"
-            width="300"
+            width="250"
           >
           </el-table-column>
-          <el-table-column label="操作" align="center">
+          <el-table-column label="操作" align="center" width="250">
             <template slot-scope="scope">
               <el-button
                 size="mini"
-                type="primary"
+                type="success"
                 round
+                plain
                 v-if="scope.row"
-                @click="modifyStatus(scope.row), (dialogModifyAtt = true)"
-              >修改</el-button>
+                @click="modifyStatus(scope.row), (dialogModifyAttAM = true)"
+                >修改签到状态</el-button
+              >
+              <el-button
+                size="mini"
+                type="warning"
+                round
+                plain
+                v-if="scope.row"
+                @click="modifyStatus(scope.row), (dialogModifyAttPM = true)"
+                >修改签退状态</el-button
+              >
             </template>
           </el-table-column>
         </el-table>
@@ -104,23 +117,42 @@
         style="width: 600px; height: 400px"
       ></div>
     </div>
-    <!-- 修改考勤信息模态框 -->
-    <el-dialog title="修改考勤状态" :visible.sync="dialogModifyAtt">
-      <el-form :model="attDataform">
+    <!-- 修改签到状态模态框 -->
+    <el-dialog title="修改考勤状态" :visible.sync="dialogModifyAttAM">
+      <el-form :model="attDataformAM">
         <el-form-item label="学生ID" :label-width="formLabelWidth">
-          <el-input v-model="attDataform.student.studentId" autocomplete="off"></el-input>
+          <el-input
+            v-model="attDataformAM.student.studentId"
+            autocomplete="off"
+            disabled
+          ></el-input>
         </el-form-item>
         <el-form-item label="学生姓名" :label-width="formLabelWidth">
-          <el-input v-model="attDataform.student.studentName" autocomplete="off"></el-input>
+          <el-input
+            v-model="attDataformAM.student.studentName"
+            autocomplete="off"
+            disabled
+          ></el-input>
         </el-form-item>
         <el-form-item label="当前签到状态" :label-width="formLabelWidth">
-          <el-input v-model="attDataform.attendabnceAmStatus" autocomplete="off"></el-input>
+          <el-input
+            v-model="attDataformAM.attendabnceAmStatus"
+            autocomplete="off"
+            disabled
+          ></el-input>
         </el-form-item>
-        <el-form-item label="当前签退状态" :label-width="formLabelWidth">
-          <el-input v-model="attDataform.attendabncePmStatus" autocomplete="off"></el-input>
+        <el-form-item label="当前签到时间" :label-width="formLabelWidth">
+          <el-input
+            v-model="attDataformAM.attendabnceAmTime"
+            autocomplete="off"
+            disabled
+          ></el-input>
         </el-form-item>
-        <el-form-item label="修改状态" :label-width="formLabelWidth">
-          <el-select v-model="attDataform.status" placeholder="请选择修改状态">
+        <el-form-item label="修改签到状态" :label-width="formLabelWidth">
+          <el-select
+            v-model="attDataformAM.modifyAMstatus"
+            placeholder="请选择修改状态"
+          >
             <el-option label="正常" value="0"></el-option>
             <el-option label="迟到" value="1"></el-option>
             <el-option label="待考勤" value="2"></el-option>
@@ -128,24 +160,105 @@
             <el-option label="请假" value="4"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="添加记录时间" :label-width="formLabelWidth">
+        <el-form-item label="修改签到时间" :label-width="formLabelWidth">
           <div class="block">
-            <el-date-picker v-model="value1" type="date" placeholder="选择日期">
-            </el-date-picker>
+            <el-date-picker
+              v-model="attDataformAM.modifyAMDate1"
+              type="date"
+              placeholder="选择修改日期"
+              value-format="yyyy-MM-dd"
+            ></el-date-picker>
+            -
             <el-time-picker
-              v-model="time1"
-              :picker-options="{
-                selectableRange: '18:30:00 - 20:30:00',
-              }"
-              placeholder="任意时间点"
+              v-model="attDataformAM.modifyAMTime1"
+              placeholder="选择签到时间"
+              type="fixed-time"
+              value-format="HH:mm:ss"
             >
             </el-time-picker>
           </div>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogModifyAtt = false">取 消</el-button>
-        <el-button type="primary" @click="dialogModifyAtt = false"
+        <el-button @click="dialogModifyAttAM = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="modifyAttAMTrue(), (dialogModifyAttAM = false)"
+          >确 定</el-button
+        >
+      </div>
+    </el-dialog>
+    <!--  修改签退状态模态框 -->
+    <el-dialog title="修改考勤状态" :visible.sync="dialogModifyAttPM">
+      <el-form :model="attDataformPM">
+        <el-form-item label="学生ID" :label-width="formLabelWidth">
+          <el-input
+            v-model="attDataformPM.student.studentId"
+            autocomplete="off"
+            disabled
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="学生姓名" :label-width="formLabelWidth">
+          <el-input
+            v-model="attDataformPM.student.studentName"
+            autocomplete="off"
+            disabled
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="当前签退状态" :label-width="formLabelWidth">
+          <el-input
+            v-model="attDataformPM.attendabncePmStatus"
+            autocomplete="off"
+            disabled
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="当前签退时间" :label-width="formLabelWidth">
+          <el-input
+            v-model="attDataformPM.attendabncePmTime"
+            autocomplete="off"
+            disabled
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="修改签退状态" :label-width="formLabelWidth">
+          <el-select
+            v-model="attDataformPM.modifyPMstatus"
+            placeholder="请选择修改状态"
+          >
+            <el-option label="正常" value="0"></el-option>
+            <el-option label="迟到" value="1"></el-option>
+            <el-option label="待考勤" value="2"></el-option>
+            <el-option label="早退" value="3"></el-option>
+            <el-option label="请假" value="4"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="修改签退时间" :label-width="formLabelWidth">
+          <div class="block">
+            <el-date-picker
+              v-model="attDataformPM.modifyPMDate2"
+              type="date"
+              placeholder="选择修改日期"
+              value-format="yyyy-MM-dd"
+            >
+            </el-date-picker>
+            -
+            <el-time-picker
+              v-model="attDataformPM.modifyPMTime2"
+              :picker-options="{
+                selectableRange: '18:30:00 - 20:30:00',
+              }"
+              placeholder="选择签退时间"
+              type="fixed-time"
+              value-format="HH:mm:ss"
+            >
+            </el-time-picker>
+          </div>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogModifyAttPM = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="modifyAttPMTrue(), (dialogModifyAttPM = false)"
           >确 定</el-button
         >
       </div>
@@ -195,14 +308,23 @@ export default {
       pageTotal: 20, //表格页码----最大条数
       pageSize: 8, //表格页码----一页显示多少条
       nowPage: 1, //表格页码----当前页
-      dialogModifyAtt: false, //修改考勤信息模态框
-      attDataform: {
-        student:{},
-        status:''
+      dialogModifyAttAM: false, //修改签到信息模态框
+      attDataformAM: {
+        //修改签到信息数据
+        student: {},
+        modifyAMstatus: "",
+        modifyAMDate1: "",
+        modifyAMTime1: '',
       },
       formLabelWidth: "100px",
-      value1: "",
-      time1: new Date(2016, 9, 10, 18, 40),
+      dialogModifyAttPM: false, //修改签退信息模态框
+      attDataformPM: {
+        //修改签到信息数据
+        student: {},
+        modifyPMstatus: "",
+        modifyPMDate2: "",
+        modifyPMTime2: '',
+      },
     };
   },
   mixins: [checkInMixins],
@@ -256,23 +378,142 @@ export default {
       }).then((data) => {
         console.log(data);
         if (data.code == 200) {
+          data.data.forEach(item => {
+            item.attendabncePmTime=item.attendabncePmTime==null?'未打卡':item.attendabncePmTime;
+            item.attendabnceAmTime=item.attendabnceAmTime==null?'未打卡':item.attendabnceAmTime;
+            item.attendabncePmStatus=item.attendabncePmStatus==null?'未打卡':item.attendabncePmStatus;
+          });
           this.checkInTableData = data.data;
           this.pageTotal = data.count;
         }
       });
     },
-    // 修改考勤信息
+    // 修改考勤信息模态框
     modifyStatus(obj) {
-      console.log(obj);
-      this.attDataform={...obj};
-      // for (let key in this.attDataform){
-      //   // if(key==attendabnceAmStatus){
-      //   //   // 0 正常 1 迟到 默认2 2 待考勤 4 请假
-          
-      //   // }
-      // }
-
+      for (let i in obj) {
+        if (i == "attendabnceAmStatus") {
+          // 0 正常 1 迟到 默认2 2 待考勤 4 请假
+          obj[i] =
+            obj[i] == 0
+              ? "正常"
+              : obj[i] == 1
+              ? "迟到"
+              : obj[i] == 2
+              ? "未签到"
+              : obj[i] == 4
+              ? "请假"
+              : "无";
+        } else if (i == "attendabncePmStatus") {
+          // 0 正常 1 迟到 2 待考情 默认2 3 早退 4 请假
+          obj[i] =
+            obj[i] == 0
+              ? "正常"
+              : obj[i] == 1
+              ? "迟到"
+              : obj[i] == 2
+              ? "未签退"
+              : obj[i] == 4
+              ? "请假"
+              : obj[i] == 3
+              ? "早退"
+              : "无";
+        }
+      }
+      this.attDataformAM = { ...obj };
+      this.attDataformPM = { ...obj };
     },
+    // 确定修改签到状态
+    modifyAttAMTrue() {
+      let tempObj = {
+        attendabnceAmStatus: this.attDataformAM.modifyAMstatus,
+        attendabnceAmTime:
+          this.attDataformAM.modifyAMDate1 +
+          " " +
+          this.attDataformAM.modifyAMTime1,
+        attendanceId: this.attDataformAM.attendanceId,
+        studentId: this.attDataformAM.studentId,
+      };
+      console.log(tempObj);
+      this.modifydata({
+        name: "MODIFYATTDATA",
+        data: tempObj,
+      }).then((data) => {
+        if (data.code == 200) {
+          this.$message({
+            type: "success",
+            message: data.msg,
+          });
+          this.getAttendanceDataFn();
+        }else{
+          this.$message({
+            type: "error",
+            message: data.msg,
+          });
+        }
+      });
+    },
+    // 确定修改签退状态
+    modifyAttPMTrue() {
+      let tempObj = {
+        attendabncePmStatus: this.attDataformPM.modifyPMstatus,
+        attendabncePmTime:
+          this.attDataformPM.modifyPMDate2 +
+          " " +
+          this.attDataformPM.modifyPMTime2,
+        attendanceId: this.attDataformPM.attendanceId,
+        studentId: this.attDataformPM.studentId,
+      };
+      console.log(tempObj);
+      this.modifydata({
+        name: "MODIFYATTDATA",
+        data: tempObj,
+      }).then((data) => {
+        if (data.code == 200) {
+          this.$message({
+            type: "success",
+            message: data.msg,
+          });
+          this.getAttendanceDataFn();
+        }else{
+          this.$message({
+            type: "error",
+            message: data.msg,
+          });
+        }
+      });
+    },
+    // 搜索
+    searchAttData(){
+      
+      let tempObj={
+        endTime:this.CheckInDateEnd,
+        startTime:this.CheckInDateStart,
+        name:this.selectStuName,
+        page:this.nowPage,
+        limit:this.pageSize
+      }
+      this.selectAllData({
+        name:'ATTENDANCEALL',
+        data:tempObj
+      }).then(data=>{
+        if (data.code == 200) {
+          data.data.forEach(item => {
+            item.attendabncePmTime=item.attendabncePmTime==null?'未打卡':item.attendabncePmTime;
+            item.attendabnceAmTime=item.attendabnceAmTime==null?'未打卡':item.attendabnceAmTime;
+            item.attendabncePmStatus=item.attendabncePmStatus==null?'未打卡':item.attendabncePmStatus;
+          });
+          this.checkInTableData = data.data;
+          this.pageTotal = data.count;
+        }
+      })
+    },
+    // 重置
+    resetAttData(){
+      this.getAttendanceDataFn();
+      this.selectStuName='';
+      this.CheckInDateEnd='';
+      this.CheckInDateStart='';
+    }
   },
   mounted() {
     this.drawChart();

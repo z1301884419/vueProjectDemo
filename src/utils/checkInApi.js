@@ -6,6 +6,12 @@ export default{
     url:ATTENDANCEALL,
     method:'post',
     data:data
-  })
+  }),
+  MODIFYATTDATA:data=>http({
+    url:MODIFYATTDATA,
+    method:'post',
+    data:data
+  }),
 }
 const ATTENDANCEALL = '/attendance/allAttendance'
+const MODIFYATTDATA='/attendance/updateAttendance'

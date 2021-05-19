@@ -40,7 +40,7 @@
         <el-button plain class="selectExamBtn" @click="searchExamInfo()"
           >查询考试信息</el-button
         >
-        <el-button type="info" plain>重置</el-button>
+        <el-button type="info" plain @click="resetExamInfo()">重置</el-button>
       </div>
     </div>
     <!-- 表格 -->
@@ -108,6 +108,7 @@
         <el-form-item label="考试名称" prop="examName">
           <el-input v-model="addExamFormData.examName"></el-input>
         </el-form-item>
+        <!-- 班主任和家长发起的考试 -->
         <el-form-item
           label="考试班级"
           prop="classList"
@@ -120,9 +121,9 @@
             <el-checkbox
               :label="item.classId"
               name="classList"
-              v-for="item in classArr"
-              :key="item.classId"
-              >{{ item.className }}</el-checkbox
+              v-for="item in classTeacherArr"
+              :key="item.className"
+              >{{ item.gradeName+' '+item.className }}</el-checkbox
             >
           </el-checkbox-group>
         </el-form-item>
@@ -164,7 +165,7 @@
             $store.state.loginModules.userShenfen == '班主任'
           "
         >
-          <el-input v-model="addExamFormData.name"></el-input>
+          <el-input v-model="subjectNameTeacher" disabled></el-input>
         </el-form-item>
         <el-form-item label="考试日期" required>
           <el-form-item prop="date1">
@@ -239,6 +240,8 @@ export default {
       // 模态框数据
       classArr: [], //管理员的班级年级
       subjectArr: [], //管理员的科目
+      classTeacherArr:[],//老师班主任的班级年级
+      subjectNameTeacher:'',//老师班主任的科目名称
       // form的
       addExamFormData: {
         examName: "",
@@ -363,9 +366,9 @@ export default {
           this.subjectArr = data.data.subjects;
         } else if (data.data.status == 2) {
           // 老师班主任
+          this.classTeacherArr=data.data.clazzes;
+          this.subjectNameTeacher=data.data.subjectName;
         }
-
-        console.log(this.classArr.grades);
       });
     },
     // 确定添加考试
@@ -376,10 +379,7 @@ export default {
           let tempobj = {
             examDate: this.addExamFormData.date1,
             examName: this.addExamFormData.examName,
-            examTime:
-              this.addExamFormData.time2[0] +
-              "-" +
-              this.addExamFormData.time2[1],
+            examTime:this.addExamFormData.time2[0] +"-" +this.addExamFormData.time2[1],
             objectIds: this.addExamFormData.classList,
             subjectIds: this.addExamFormData.subjectList,
           };
@@ -449,10 +449,6 @@ export default {
     },
     // 搜索考试
     searchExamInfo() {
-      // this.searchStartDate = new Date(Date.parse(this.searchStartDate.replace(/-/g,  "/")));
-      // this.searchEndDate = new Date(Date.parse(this.searchEndDate.replace(/-/g,  "/")));
-      // console.log(typeof(this.searchStartDate));
-      // console.log(this.searchStartDate.getTime());
       this.seletcExamInfo({
         name: "SELECTEXAMALL",
         data: {
@@ -463,9 +459,29 @@ export default {
           startDate: this.searchStartDate,
         },
       }).then(data=>{
-        console.log(data);
+        this.tableData = data.data;
+          // 判断考试类型
+          this.tableData.forEach((item) => {
+            item.examTypeName =
+              item.examTypeId == 1
+                ? "班级考"
+                : item.examTypeId == 2
+                ? "年级考"
+                : "123";
+            item.examTimeStr = item.examDate + " " + item.examTime;
+            item.examTimeMS = item.examDate.replace(new RegExp("-", "gm"), "/");
+            item.examTimeMS2 = new Date(item.examTimeMS).getTime();
+          });
+          this.pageTotal = data.count;
       })
     },
+    // 搜索栏--重置按钮
+    resetExamInfo(){
+      this.selectExam()
+      this.searchStartDate="";//搜索的开始日期
+      this.searchEndDate=''; //搜索的结束日期
+      this.examSelectId='';
+    }
   },
   created() {
     this.selectExam();
@@ -501,7 +517,7 @@ export default {
 }
 .el-date-editor.el-input[data-v-51faa29e],
 .el-date-editor.el-input__inner[data-v-51faa29e] {
-  width: 18%;
+  width: 100%;
 }
 // 发起考试
 .addExam {
@@ -530,6 +546,9 @@ export default {
   .el-select {
     width: 20rem;
     margin-right: 2rem;
+  }
+  .el-date-editor.el-input[data-v-51faa29e]{
+    width: 18%;
   }
 }
 // 查询考试按钮

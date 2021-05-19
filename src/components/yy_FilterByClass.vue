@@ -4,6 +4,7 @@
             v-model="checkedClass"
             :options="newClassList"
             placeholder="请选择班级"
+            clearable
             @change="selectClass"></el-cascader>
   </div>
 </template>
@@ -60,8 +61,8 @@
     methods:{
       ...mapActions('yy_module',['getAllClass']),
       selectClass(value){
-        console.log(value);//班级和年级
-        console.log(value[1]);//班级id
+        //console.log(value);//班级和年级
+        //console.log(value[1]);//班级id
         this.$emit('getClassId',value)
       },
     }

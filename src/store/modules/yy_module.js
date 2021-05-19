@@ -16,6 +16,10 @@ export default{
     AllSubject:[],
     //所有班级信息
     AllClass:[],
+    //家长信息
+    StuParentData:[],
+    //家长信息长度
+    StuParentDataLength:'',
   },
   mutations: {
     setAllSubject(state,data){
@@ -30,26 +34,40 @@ export default{
     setAllStuXiangDataLength(state,value){
       state.AllStuXiangDataLength = value
     },
+    //保存家长信息
+    setStuParentData(state,value){
+      state.StuParentData = value
+    },
+    //保存家长信息的总长度
+    setStuParentDataLength(state,value){
+      state.StuParentDataLength = value
+    },
+
 
   },
   actions: {
     getALLSubject(context){
       yy_request.SelectAllSubjectFn().then(res=>{
-        console.log(res);
         context.commit('setAllSubject',res.data)
       })
     },
     getAllClass(context){
       yy_request.SelectAllClassFn().then(res=>{
-        console.log(res);
         context.commit('setAllClass',res.data)
       })
     },
     getAllStuXiangData(context,pageData){
       return yy_request.SelectAllStuXiangFn(pageData).then(res=>{
-        console.log(res);
         context.commit('setAllStuXiangData',res.data)
         context.commit('setAllStuXiangDataLength',res.count)
+        return res
+      })
+    },
+    //获取家长信息
+    getStuParentData(context,pageData){
+      return yy_request.SelectStuParentFn(pageData).then(res=>{
+        context.commit('setStuParentData',res.data)
+        context.commit('setStuParentDataLength',res.count)
         return res
       })
     },

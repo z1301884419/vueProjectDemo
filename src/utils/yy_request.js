@@ -87,4 +87,17 @@ export default {
       return data.data
     })
   },
+  //查询家长
+  SelectStuParentFn(data){
+    console.log(data);
+    return yy_axiosStu({
+      url:yy_api.AllStudentParent,
+      method:'post',
+      params:data,
+      data
+    }).then(data=>{
+      return data.data
+    })
+  },
+
 }

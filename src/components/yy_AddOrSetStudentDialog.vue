@@ -118,15 +118,15 @@
         addrule:{
           studentPassword:[
             { required: true, message: '请输入密码', trigger: 'blur' },
-            { min: 8, max: 16, message: '长度在 8 到 16 个字符', trigger: 'blur'}
+            { min: 6, max: 16, message: '长度在 8 到 16 个字符', trigger: 'blur'}
             ],//密码
           newPassword:[
             { validator: this.test_newPassword, trigger: 'blur' },
-            { min: 8, max: 16, message: '长度在 8 到 16 个字符', trigger: 'blur'}
+            { min: 6, max: 16, message: '长度在 8 到 16 个字符', trigger: 'blur'}
             ],
           sureNewPassword:[
             { validator: this.test_sureNewPassword, trigger: 'blur' },
-            { min: 8, max: 16, message: '长度在 8 到 16 个字符', trigger: 'blur'}
+            { min: 6, max: 16, message: '长度在 8 到 16 个字符', trigger: 'blur'}
               ],
           classId:[{required: true, message: '请选择班级', trigger: 'change'}],//班级
           studentName:[{ validator: this.test_student_name, trigger: 'blur' }],//姓名
@@ -223,8 +223,8 @@
         if (value===""){
           callback(new Error('身份证号不能为空'));
         } else {
-          if(value.length!=18){
-            callback(new Error('身份证号只能是18位'));
+          if(!/^\d{6}(18|19|20)?\d{2}(0[1-9]|1[012])(0[1-9]|[12]\d|3[01])\d{3}(\d|X)$/igm.test(value)){
+            callback(new Error('身份证号格式错误'));
           }else{
             callback();
           }

@@ -42,26 +42,42 @@
     <div v-if="shenfen=='老师'||shenfen=='班主任'||shenfen=='管理员'">
       <div class="filter-cpns">
         <!--学号-->
-        <yy_FilterByInput :filterData="{data:AllStuXiangData,text:'请输入学号',filterProperty:'student_number'}"
-                          @filteredData="filteredByXuehaoFn"/>
+        <el-input
+                placeholder="请输入学号"
+                v-model="filteredByXuehao"
+                @change="filteredByXuehaoFn"
+                clearable>
+        </el-input>
 
         <!--联级班级选择-->
         <yy_FilterByClass @getClassId="checkedClassID"/>
         <!--姓名-->
-        <yy_FilterByInput :filterData="{data:AllStuXiangData,text:'请输入姓名',filterProperty:'student_name'}"
-                          @filteredData="filteredByNameFn"/>
+        <el-input
+                placeholder="请输入姓名"
+                v-model="filteredByName"
+                @change="filteredByNameFn"
+                clearable>
+        </el-input>
         <!--性别-->
-        <yy_FilterBySelect :filterData="{
-        optionData:{label:'lable',value:'value',data:[{lable:'男',value:'男'},{lable:'女',value:'女'}]},
-        data:AllStuXiangData,
-        text:'请选择性别',
-        filterProperty:'student_gender'
-        }" @filteredData="filteredBySexFn"/>
+        <el-select
+                v-model="filteredBySex"
+                @change="filteredBySexFn"
+                clearable
+                placeholder="请选择性别">
+          <el-option label="男" value="男"></el-option>
+          <el-option label="女" value="女"></el-option>
+        </el-select>
       </div>
       <!--添加学生-->
       <div class="add-student">
         <el-button style="padding:0 1rem;margin: 0 0.5rem;" size="small" plain>
           <yy_AddOrSetStudentDialog :stuData="{text:'添加学生',title:'添加学生信息',nowPage}"/>
+        </el-button>
+      </div>
+      <!--通过excel表格批量添加学生-->
+      <div class="add-students" style="margin-left: -15px">
+        <el-button style="padding:0 1rem;margin: 0 0.5rem;" size="small" plain>
+          <yy_UploadExcel/>
         </el-button>
       </div>
       <!--给学生群发通告-->
@@ -70,7 +86,7 @@
           <yy_ReleaseMessage/>
         </el-button>
       </div>
-      <!--    学生信息表-->
+      <!--学生信息表-->
       <div class="stu-table">
         <yy_StudentInfoTable :tableData="renderData" :nowPage="nowPage"/>
       </div>
@@ -81,6 +97,7 @@
                 :page-size="5"
                 :pager-count="9"
                 layout="prev, pager, next"
+                :current-page="nowPage"
                 @current-change="currentChange"
                 :total="dataLength">
         </el-pagination>
@@ -89,35 +106,34 @@
   </div>
 </template>
 <script>
+  import {mapState,mapActions} from 'vuex'
   import { getStorage } from "../utils/storage";
-  import yy_FilterBySelect from '@/components/yy_FilterBySelect'
-  import yy_FilterByInput from '@/components/yy_FilterByInput'
   import yy_FilterByClass from '@/components/yy_FilterByClass'
-
   import yy_ReleaseMessage from '@/components/yy_ReleaseMessage'
   import yy_StudentInfoTable from '@/components/yy_StudentInfoTable'
   import yy_AddOrSetStudentDialog from '@/components/yy_AddOrSetStudentDialog'
+  import yy_UploadExcel from '@/components/yy_UploadExcel'
 
-  import {mapState,mapActions} from 'vuex'
   export default {
     name:'StudentInfo',
     components:{
-      yy_FilterBySelect,
-      yy_FilterByInput,
       yy_FilterByClass,
       yy_ReleaseMessage,
       yy_StudentInfoTable,
       yy_AddOrSetStudentDialog,
+      yy_UploadExcel,
     },
     data(){
       return{
         renderData:[],//表格数据
         dataLength:0,//数据总长度
-        filteredByNameData:[],//通过名字筛选出的数据
-        filteredBySexData:[],//通过性别筛选出的数据
-        filteredByXuehaoData:[],//通过学号筛选出的数据
-        filteredByClassData:[],//通过班级筛选出的数据
-        checkedClass: [],//联级菜单选的班级
+
+        filteredByName:"",//通过名字筛选出的数据
+        filteredBySex:"",//通过性别筛选出的数据
+        filteredByXuehao:"",//通过学号筛选出的数据
+        filteredByClass:"",//通过班级筛选出的数据
+
+        checkedClass: "",//联级菜单选的班级
         nowClassId:"",//选择班的id
         nowPage:1,//当前页
       }
@@ -133,8 +149,6 @@
       //生成新的学生信息
       newStuData(){
         return this.AllStuXiangData.map(v=>{
-          console.log(v.grade.gradeName);
-          console.log(v.clazz.className);
           this.$set(v,'calssFullName',v.grade.gradeName?
               v.clazz.className?v.grade.gradeName+v.clazz.className:'暂无':'暂无')
           let listNotNull = v.parentList.length>0? v.parentList.reduce((prev,cur)=>{
@@ -146,7 +160,7 @@
         })
       },
     },
-    updated() {
+    created() {
       if(this.AllStuXiangData.length==0){
         this.getAllStuXiangData({
           limit:5,
@@ -159,55 +173,59 @@
         this.renderData = this.newStuData//初始化表格数据
         this.dataLength = this.AllStuXiangDataLength
       }
-      this.filteredByNameData = this.allStuData//初始化通过名字筛选出的数据
-      this.filteredBySexData = this.allStuData//性别
-      this.filteredByClassData = this.allStuData//班级
-      this.filteredByXuehaoData = this.allStuData//学号
-      this.filteredByBirthdayData = this.allStuData//出生日期
-      this.filteredByDescData = this.allStuData//备注
     },
     methods:{
       ...mapActions('yy_module',['getAllStuXiangData']),
       //筛选姓名
       filteredByNameFn(data){
-        this.filteredByNameData = data
+        this.filteredByName = data
         this.filterFn()
       },
       //筛选性别
       filteredBySexFn(data){
-        console.log(data);
-        this.filteredBySexData = data
+        this.filteredBySex = data
         this.filterFn()
-       },
+      },
       //筛选学号
       filteredByXuehaoFn(data){
-        this.filteredByXuehaoData = data
+        this.filteredByXuehao = data
         this.filterFn()
       },
       //筛选班级
       checkedClassID(value) {
-        console.log(value);//班级id
+        this.filteredByClass = value[1]
+        this.filterFn()
       },
       //筛选函数
       filterFn(){
-        this.renderData = this.filteredByNameData.filter(item=>this.filteredBySexData.includes(item))
-            .filter(item=>this.filteredByClassData.includes(item))
-            .filter(item=>this.filteredByXuehaoData.includes(item))
-            .filter(item=>this.filteredByBirthdayData.includes(item))
-            .filter(item=>this.filteredByDescData.includes(item))
+        this.nowPage = 1
+        this.getAllStuXiangData({
+          limit:5,
+          page:1,
+          classId:this.filteredByClass,
+          studentGender:this.filteredBySex,
+          studentName:this.filteredByName,
+          studentNumber:this.filteredByXuehao
+        }).then(data=>{
+          this.dataLength = data.count
+          this.renderData = this.newStuData//初始化表格数据
+        })
       },
-
       //分页
       currentChange(value){
-        console.log(value);
         this.nowPage = value
         this.getAllStuXiangData({
           limit:5,
           page:value,
+          classId:this.filteredByClass,
+          studentGender:this.filteredBySex,
+          studentName:this.filteredByName,
+          studentNumber:this.filteredByXuehao
         }).then(()=>{
           this.renderData = this.newStuData//初始化表格数据
         })
-      }
+      },
+
     },
   }
 </script>
@@ -287,23 +305,31 @@
   .el-main{
     overflow: hidden!important;
   }
-  .add-student>.el-button,.send-message-stu>.el-button{
+  .add-student>.el-button,.send-message-stu>.el-button,.add-students>.el-button{
     background-color: #16B387;
     border: 1px solid #16B387;
   }
+  /**/
   .add-student>.el-button .add-btn span{
     color: #fff!important;
   }
   .send-message-stu>.el-button .message-btn span{
     color: #fff!important;
   }
+  .add-students>.el-button .add-btn span{
+    color: #fff!important;
+  }
+  /**/
   .add-student>.el-button:hover .add-btn span{
     color: #16B387!important;
   }
-  .add-student,.send-message-stu{
+  .add-student,.send-message-stu,.add-students{
     display: inline-block;
   }
   .send-message-stu>.el-button:hover .message-btn span{
+    color: #16B387!important;
+  }
+  .add-students>.el-button:hover .add-btn span{
     color: #16B387!important;
   }
   .el-divider--horizontal{

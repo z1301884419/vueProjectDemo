@@ -124,7 +124,10 @@
                 >
               </div>
               <div class="caozuoBox">
-                <el-button size="mini" round>删除</el-button>
+                <el-button size="mini" round
+              @click="deleteUser1(item.messageId)"
+
+                >删除</el-button>
                 <el-button
                   size="mini"
                   v-if="item.messageId != id"
@@ -150,6 +153,9 @@
 </template>
 <script>
 import liuYan from "../mixins/liuYan";
+import { mapActions } from "vuex";
+
+
 
 export default {
   mixins: [liuYan],
@@ -207,10 +213,27 @@ export default {
   created(){
 this.getData()
 // this.handleClick(tab, event)
+    this.liuyanshuliang();
+
 this.getData1()
 
   },
   methods: {
+    ...mapActions(["loginModules/LoginAction1"]),
+
+liuyanshuliang(){
+        this["loginModules/LoginAction1"]({
+        name: "LIUYANNUM_API",
+        data: {},
+      }).then((data) => {
+        console.log(data);
+        // if(data==200){
+        //   console.log('chengg');
+        //   this.$router.push("/Home");
+          
+        // }
+      });
+    },
     replyliuyanClick(){
       this.LoginAction12({
         name: "LIUYANHUIFU_API",
@@ -242,6 +265,19 @@ this.LoginAction11({
       }).then((data) => {
         console.log(data);
         this.getData1()
+        // this.KeyWordTableData=data.data
+        // this.pageTotal=data.count
+      });
+    },
+
+    deleteUser1(obj){
+console.log(obj);
+this.LoginAction11({
+        name: "DELETE_API",
+        data: {messageId:obj},
+      }).then((data) => {
+        console.log(data);
+        this.getData2()
         // this.KeyWordTableData=data.data
         // this.pageTotal=data.count
       });
@@ -286,7 +322,7 @@ this.form.type=event.bb
     },
      changePage(val){
       this.nowPage=val
-      this.getData()
+      this.getData1()
     },
     getData() {
       // console.log(this.form1.parentPhone);
@@ -317,21 +353,21 @@ this.form.type=event.bb
         this.pageTotal=data.count
       });
     },
-    // getData2(){
-    //   console.log("236");
-    //   this.LoginAction8({
-    //     name: "MYJIESHOU_API",
-    //     data: {
-    //       limit:this.pageSize,
-    //       page:this.nowPage,
-    //       // type:"1"
-    //     },
-    //   }).then((data) => {
-    //     console.log(data);
-    //     this.tableData=data.data
-    //     this.pageTotal=data.count
-    //   });
-    // },
+    getData2(){
+      console.log("236");
+      this.LoginAction8({
+        name: "MYJIESHOU_API",
+        data: {
+          limit:this.pageSize,
+          page:this.nowPage,
+          type:"1"
+        },
+      }).then((data) => {
+        console.log(data);
+        this.tableData=data.data
+        this.pageTotal=data.count
+      });
+    },
     replyClick(id) {
       this.id = id;
       console.log(id);
@@ -345,6 +381,17 @@ this.form.type=event.bb
       }else {
         aa="1"
       }
+       this["loginModules/LoginAction1"]({
+        name: "LIUYANNUM_API",
+        data: {},
+      }).then((data) => {
+        console.log(data);
+        // if(data==200){
+        //   console.log('chengg');
+        //   this.$router.push("/Home");
+          
+        // }
+      });
       this.LoginAction8({
         name: "MYFABIAO_API",
         data: {

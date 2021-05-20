@@ -65,17 +65,23 @@ export default {
     method: 'post',
     data: data
   }),
+  SELECT_FINDTEACHER: data => http({ // 查找任课教师
+    url: SELECT_FINDTEACHER,
+    method: 'post',
+    data: data
+  }),
 }
-const SUBJECT_ALL = 'subject/all';
-const CLASS_ALL = '/clazz/selectAll';
-const GRADE_ALL = '/grade/all';
-const CLASS_SELECTBYCONDITION = '/clazz/selectAll';
-const CLASSROOM_NOTUSE= '/classroom/notUse';
-const CLASS_TOTALDATA= '/clazz/all';
-const CLASS_ADD= '/clazz/add';
-const SELECT_HEADERTEACHER= '/staff/headTeacher';
-const SELECT_UPDATE= '/clazz/update';
-const SELECT_UPDATETEACHER= '/clazz/update/Teacher';
-const SELECT_UPDATEHEADERTEACHER= '/clazz/update/headTeacher';
-const SELECT_CLASSROOMALL= '/classroom/all';
-const SELECT_CLASSROOMADD= '/classroom/add';
+const SUBJECT_ALL = '/admin/subject/all';
+const CLASS_ALL = '/admin/clazz/selectAll';
+const GRADE_ALL = '/admin/grade/all';
+const CLASS_SELECTBYCONDITION = '/admin/clazz/selectAll';
+const CLASSROOM_NOTUSE= '/admin/classroom/notUse';
+const CLASS_TOTALDATA= '/admin/clazz/all';
+const CLASS_ADD= '/admin/clazz/add';
+const SELECT_HEADERTEACHER= '/admin/staff/headTeacher';
+const SELECT_UPDATE= '/admin/clazz/update';
+const SELECT_UPDATETEACHER= '/admin/clazz/addStaff';
+const SELECT_UPDATEHEADERTEACHER= '/admin/clazz/update/headTeacher';
+const SELECT_CLASSROOMALL= '/admin/classroom/all';
+const SELECT_CLASSROOMADD= '/admin/classroom/add';
+const SELECT_FINDTEACHER= '/admin/clazz/findTeacher';

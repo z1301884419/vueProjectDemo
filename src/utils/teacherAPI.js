@@ -21,7 +21,7 @@ export default {
     data: data
   }),
 }
-const STAFF_SELECT = '/staff/select';
-const STAFF_ADD = '/staff/add';
-const STAFF_DELETE = '/staff/delete';
-const STAFF_UPDATE = '/staff/selfInfo/update';
+const STAFF_SELECT = '/instructor/staff/select';
+const STAFF_ADD = '/instructor/staff/add';
+const STAFF_DELETE = '/instructor/staff/delete';
+const STAFF_UPDATE = '/instructor/staff/selfInfo/update';

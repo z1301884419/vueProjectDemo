@@ -28,7 +28,7 @@
     </el-form>
 
     <!-- 表格部分 -->
-    <el-table :data="tableData" style="width: 96%" >
+    <el-table :data="tableData" style="width: 96%" :header-cell-style="{ background: '#D4EDF9', color: '#000' }">
       <el-table-column prop="staffNumber" label="教师编号" align="center"></el-table-column>
       <el-table-column prop="staffName" label="姓名" align="center" width="100px"></el-table-column>
       <el-table-column prop="subjectId" label="课程代号" align="center" width="80px"></el-table-column>

@@ -11,5 +11,5 @@ export default {
     data: data
   }),
 }
-const SELETE_PARENTS = '/parent/findHeadteacherParents';//查找班主任所在班级的家长
-const DELETE_PARENT = '/parent/delete';
+const SELETE_PARENTS = '/parent/parent/findHeadteacherParents';//查找班主任所在班级的家长
+const DELETE_PARENT = '/parent/parent/delete';

@@ -20,7 +20,7 @@
     </el-form>
 
     <!-- 表格部分 -->
-    <el-table :data="tableData" style="width: 96%" >
+    <el-table :data="tableData" style="width: 96%" :header-cell-style="{ background: '#D4EDF9', color: '#000' }">
       <el-table-column prop="parentId" label="家长编号" align="center"></el-table-column>
       <el-table-column prop="parentName" label="家长姓名" align="center"></el-table-column>
       <el-table-column prop="childrenName" label="孩子姓名" align="center"></el-table-column>
@@ -104,7 +104,10 @@ export default {
       })
     },
     resizeFn(){
-      this.getAllParents()
+      this.getAllParents();
+      this.searchForm = {
+        studentName: ""
+      }
     },
     deleteTeacherRequest(row){
       console.log(row.parentId);

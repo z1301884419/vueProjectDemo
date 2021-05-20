@@ -38,7 +38,8 @@
           <p>教室地址: {{ item.classroomName }}</p>
           <div v-if="item.staffName===null"><el-button round plain class="plainBtn" @click="allotHearderTeacherShow(item.classId)">分配班主任</el-button></div>
           <div v-else><el-button round plain class="plainBtn" @click="changeHeaderTeacherShow(item.classId, item.staffName, item.classStaffId)">调换班主任</el-button></div>
-          <div><el-button round plain class="plainBtn" @click="allotTeacherShow(item.classId)">分配任课教师</el-button></div>
+          <div v-if="item.staffClassRS.length==3"><el-button round plain class="plainBtn" @click="changeTeacherShow(item.classId)">查看任课教师</el-button></div>
+          <div v-else><el-button round plain class="plainBtn" @click="allotTeacherShow(item.classId)">分配任课教师</el-button></div>
           <div><el-button round plain class="plainBtn" @click="changeClassRoomShow(item.classId, item.classroomName)">调换教室</el-button></div>
         </el-card>
       </el-col>
@@ -107,7 +108,7 @@
     <!-- 分配任课老师的弹框 -->
     <el-dialog title="分配任课教师" :visible.sync="allotTeacher" width="33%">
       <el-form :model="allotTeacherForm" label-width="80px" class="demo-ruleForm">
-        <el-form-item :label="item.subjectName + '老师'" v-for="item in allSubjectTeacherArr" :key="item.subjectId">
+        <el-form-item :label="item.subjectName + '老师'" v-for="item in newAllSubjectTeacherArr" :key="item.subjectId">
           <el-select v-model="allotTeacherForm[item.subjectId]" placeholder="请选择要分配的任课教师" style="width: 100%;">
             <el-option v-for="(teacher, i) in item.data" :key="i" :label="teacher.staffName" :value="teacher.staffId"></el-option>
           </el-select>
@@ -118,6 +119,20 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+
+    <!-- 查看任课老师的弹框 -->
+    <el-dialog title="查看任课教师" :visible.sync="changeTeacher" width="33%">
+      <el-form :model="changeTeacherForm" label-width="80px" class="demo-ruleForm">
+        <el-form-item :label="item.subjectName + '老师'" v-for="item in teacherSubjectArr" :key="item.staffId">
+          <!-- <span class="inputSpan">{{item.staffName}}</span> -->
+          <el-input disabled v-model="item.staffName"></el-input>
+        </el-form-item>
+        <el-form-item class="btnBox">
+          <el-button @click="changeTeacher = false">取 消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
 
     <!-- 调换教室的弹框 -->
     <el-dialog title="调换教室" :visible.sync="changeClassRoom" width="33%">
@@ -172,10 +187,14 @@ export default {
       allotTeacher:false,
       allotTeacherForm: {}, //分配任课教师
       allSubjectTeacherArr: [], //老师和科目匹配的数据
+      newAllSubjectTeacherArr: [], //老师和科目匹配的数据
       changeClassRoom: false, //调换教室
       changeClassRoomForm: {
         classroomName: ''
-      }
+      },
+      changeTeacherForm:{},
+      changeTeacher:false,
+      teacherSubjectArr: []
     };
   },
   mixins: [TeachInfoMixins, TeacherMixins], //使用mixins里的模块
@@ -190,10 +209,23 @@ export default {
           pageSize: this.pageSize
         }
       }).then(data => {
-        console.log(data);
+        console.log(123123, data);
         this.tableData = data.data;
         this.totalLength = data.count;
       })
+    },
+    async getAllSubject(){ //获取科目
+    return new Promise((resovle,reject)=>{
+      this.getAllData({
+        name: 'SUBJECT_ALL'
+      }).then(data => {
+        resovle();
+        this.subjectArr = data.data
+      }).catch(()=>{
+        reject();
+      })
+    })
+     
     },
     getTotalClassData(){ //获取所有班级
       this.getAllData({
@@ -307,27 +339,54 @@ export default {
       })
     },
     allotTeacherShow(id){ //分配任课教师的显示
+      this.newAllSubjectTeacherArr = [];
       this.classId = id;
       this.allotTeacher = true;
+
+      this.getAllData({
+        name: 'SELECT_FINDTEACHER',
+        data: {
+          classId: id
+        }
+      }).then(data=>{
+        if(data.data){
+          this.newAllSubjectTeacherArr = this.allSubjectTeacherArr.filter(item=> data.data.some(ele=>ele.subjectName != item.subjectName));
+        } else {
+          this.newAllSubjectTeacherArr = this.allSubjectTeacherArr;
+        }
+      })
+      
+    },
+    changeTeacherShow(id){
+      this.changeTeacher = true;
+      this.getAllData({
+        name: 'SELECT_FINDTEACHER',
+        data: {
+          classId: id
+        }
+      }).then(data=>{
+        this.teacherSubjectArr = data.data
+      })
+      console.log(this.changeTeacherForm);
     },
     allotTeacherRequest(){ //分配任课教师的请求
       let arr = [];
       for(let k in this.allotTeacherForm){
-        arr.push({subjectId: parseInt(k), staffId: this.allotTeacherForm[k]})
+        arr.push({classId: this.classId, staffId: this.allotTeacherForm[k]})
       }
       this.ModifyDateT({
         name: 'SELECT_UPDATETEACHER',
         data: {
-          clazzId: this.classId,
-          teacherParams: arr
+          staffClassRS: arr
         }
       }).then(data=>{
         this.allotTeacher = false;
         console.log(data);
-        this.getAllClass()
+        this.getAllClass();
       })
     },
     getTeacherBySubject(){ //获取教当前科目的老师
+    console.log(888, this.subjectArr);
       this.subjectArr.forEach(item => {
         this.getAllDataT({
           name: "STAFF_SELECT",
@@ -365,16 +424,18 @@ export default {
       return classNameArr.length
     }
   },
-  created() {
+ async created() {
     this.getAllGrade(); //获取所有年级
+    await this.getAllSubject();
     this.gradeArr = this.$store.state.teacherModules.grade;
     this.getAllClass(); //获取一页班级信息
     this.getClassRoomNotUse() //获取所有没有使用过的教室
     this.classRoomArr = this.$store.state.teacherModules.classroom;
     this.getTotalClassData() //获取所有班级的信息
     this.getHeaderTeacher() //获取所有不是班主任的老师
-    this.subjectArr = this.$store.state.teacherModules.subject;
+    // this.subjectArr = this.$store.state.teacherModules.subject;
     this.getTeacherBySubject();
+    
   }
 };
 </script>
@@ -481,5 +542,13 @@ export default {
       margin-right: 0;
     }
   }
+}
+.inputSpan{
+  display: inline-block;
+  width: 90%;
+  border: 1px solid rgb(190, 189, 189);
+  text-indent: 1rem;
+  background-color: rgba(196, 193, 193, 0.24);
+  border-radius: 5px;
 }
 </style>

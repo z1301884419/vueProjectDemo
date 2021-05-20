@@ -33,9 +33,7 @@ export default{
     },
     // 获取总数据
     getAllData(obj) {
-      console.log(obj);
       return api[obj.name](obj.data).then(data => {
-        console.log(data);
         if (data.data.code == 200) {
           console.log(data.data.data);
           this.searchStu = data.data.data
@@ -53,14 +51,12 @@ export default{
     },
     // 删除数据的方法
     DeleteData(obj) {
-      console.log(obj);
       return this.$confirm('此操作将永久删除该信息, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         return api[obj.name](obj.data).then(data => {
-          console.log(data);
           if (data.data.code == 200) {
             this.openSuccess('删除成功', '该数据已成功移出!');
             return 200

@@ -26,7 +26,7 @@
           <el-input v-model="form.sureNewPassword" type="password" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="班级" required label-width="100px" prop="classId">
-          <yy_FilterByClass @getClassId="getClassId" :nowClass="[form.gradeId,form.classId]"/>
+          <yy_teacherClassList @getClassId="getClassId" :nowClass="[form.gradeId,form.classId]"/>
         </el-form-item>
         <el-form-item label="姓名" required label-width="100px" prop="studentName">
           <el-input v-model="form.studentName" autocomplete="off"></el-input>
@@ -56,7 +56,7 @@
         <el-form-item label="住址" label-width="100px">
           <el-input v-model="form.studentHome" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="联系方式" label-width="100px">
+        <el-form-item label="联系方式" label-width="100px" prop="studentContact">
           <el-input v-model="form.studentContact" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="获奖情况" label-width="100px">
@@ -85,11 +85,11 @@
   import {mapActions} from 'vuex'
   import sureAgainBox from '@/utils/sureAgainBox'
   import yy_request from '@/utils/yy_request'
-  import yy_FilterByClass from '@/components/yy_FilterByClass'
+  import yy_teacherClassList from '@/components/yy_teacherClassList'
   export default {
     name: "yy_AddOrSetStudentDialog",
     components:{
-      yy_FilterByClass,
+      yy_teacherClassList,
     },
     props:['stuData'],
     data() {
@@ -135,6 +135,7 @@
           studentNation:[{ validator: this.test_student_nation, trigger: 'blur' }],//民族
           studentPolitics:[{required: true, message: '请选择政治面貌', trigger: 'change'}],//政治面貌
           studentState:[{required: true, message: '请选择在读状态', trigger: 'change'}],//在读状态
+          studentContact:[{pattern:/^1[3|4|5|7|8][0-9]{9}$/,message:'联系方式有误', trigger: 'blur'}],
         }
       }
     },
@@ -182,6 +183,7 @@
               })
 
             }else {
+              console.log(this.form);
               sureAgainBox.bind(this)({
                 text:'添加',
                 requestFn:yy_request.AddStudentFn,

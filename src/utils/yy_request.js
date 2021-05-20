@@ -7,32 +7,10 @@ import {getStorage} from "./storage";
 //查寻学科
 import axios from 'axios'
 const yy_axios=axios.create({
-  baseURL:'http://172.16.14.38:8097', // api的base_url
+  baseURL:'http://172.16.14.46:8410', // api的base_url
   timeout: 10000 // 请求超时时间
 })
 yy_axios.interceptors.request.use(req=>{
-  let token=getStorage("token")
-  if(token) req.headers['Authorization'] = token
-  return req
-})
-//学生的端口号
-const yy_axiosStu=axios.create({
-  baseURL:'http://172.16.14.46:8191', // api的base_url
-  timeout: 10000 // 请求超时时间
-})
-
-//家长的端口号
-const yy_axiosParent=axios.create({
-  baseURL:'http://172.16.14.46:7094', // api的base_url
-  timeout: 10000 // 请求超时时间
-})
-
-//成绩的端口号
-const yy_axiosScore=axios.create({
-  baseURL:'http://172.16.14.46:8092', // api的base_url
-  timeout: 10000 // 请求超时时间
-})
-yy_axiosScore.interceptors.request.use(req=>{
   let token=getStorage("token")
   if(token) req.headers['Authorization'] = token
   return req
@@ -57,7 +35,7 @@ export default {
     })
   },
   SelectAllStuXiangFn(data){
-    return yy_axiosStu({
+    return yy_axios({
       url:yy_api.SelectAllStuXiang,
       method:'post',
       params:data,
@@ -67,7 +45,7 @@ export default {
     })
   },
   AddStudentFn(stuData){
-    return yy_axiosStu({
+    return yy_axios({
       url:yy_api.AddStudent,
       method:'post',
       data:stuData
@@ -77,7 +55,7 @@ export default {
   },
   DelStudentFn(id){
     console.log(id);
-    return yy_axiosStu({
+    return yy_axios({
       url:yy_api.DelStudent,
       method:'post',
       data:{
@@ -90,7 +68,7 @@ export default {
   },
   SetStudentFn(data){
     console.log(data);
-    return yy_axiosStu({
+    return yy_axios({
       url:yy_api.SetStudent,
       method:'post',
       data
@@ -101,7 +79,7 @@ export default {
   },
   //查询家长
   SelectStuParentFn(data){
-    return yy_axiosParent({
+    return yy_axios({
       url:yy_api.AllStudentParent,
       method:'post',
       params:data,
@@ -112,8 +90,7 @@ export default {
   },
   //查询学生成绩
   SelsectAllStuScoresFn(data){
-    console.log(data);
-    return yy_axiosScore({
+    return yy_axios({
       url:yy_api.SelsectAllStuScores,
       method:'post',
       data
@@ -135,10 +112,22 @@ export default {
       return data.data
     })
   },
-  //通过班级查成绩
+  //通过班级查所有未录成绩的考试
   SelectClassByClassFn(id){
-    return yy_axiosScore({
+    return yy_axios({
       url:yy_api.SelectScoreByClass,
+      method:'post',
+      data:{
+        classId:id
+      }
+    }).then(data=>{
+      return data.data
+    })
+  },
+  //通过班级查所有考试
+  SelectClassByClassFn2(id){
+    return yy_axios({
+      url:yy_api.SelectScoreByClass2,
       method:'post',
       data:{
         classId:id
@@ -149,10 +138,64 @@ export default {
   },
   //上传excel成绩表
   UploadScoreExcelFn(formData){
-    return yy_axiosScore.post(yy_api.UploadScoreExcel, formData).then(data=>{
+    return yy_axios.post(yy_api.UploadScoreExcel, formData).then(data=>{
       console.log(data);
+      return data
     })
-  }
+  },
+  //查询老师
+  SelectTeacherFn(num){
+    return yy_axios({
+      url:yy_api.SelectTeacher,
+      method:'post',
+      data:{
+        staffNumber:num
+      }
+    }).then(data=>{
+      return data.data
+    })
+  },
+  //录入单个学生成绩
+  AddStuScoreOneFn(data){
+    console.log(data);
+    return yy_axios({
+      url:yy_api.AddStuScoreOne,
+      method:'post',
+      data
+    }).then(data=>{
+      console.log(data);
+      return data.data
+    })
+  },
+  //录入单个学生成绩
+  UpdateStuScoreOneFn(data){
+    console.log(data);
+    return yy_axios({
+      url:yy_api.UpdateStuScoreOne,
+      method:'post',
+      data
+    }).then(data=>{
+      console.log(data);
+      return data.data
+    })
+  },
+  //删除单个学生成绩
+  DelStuScoreOneFn(ids){
+    console.log(ids);
+    return yy_axios({
+      url:yy_api.DelStuScoreOne,
+      method:'post',
+      data:{
+        scoreIds:ids
+      }
+    }).then(data=>{
+      console.log(data);
+      return data.data
+    })
+  },
+
+
+
 
 
 }

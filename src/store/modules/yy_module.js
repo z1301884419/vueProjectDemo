@@ -83,9 +83,7 @@ export default{
     },
     //获取该班学生成绩信息
     getAllStuScores(context,pageData){
-      console.log(pageData);
       return yy_request.SelsectAllStuScoresFn(pageData).then(res=>{
-        console.log(res);
         context.commit('setAllStuScores',res.data)
         context.commit('setAllStuScoresLength',res.count)
         return res

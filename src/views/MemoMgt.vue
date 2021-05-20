@@ -22,7 +22,7 @@
       </el-card>
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <!-- ,getData2() -->
-        <el-tab-pane label="我的留言板" name="first">
+        <el-tab-pane label="已发表留言" name="first">
           <el-card shadow="hover" v-for="item in tableData" :key="item.id">
             <div class="contentCard">
               <div class="content">
@@ -90,7 +90,7 @@
           <el-pagination layout="prev, pager, next" :total="pageTotal" :page-size="pageSize" @current-change="changePage"></el-pagination>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="我收到的回复" name="second" >
+        <el-tab-pane label="已收到留言" name="second" >
           <el-card shadow="hover" v-for="item in tableData" :key="item.id">
             <div class="contentCard">
               <div class="content">

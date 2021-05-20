@@ -72,14 +72,39 @@
     <!-- 右边签到和公告处 -->
     <div class="homeRightBox">
       <!-- 签到模块 -->
-      <div class="homeRTopBox"></div>
-
+      <div class="homeRTopBox">
+        <!-- 签到 -->
+        <div
+          class="signInBox"
+          v-if="$store.state.loginModules.userShenfen == '学生'"
+        >
+          <h3 class="signInBtn" v-if="signInFlag" @click="signInFn">
+            <i class="el-icon-alarm-clock"></i>上课打卡
+          </h3>
+          <h3 v-else @click="signOutFn">
+            <i class="el-icon-alarm-clock"></i>下课打卡
+          </h3>
+          <p>(点击上方进行签到)</p>
+          <p>
+            <i class="el-icon-location-information"></i>状态:<span>{{
+              signInText
+            }}</span>
+          </p>
+        </div>
+        <div class="timeBox" v-else>
+          <timer-comp></timer-comp>
+        </div>
+      </div>
       <!-- 公告栏 -->
-      <div class="homeRBottomBox"></div>
+      <div class="homeRBottomBox">
+        
+      </div>
     </div>
   </div>
 </template>
 <script>
+import homeMixins from "../mixins/homeMixins";
+import TimerComp from '@/components/TimerComp'
 export default {
   data() {
     return {
@@ -109,7 +134,89 @@ export default {
           src: require("../assets/img/banner6.jpg"),
         },
       ],
+      signInText: "",
+      signInFlag: false,
     };
+  },
+  components:{
+    TimerComp
+  },
+  mixins: [homeMixins],
+  methods: {
+    // 页面加载查询状态
+    selectSignIn() {
+      this.seletcSignInStatus({
+        name: "SELECTSIGNIN",
+        data: {
+          studentNum: this.$store.state.loginModules.user.studentNumber,
+        },
+      }).then((data) => {
+        console.log(data);
+        if (data.code == 200) {
+          let h = parseInt(
+            data.data.attendabnceUpdateTime.split(" ")[1].split(":")[0]
+          );
+          this.signInFlag = h < 12 ? true : false; //true是上课打卡，false下课打卡
+          // data.data.attendabnceAmStatus==2?'待签到':data.data.attendabnceAmStatus==0?''
+          if (this.signInFlag) {
+            if (data.data.attendabnceAmStatus == 2) {
+              this.signInText = "待签到";
+            } else if (data.data.attendabnceAmStatus == 0) {
+              this.signInText = "已签到";
+            } else if (data.data.attendabnceAmStatus == 1) {
+              this.signInText = "已迟到";
+            } else {
+              this.signInText = "无";
+            }
+          } else {
+            if (data.data.attendabncePmStatus == 2) {
+              this.signInText = "待签退";
+            } else if (data.data.attendabncePmStatus == 0) {
+              this.signInText = "已签退";
+            } else if (data.data.attendabncePmStatus == 3) {
+              this.signInText = "早退打卡";
+            } else {
+              this.signInText = "无";
+            }
+          }
+        }
+      });
+    },
+    // 签到
+    signInFn() {
+      this.addSignInStatus({
+        name: "ADDSIGNIN",
+        data: {
+          studentNum: this.$store.state.loginModules.user.studentNumber,
+        },
+      }).then((data) => {
+        console.log(data);
+        this.$message({
+          message: data,
+          type: "success",
+        });
+        this.selectSignIn();
+      });
+    },
+    // 签退
+    signOutFn() {
+      this.addSignInStatus({
+        name: "ADDSIGNIN",
+        data: {
+          studentNum: this.$store.state.loginModules.user.studentNumber,
+        },
+      }).then((data) => {
+        console.log(data);
+        this.$message({
+          message: data,
+          type: "success",
+        });
+        this.selectSignIn();
+      });
+    },
+  },
+  created() {
+    this.selectSignIn();
   },
 };
 </script>
@@ -148,6 +255,34 @@ export default {
   height: 49%;
   border-radius: 10px;
   background-color: white;
+  .signInBox {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding-top: 5rem;
+    // border: 1px solid red;
+    h3 {
+      // border: 1px solid green;
+      font-size: 3rem;
+      text-align: center;
+      cursor: pointer;
+    }
+    p {
+      // border: 1px solid green;
+      font-size: 2rem;
+      text-align: center;
+      color: gray;
+      margin-top: 2rem;
+      span {
+        color: rgb(81, 163, 33);
+      }
+    }
+  }
+  .timeBox{
+    width: 100%;
+    height: 100%;
+    text-align: center;
+  }
 }
 // 公告处
 .homeRBottomBox {
@@ -188,7 +323,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  p{
+  p {
     font-size: 1.6rem;
     line-height: 3rem;
   }

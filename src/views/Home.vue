@@ -41,22 +41,6 @@
     </el-aside>
     <el-container>
       <el-header height="80px">
-        <!-- 签到 -->
-        <div
-          class="signInBox"
-          v-if="$store.state.loginModules.userShenfen == '学生'"
-        >
-          <h3 class="signInBtn" v-if="signInFlag" @click="signInFn">
-            <i class="el-icon-alarm-clock"></i>上课打卡
-          </h3>
-          <h3 v-else @click="signOutFn">
-            <i class="el-icon-alarm-clock"></i>下课打卡
-          </h3>
-          <p>
-            <i class="el-icon-location-information"></i>状态:{{ signInText
-            }}<span></span>
-          </p>
-        </div>
         <div class="userBox">
           <div class="messageBox">
             <!-- <el-badge :value="3" class="item">
@@ -105,7 +89,7 @@ export default {
     return {
       user: this.$store.state.loginModules.user.parentImg,
       user1:this.$store.state.loginModules.user.studentPhoto,
-       user2:this.$store.state.loginModules.user.staffImg,
+      user2:this.$store.state.loginModules.user.staffImg,
       bodyHeight: window.innerHeight,
       currentIndex: 0,
       // navList: [
@@ -225,8 +209,6 @@ export default {
       //     children: "",
       //   },
       // ],
-      signInFlag: false,
-      signInText: "",
       menuList:this.$store.state.loginModules.userMenulist
     };
   },
@@ -283,78 +265,6 @@ export default {
     handleClose(key, keyPath) {
       console.log(key, keyPath);
     },
-    // 页面加载查询状态
-    selectSignIn() {
-      this.seletcSignInStatus({
-        name: "SELECTSIGNIN",
-        data: {
-          studentNum: this.$store.state.loginModules.user.studentNumber,
-        },
-      }).then((data) => {
-        console.log(data);
-        if (data.code == 200) {
-          let h = parseInt(
-            data.data.attendabnceUpdateTime.split(" ")[1].split(":")[0]
-          );
-          this.signInFlag = h < 12 ? true : false; //true是上课打卡，false下课打卡
-          // data.data.attendabnceAmStatus==2?'待签到':data.data.attendabnceAmStatus==0?''
-          if (this.signInFlag) {
-            if (data.data.attendabnceAmStatus == 2) {
-              this.signInText = "待签到";
-            } else if (data.data.attendabnceAmStatus == 0) {
-              this.signInText = "已签到";
-            } else if (data.data.attendabnceAmStatus == 1) {
-              this.signInText = "已迟到";
-            } else {
-              this.signInText = "无";
-            }
-          } else {
-            if (data.data.attendabncePmStatus == 2) {
-              this.signInText = "待签退";
-            } else if (data.data.attendabncePmStatus == 0) {
-              this.signInText = "已签退";
-            } else if (data.data.attendabncePmStatus == 3) {
-              this.signInText = "早退打卡";
-            } else {
-              this.signInText = "无";
-            }
-          }
-        }
-      });
-    },
-    // 签到
-    signInFn() {
-      this.addSignInStatus({
-        name: "ADDSIGNIN",
-        data: {
-          studentNum: this.$store.state.loginModules.user.studentNumber,
-        },
-      }).then((data) => {
-        console.log(data);
-        this.$message({
-          message: data,
-          type: "success",
-        });
-        this.selectSignIn();
-      });
-    },
-    // 签退
-    signOutFn() {
-      this.addSignInStatus({
-        name: "ADDSIGNIN",
-        data: {
-          studentNum: this.$store.state.loginModules.user.studentNumber,
-        },
-      }).then((data) => {
-        console.log(data);
-        this.$message({
-          message: data,
-          type: "success",
-        });
-        this.selectSignIn();
-      });
-    },
-    // 日期比大小
   },
   computed: {
     getAsideHeight() {
@@ -367,7 +277,6 @@ export default {
     };
   },
   created() {
-    this.selectSignIn();
     this.liuyanshuliang();
     console.log(this.menuList);
   },

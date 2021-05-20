@@ -101,6 +101,7 @@
           </el-row>
         </el-form>
       </div>
+      <!-- 注册 -->
       <el-dialog
         title="注册家长账号"
         :visible.sync="dialogFormVisible1"
@@ -187,20 +188,9 @@
           <el-dialog :visible.sync="dialogVisible">
             <img width="100%" :src="dialogImageUrl" alt="" />
           </el-dialog>
-          <!-- <el-form-item label="宿舍" :label-width="formLabelWidth">
-      <el-select v-model="form.region1" placeholder="请选择" >
-        <el-option :label="item.mingCheng" :value="item.id" v-for="item in tableData1" :key="item.id"></el-option> -->
-          <!-- <el-option label="太和殿" value="太和殿"></el-option>
-        <el-option label="永寿殿" value="永寿殿"></el-option>
-        <el-option label="钟粹宫" value="钟粹宫"></el-option> -->
-
-          <!-- </el-select>
-    </el-form-item> -->
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible1 = false">取 消</el-button>
-          <!-- <el-button type="primary" @click="TianJia(),dialogFormVisible = false,resetForm('form')" >确 定</el-button>
-     -->
           <el-button
             type="primary"
             @click="zhuCe(), dialogFormVisible1 = false"
@@ -237,15 +227,10 @@
         </div>
       </div>
     </div>
-    <!-- <img alt="Vue logo" src="../assets/logo.png">
-    <button @click="goMain">首页</button> -->
   </div>
 </template>
 
 <script>
-// import qs from "qs";
-
-// @ is an alias to /src
 import huoQu from "../mixins/huoQu";
 import { mapActions } from "vuex";
 export default {

@@ -287,7 +287,8 @@ export default {
           limit: this.pageSize
         }
       }).then(data => {
-        data.data.map(item=> item.roleId = item.roleList.length > 0 ? '班主任' : '任课教师');
+        console.log(121212,data.data);
+        data.data.map(item=> item.roleId = item.roleList.length > 1 ? '班主任、任课教师' : '任课教师');
         this.tableData = data.data;
         this.totalLength = data.count;
       })

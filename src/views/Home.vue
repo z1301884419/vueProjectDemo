@@ -42,7 +42,7 @@
     <el-container>
       <el-header height="80px">
         <div class="userBox">
-          <div class="messageBox" v-if="$store.state.loginModules.userShenfen == '学生'||$store.state.loginModules.userShenfen == '家长'||$store.state.loginModules.userShenfen == '班主任'">
+          <div class="messageBox" v-if="$store.state.loginModules.userShenfen == '学生'||$store.state.loginModules.userShenfen == '老师'||$store.state.loginModules.userShenfen == '班主任'">
             <!-- <el-badge :value="3" class="item">
               <span class="iconfont icon-lingdang"></span>
             </el-badge> -->
@@ -229,7 +229,10 @@ export default {
         //   this.$router.push("/Home");
           
         // }
-      });
+      })
+       .catch((error)=> {
+          console.log(error);
+        });
     },
     // 退出登录
     tuichu() {
@@ -277,7 +280,10 @@ export default {
     };
   },
   created() {
-    this.liuyanshuliang();
+    if(this.$store.state.loginModules.userShenfen !== '家长'){
+      this.liuyanshuliang();
+    }
+    
     console.log(this.menuList);
   },
 };

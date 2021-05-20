@@ -232,7 +232,10 @@ liuyanshuliang(){
         //   this.$router.push("/Home");
           
         // }
-      });
+      })
+       .catch(function (error) {
+          console.log(error);
+        });
     },
     replyliuyanClick(){
       this.LoginAction12({

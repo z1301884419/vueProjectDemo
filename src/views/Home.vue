@@ -42,7 +42,7 @@
     <el-container>
       <el-header height="80px">
         <div class="userBox">
-          <div class="messageBox">
+          <div class="messageBox" v-if="$store.state.loginModules.userShenfen == '学生'||$store.state.loginModules.userShenfen == '家长'||$store.state.loginModules.userShenfen == '班主任'">
             <!-- <el-badge :value="3" class="item">
               <span class="iconfont icon-lingdang"></span>
             </el-badge> -->

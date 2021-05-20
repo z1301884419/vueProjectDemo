@@ -169,19 +169,16 @@ export default {
   },
   //录入单个学生成绩
   UpdateStuScoreOneFn(data){
-    console.log(data);
     return yy_axios({
       url:yy_api.UpdateStuScoreOne,
       method:'post',
       data
     }).then(data=>{
-      console.log(data);
       return data.data
     })
   },
   //删除单个学生成绩
   DelStuScoreOneFn(ids){
-    console.log(ids);
     return yy_axios({
       url:yy_api.DelStuScoreOne,
       method:'post',
@@ -193,6 +190,34 @@ export default {
       return data.data
     })
   },
+  //下载excel成绩表
+  DownScoreExcelFn(data){
+    return yy_axios({
+      url:yy_api.DownScoreExcel,
+      method:'post',
+      data
+    }).then(data=>{
+      return data.data
+    })
+  },
+  //下载excel添加学生
+  DownStuExcelFn(){
+    return yy_axios({
+      url:yy_api.DownStuExcel,
+      method:'post',
+    }).then(data=>{
+      return data.data
+    })
+  },
+  //通过excel添加学生
+  AddStuByExcelFn(formData){
+    return yy_axios.post(yy_api.AddStuByExcel, formData).then(data=>{
+      console.log(data);
+      return data
+    })
+  },
+
+
 
 
 

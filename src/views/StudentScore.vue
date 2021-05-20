@@ -120,7 +120,6 @@
 </template>
 <script>
   import { getStorage } from "../utils/storage";
-  import axios from 'axios'
   import yy_request from "@/utils/yy_request"
   import yy_teacherClassList from '@/components/yy_teacherClassList'
   import yy_ClassGreadTable from '@/components/yy_ClassGreadTable'
@@ -346,17 +345,13 @@
       },
       //下载模板
       downLoadExcel() {
-        axios({
-          url:"http://172.16.14.46:8410/instructor/instructor/score/export/excel",
-          method:"post",
-          data:{
-            classId:this.selectClassId,
-            examNumber:this.InputExamNumber,
-            staffId:getStorage('user').staffId,
-          }
+        yy_request.DownScoreExcelFn({
+          classId:this.selectClassId,
+          examNumber:this.InputExamNumber,
+          staffId:getStorage('user').staffId,
         }).then(res=>{
           console.log(res);
-          this.downExcelAdress = res.data.data
+          this.downExcelAdress = res.data
         })
       },
       //下载模板时的班级考试编号联级选择

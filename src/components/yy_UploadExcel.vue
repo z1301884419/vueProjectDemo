@@ -42,8 +42,8 @@
 </template>
 
 <script>
-  import axios from 'axios'
   import yy_FilterByClass from '@/components/yy_FilterByClass'
+  import yy_request from "../utils/yy_request";
   export default {
     name: "yy_UploadExcel",
     components:{
@@ -134,7 +134,7 @@
           spinner: 'el-icon-loading',
           background: 'rgba(0, 0, 0, 0.7)'
         })
-        axios.post('http://172.16.14.46:8191/student/student/add/excel', formData).then(({data}) => {
+        yy_request.AddStuByExcelFn(formData).then(({data}) => {
           console.log(data);
           if (data.code === 200) {
             thiz.$message({
@@ -156,11 +156,9 @@
       },
       //下载模板
       downLoadExcel() {
-        axios({
-          url:"http://172.16.14.46:8191/student/student/export/excel",
-          method:"post",
-        }).then(res=>{
-          this.downExcelAdress = res.data.data
+        yy_request.DownStuExcelFn().then(res=>{
+          console.log(res);
+          this.downExcelAdress = res.data
         })
        },
       checkedClassID(value){

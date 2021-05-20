@@ -3,6 +3,8 @@ export const SelectAllClass = '/admin/clazz/all';//查询所有班级-完成
 export const SelectAllStuXiang = '/student/student/list';//查询所有学生详情-完成
 export const AddStudent = '/student/student/addStudent';//添加学生-完成
 export const DelStudent = '/student/student/deleteIds';//删除学生-完成
+export const DownStuExcel = '/student/student/export/excel';//下载excel表格添加学生-完成
+export const AddStuByExcel = '/student/student/add/excel';//上传excel表格添加学生-完成
 export const SetStudent = '/student/student/updateStudent';//修改学生-完成
 
 export const AllStudentParent = '/student/updateStudent';//查询所有学生家长信息
@@ -16,3 +18,4 @@ export const SelectTeacher = '/instructor/staff/select';//查询老师的方法�
 export const AddStuScoreOne = '/instructor/instructor/score/add/one';//录入单个学生的成绩（完成）
 export const UpdateStuScoreOne = '/instructor/instructor/score/update';//修改单个学生的成绩(完成)
 export const DelStuScoreOne = '/instructor/instructor/score/delete';//删除单个学生的成绩(完成)
+export const DownScoreExcel = '/instructor/instructor/score/export/excel';//删除单个学生的成绩(完成)

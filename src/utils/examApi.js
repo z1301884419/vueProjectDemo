@@ -35,5 +35,5 @@ export default{
 const SELECTEXAMALL = '/admin/exam/find'
 const SELECTEXAMCLASS='/admin/exam/GradeClass'
 const ADDEXAM='/admin/exam/add'
-const DELEXAM='/exam/del'
-const SELECTCLASSLIST='/exam/lookGradeClass'
+const DELEXAM='/admin/exam/del'
+const SELECTCLASSLIST='/admin/exam/lookGradeClass'

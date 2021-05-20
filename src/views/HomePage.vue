@@ -97,14 +97,25 @@
       </div>
       <!-- 公告栏 -->
       <div class="homeRBottomBox">
-        
+        <div class="notifyTitle">
+          <h1>最新通知</h1>
+          <p>查看更多>>></p>
+        </div>
+        <div class="notifyContent">
+          <h1>端午节放假通知</h1>
+          <p>2020年6月25日至6月27日，放假期三天，6月28日（周日）正常上班。</p>
+          <p>
+            请各部门负责人做好本部门的节前工作安排，并检查相关设施、设备，做好防火、防盗工作，确保办公场所的安全、有序。
+          </p>
+          <p>预祝全体员工，全体学生及家长，端午节快乐！</p>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
 import homeMixins from "../mixins/homeMixins";
-import TimerComp from '@/components/TimerComp'
+import TimerComp from "@/components/TimerComp";
 export default {
   data() {
     return {
@@ -138,8 +149,8 @@ export default {
       signInFlag: false,
     };
   },
-  components:{
-    TimerComp
+  components: {
+    TimerComp,
   },
   mixins: [homeMixins],
   methods: {
@@ -158,7 +169,7 @@ export default {
           );
           console.log(h);
           this.signInFlag = h < 12 ? true : false; //true是上课打卡，false下课打卡
-          
+
           if (this.signInFlag) {
             if (data.data.attendabnceAmStatus == 2) {
               this.signInText = "待签到";
@@ -279,7 +290,7 @@ export default {
       }
     }
   }
-  .timeBox{
+  .timeBox {
     width: 100%;
     height: 100%;
     text-align: center;
@@ -292,6 +303,36 @@ export default {
   margin-top: 2%;
   border-radius: 10px;
   background-color: white;
+  padding: 1rem;
+  box-sizing: border-box;
+  .notifyTitle {
+    width: 100%;
+    display: flex;
+    h1,
+    p {
+      width: 50%;
+      font-size: 1.6rem;
+    }
+    p {
+      text-align: right;
+      cursor: pointer;
+
+    }
+  }
+  .notifyContent{
+    width: 100%;
+    font-size: 1.6rem;
+    padding-top: 5rem;
+    h1{
+      text-align: center;
+      font-size: 1.8rem;
+      padding-bottom: 2rem;
+    }
+    p{
+      text-indent: 2rem;
+      line-height: 3rem;
+    }
+  }
 }
 // banner
 .block {
@@ -327,6 +368,7 @@ export default {
   p {
     font-size: 1.6rem;
     line-height: 3rem;
+    text-indent: 2rem;
   }
   // div {
   //   width: 48%;

@@ -81,7 +81,7 @@
             width="250"
           >
           </el-table-column>
-          <el-table-column label="操作" align="center" width="250">
+          <el-table-column label="操作" align="center">
             <template slot-scope="scope">
               <el-button
                 size="mini"
@@ -550,6 +550,7 @@ export default {
           });
           this.checkInTableData = data.data;
           this.pageTotal = data.count;
+          this.eachartData=[];
           for (let key in data.date2) {
             if(key!='all'){
               this.eachartData.push({ name: key, value: data.date2[key]});

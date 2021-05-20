@@ -32,8 +32,8 @@ export default{
     data:data
   }),
 }
-const SELECTEXAMALL = '/exam/find'
-const SELECTEXAMCLASS='/exam/GradeClass'
-const ADDEXAM='/exam/add'
+const SELECTEXAMALL = '/admin/exam/find'
+const SELECTEXAMCLASS='/admin/exam/GradeClass'
+const ADDEXAM='/admin/exam/add'
 const DELEXAM='/exam/del'
 const SELECTCLASSLIST='/exam/lookGradeClass'

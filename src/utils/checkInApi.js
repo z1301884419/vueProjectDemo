@@ -20,6 +20,6 @@ export default{
     data:data
   }),
 }
-const ATTENDANCEALL = '/attendance/allAttendance'
-const MODIFYATTDATA='/attendance/updateAttendance'
-const ADDATTDATA='/attendance/addAttendance'
+const ATTENDANCEALL = '/headteacher/attendance/allAttendance'
+const MODIFYATTDATA='/headteacher/attendance/updateAttendance'
+const ADDATTDATA='/headteacher/attendance/addAttendance'

@@ -6,6 +6,11 @@ export default {
     method: 'post',
     data: data
   }),
+  GRADE_ALL:data => http({
+    url:  GRADE_ALL,
+    method: 'post',
+    data: data
+  }),
   SUBJECT_UPDATE: data => http({ // 
     url: SUBJECT_UPDATE,
     method: 'post',
@@ -32,12 +37,13 @@ export default {
     data: data
   }),
 }
-const CLASS_ALL = '/clazz/all';//所有班级
-const SUBJECT_UPDATE = '/subject/update';
-const COURSE_ADD = '/course/add'; //添加课程
-const COURSE_DEL = '/course/del'; 
-const COURSE_FINDCLASSCOURSE = '/course/findClassCourse'; //查询班级课表
-const COURSE_UPDATE = '/course/update'; //修改课程
+const CLASS_ALL = '/admin//clazz/selectAll';//所有班级
+const GRADE_ALL = '/admin/grade/all';//所有年级
+const SUBJECT_UPDATE = '/admin/subject/all';//所有科目
+const COURSE_ADD = '/admin/course/add'; //添加课程
+const COURSE_DEL = '/admin/course/del'; //删除课程
+const COURSE_FINDCLASSCOURSE = '/admin/course/findClassCourse'; //查询班级课表
+const COURSE_UPDATE = '/admin/course/update'; //修改课程
 
 
 

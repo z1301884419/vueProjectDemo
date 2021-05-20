@@ -12,34 +12,20 @@
     <el-divider></el-divider>
 
     <div class="form-box" style="margin-top: 15px">
-      <!-- 下拉选择框第几周-->
-      <el-select
-        v-model="formData.grade"
-        placeholder="第一周"
-        style="margin-right: 15px"
-      >
-        <el-option
-          v-for="item in tableData"
-          :key="item.value"
-          :label="item.gradeName"
-          :value="item.gradeGradeId"
-          :disabled="item.disabled"
-        >
-        </el-option>
-      </el-select>
+
 
       <!-- 下拉选择框年级-->
       <el-select
-        v-model="formData.grade"
+        v-model="gradeValue"
         placeholder="一年级"
         style="margin-right: 15px"
-
+        @change="handleGrade"
       >
         <el-option
-          v-for="item in tableData"
-          :key="item.gradeGradeId"
+          v-for="item in gradeData"
+          :key="item.gradeId"
           :label="item.gradeName"
-          :value="item.gradeGradeId"
+          :value="item.gradeId"
           :disabled="item.disabled"
         >
         </el-option>
@@ -47,9 +33,10 @@
 
       <!-- 下拉选择框班级 -->
       <el-select
-        v-model="formData.class"
-        placeholder="一班"
+        v-model="classValue"
+        placeholder="请选择班级"
         style="margin-right: 15px"
+        @change="handleGlass"
       >
         <el-option
           v-for="item in tableData"
@@ -61,13 +48,6 @@
         </el-option>
       </el-select>
 
-      <!-- 搜索按钮 -->
-      <el-button
-        type="primary"
-        icon="el-icon-search"
-        style="color: #53b08a; background: white; border: 1px solid #53b08a"
-        >查询</el-button
-      >
 
       <!-- 提交按钮 -->
       <el-popover
@@ -95,14 +75,10 @@
     </div>
 
     <!-- 课程表 -->
-    <el-table :data="tableData" border style="width: 100%">
+    <el-table :data="newtableData" border style="width: 100%">
       <el-table-column prop="week" label="week"> </el-table-column>
-      <el-table-column prop="className" label="动态年级班级">
-        <el-table-column prop="courseOne" label="第一节课">
-          <!-- <template slot-scope="scope">
-          <span>{{ scope.row.courseOne == 'yuwen' ? '语文' : scope.row.courseOne }}</span>
-        </template> -->
-        </el-table-column>
+      <el-table-column prop="className" :label = this.classNametable>
+        <el-table-column prop="courseOne" label="第一节课"> </el-table-column>
         <el-table-column prop="courseTwo" label="第二节课"> </el-table-column>
         <el-table-column prop="courseThree" label="第三节课"> </el-table-column>
         <el-table-column prop="courseFour" label="第四节课"> </el-table-column>
@@ -185,6 +161,8 @@ import bianji from "../mixins/courseALL";
 export default {
   data() {
     return {
+      gradeValue:'',
+      classValue:'',
       visible: false,
       gradeclassAate: [],
       weekAll: [
@@ -210,12 +188,9 @@ export default {
           name: "第五周",
         },
       ],
-      tableData: [],
-      formData: {
-        grade: "",
-        teacherName: "",
-        class: "",
-      },
+      tableData: [],//班级
+      newtableData: [],//新班级
+      gradeData:[],//年级
       formLabelWidth: "30%",
       form: {
         classId: "",
@@ -231,53 +206,19 @@ export default {
       list: [],
       loading: false,
       dialogFormVisible: false,
+      classNametable:''
     };
   },
   mixins: [bianji],
-  // created() {
-  //   this.tableData.map(() => {
-  //     return this.http({
-  //       url:'/api/clazz/all',
-
-  //     }).then(data => {
-  //       console.log(data)
-  //     })
-  //   })
-  // },
-  //   created(){
-  // this.tableData.push (() => {
-  //       return this.$http({
-  //         url:'CLASS_ALL',
-
-  //       }).then(data => {
-  //         console.log(data)
-  //         console.log(123)
-  //       })
-  //     })
-  //   },
 
   methods: {
     handleClick(row) {
       console.log(row);
-      this.form.classId = row.classId;
-      this.form.className = row.className;
-      this.form.courseOne = row.courseOne;
-      this.form.courseTwo = row.courseTwo;
-      this.form.courseThree = row.courseThree;
-      this.form.courseFour = row.courseFour;
-      this.form.courseFive = row.courseFive;
-      this.form.courseSix = row.courseSix;
-      this.dialogFormVisible = true;
+
     },
     handleSubmit() {
-      console.log(this.form);
-      this.tableData = this.tableData.map((item) => {
-        if (item.classId == this.form.classId) {
-          item = this.form;
-          this.dialogFormVisible = false;
-        }
-        return item;
-      });
+
+  
       // this.$http.post('url', this.form).then((res) => {
       //   console.log(res)
       //   this.dialogFormVisible = false
@@ -285,21 +226,44 @@ export default {
       //   console.log(err)
       // })
     },
-    classNameAll() {
+    handleGrade(){    //班级change函数班级
       this.classallList({
         name: "CLASS_ALL",
-        data: {},
+        data: {gradeId:this.gradeValue},
       }).then((data) => {
-        console.log(data);
-        console.log(444);
-        this.tableData = data.data;
-        console.log(this.tableData);
-      }); //获取班级信息
+        console.log(123)
+        console.log(data.data)
+        this.tableData = data.data
+      }); 
+    },
+  
+    gradeAllList(){  //获取年级信息
+      this.gradeallList({
+        name:"GRADE_ALL",
+        data:{},
+      }).then((data)=>{
+        this.gradeData = data.data
+      })
+    },
+
+    handleGlass(){
+       console.log(this.gradeValue)
+       console.log(this.classValue)
+        this.classallList({
+        name: "CLASS_ALL",
+        data: {gradeId:this.gradeValue,clazzId:this.classValue},
+      }).then((data) => {
+        console.log(123)
+        console.log(data.data)
+        this.newtableData = data.data
+        this.classNametable=data.data[0].gradeName+' '+data.data[0].className
+      }); 
     },
     tijiaoclass() {},
   },
   created() {
-    this.classNameAll();
+    this.gradeAllList();
+   
   },
 };
 </script>

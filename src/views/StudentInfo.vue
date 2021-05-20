@@ -160,6 +160,12 @@
         })
       },
     },
+    watch:{
+      AllStuXiangData(){
+        this.renderData = this.newStuData//初始化表格数据
+        this.dataLength = this.AllStuXiangDataLength//初始化表格数据
+      },
+    },
     created() {
       if(this.AllStuXiangData.length==0){
         this.getAllStuXiangData({

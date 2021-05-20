@@ -57,6 +57,7 @@
     created(){
       yy_request.SelectClassByTeacherFn().then(res=>{
         this.teacherClassList = res.data
+        console.log(res.data);
       })
     },
     methods:{

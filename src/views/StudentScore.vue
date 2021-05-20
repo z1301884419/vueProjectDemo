@@ -100,7 +100,7 @@
 
 <!--    成绩表-->
     <div class="score-table">
-      <yy_ClassGreadTable :tableData="renderData" :shenfen="shenfen"/>
+      <yy_ClassGreadTable :tableData="renderData" :ExamNumber="filteredExamNumber" :shenfen="shenfen"/>
     </div>
     <!--分页-->
     <div class="fenye">
@@ -187,71 +187,49 @@
       filteredByClassFn(value){//班级
         this.filteredByClass = value[1]
         if(value[1]){
-          yy_request.SelectClassByClassFn(value[1]).then(res=>{
+          yy_request.SelectClassByClassFn2(value[1]).then(res=>{
             this.filteredByTestType = res.data
-            this.filteredExamNumber = ''
           })
         }else {
           this.filteredByTestType = []
+          this.renderData = []
         }
+        this.filteredExamNumber = ''
       },
       filteredByTestTypeFn(){//考试类型
-        console.log(this.filteredExamNumber);
         this.filterFn()
       },
       //筛选函数
       filterFn(){
         this.nowPage = 1
-        if(this.filteredByXueHao){
-          this.getAllStuScores({
-            examNumber:"202105144a6d43",//必须
-            limit: 5,
-            page: 1,
-            studentNumber: this.filteredByXueHao
-          }).then(res=>{
-            if(res.code==500){
-              this.$message({
-                type:'error',
-                message:'查询失败'
-              })
-            }else {
-              this.$message({
-                type:'success',
-                message:'查询成功'
-              })
-              this.renderData = res.data
-            }
+        console.log(this.filteredByXueHao);
+        console.log(this.renderData);
+        if(this.renderData.length==0&&this.filteredByXueHao){
+          this.$message({
+            type:'error',
+            message:'查询失败,请先选择班级和考试'
           })
-        }else {
-          this.getAllStuScores({
-            classId: this.filteredByClass,
-            examNumber:this.filteredExamNumber,//必须
-            limit: 5,
-            page: 1,
-          }).then(res=>{
-            this.renderData = res.data
-          })
+          return
         }
-      },
-      //点击取消批量录入dialog
-      closeAddScoreDialog(formName){
-        this.addScoreDialogFormVisible = false
-        this.$refs[formName].resetFields();
-      },
-      //点击确定得到excel表格
-      getExcelForm(formName){
-        console.log(this.importForm);
-
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            console.log('ok');
-          } else {
-            //后端找不到数据提示
+        this.getAllStuScores({
+          classId: this.filteredByClass,
+          examNumber:this.filteredExamNumber,//必须
+          limit: 5,
+          page: 1,
+        }).then(res=>{
+          this.renderData = res.data
+          if(res.code==500){
             this.$message({
               type:'error',
-              message:'考试编号不存在'
+              message:'查询失败'
             })
-            return false;
+            this.renderData = []
+          }else {
+            this.$message({
+              type:'success',
+              message:'查询成功'
+            })
+            this.renderData = res.data
           }
         })
       },
@@ -260,7 +238,7 @@
         this.nowPage = value
         this.getAllStuScores({
           classId: this.filteredByClass,
-          examNumber:"dsfiosdgisdgmo16161615",//必须
+          examNumber:this.filteredExamNumber,//必须
           limit: 5,
           page: value,
         }).then(res=>{
@@ -347,7 +325,15 @@
             })
             thiz.formFileList = []
             thiz.uploadFormFileList = []
-          } else {
+          }
+          else if(data.data.code > 200){
+            thiz.$message({
+              type:'error',
+              message:data.data.msg,
+            })
+            thiz.formFileList = []
+            thiz.uploadFormFileList = []
+          }else {
             thiz.formFileList = []
             thiz.uploadFormFileList = []
             thiz.$message({
@@ -361,7 +347,7 @@
       //下载模板
       downLoadExcel() {
         axios({
-          url:"http://172.16.14.46:8092/instructor/score/export/excel",
+          url:"http://172.16.14.46:8410/instructor/instructor/score/export/excel",
           method:"post",
           data:{
             classId:this.selectClassId,

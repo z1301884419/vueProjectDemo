@@ -13,7 +13,7 @@ import {
 // import VueAMap from 'vue-amap';
 // 在线图标库
 import IconFontOnline from 'vue-iconfont-online';
-Vue.use(IconFontOnline, {  url: '//at.alicdn.com/t/font_2534815_idwh0uhqwf.css',  symbol: 'alibaba-',  fontFamily: 'alibaba-icon',  fontSize: 22})
+Vue.use(IconFontOnline, {  url: '//at.alicdn.com/t/font_2534815_f981f5n5nvk.css',  symbol: 'alibaba-',  fontFamily: 'alibaba-icon',  fontSize: 22})
 
 Vue.config.productionTip = false
 Vue.prototype.$axios=http

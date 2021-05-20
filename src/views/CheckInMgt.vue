@@ -12,7 +12,9 @@
     <!-- 搜索栏 -->
     <div class="searchBox">
       <div class="addAbsence">
-        <el-button class="addAbsenceBtn">添加缺勤记录</el-button>
+        <el-button class="addAbsenceBtn" @click="dialogAddAtt = true"
+          >添加缺勤记录</el-button
+        >
       </div>
       <div class="selectAbsenceExam">
         <el-input
@@ -37,7 +39,9 @@
           :picker-options="pickerCheckInDate"
         >
         </el-date-picker>
-        <el-button plain class="selectAbsenceBtn" @click="searchAttData">查看考勤信息</el-button>
+        <el-button plain class="selectAbsenceBtn" @click="searchAttData"
+          >查看考勤信息</el-button
+        >
         <el-button type="info" plain @click="resetAttData">重置</el-button>
       </div>
     </div>
@@ -243,9 +247,6 @@
             -
             <el-time-picker
               v-model="attDataformPM.modifyPMTime2"
-              :picker-options="{
-                selectableRange: '18:30:00 - 20:30:00',
-              }"
               placeholder="选择签退时间"
               type="fixed-time"
               value-format="HH:mm:ss"
@@ -259,6 +260,103 @@
         <el-button
           type="primary"
           @click="modifyAttPMTrue(), (dialogModifyAttPM = false)"
+          >确 定</el-button
+        >
+      </div>
+    </el-dialog>
+    <!-- 添加考勤记录模态框 -->
+    <el-dialog title="添加考勤记录" :visible.sync="dialogAddAtt">
+      <el-form
+        :model="addAttRecordFormData"
+        :rules="rules"
+        ref="addAttRecordFormData"
+        label-width="130px"
+        class="demo-ruleForm"
+      >
+        <el-form-item label="学生id" prop="attStuId">
+          <el-input v-model="addAttRecordFormData.attStuId"></el-input>
+        </el-form-item>
+        <el-form-item label="学生姓名" prop="attStuName">
+          <el-input v-model="addAttRecordFormData.attStuName"></el-input>
+        </el-form-item>
+        <el-form-item label="添加早上考勤状态" prop="attAmStatus">
+          <el-select
+            v-model="addAttRecordFormData.attAmStatus"
+            placeholder="选择早上考勤状态"
+          >
+            <el-option label="正常" value="0"></el-option>
+            <el-option label="迟到" value="1"></el-option>
+            <el-option label="待考勤" value="2"></el-option>
+            <el-option label="早退" value="3"></el-option>
+            <el-option label="请假" value="4"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="添加早上考勤时间" required>
+          <el-col :span="11">
+            <el-form-item prop="Amdate1">
+              <el-date-picker
+                type="date"
+                placeholder="选择日期"
+                v-model="addAttRecordFormData.Amdate1"
+                style="width: 100%"
+                value-format="yyyy-MM-dd"
+              ></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col class="line" :span="2">-</el-col>
+          <el-col :span="11">
+            <el-form-item prop="AmTime1">
+              <el-time-picker
+                placeholder="选择时间"
+                v-model="addAttRecordFormData.AmTime1"
+                style="width: 100%"
+                type="fixed-time"
+                value-format="HH:mm:ss"
+              ></el-time-picker>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="添加晚上考勤状态" prop="attPmStatus">
+          <el-select
+            v-model="addAttRecordFormData.attPmStatus"
+            placeholder="选择晚上考勤状态"
+          >
+            <el-option label="正常" value="0"></el-option>
+            <el-option label="迟到" value="1"></el-option>
+            <el-option label="待考勤" value="2"></el-option>
+            <el-option label="早退" value="3"></el-option>
+            <el-option label="请假" value="4"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="添加晚上考勤时间" required>
+          <el-col :span="11">
+            <el-form-item prop="Pmdate1">
+              <el-date-picker
+                type="date"
+                placeholder="选择日期"
+                v-model="addAttRecordFormData.Pmdate1"
+                style="width: 100%"
+                value-format="yyyy-MM-dd"
+              ></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col class="line" :span="2">-</el-col>
+          <el-col :span="11">
+            <el-form-item prop="PmTime1">
+              <el-time-picker
+                placeholder="选择时间"
+                v-model="addAttRecordFormData.PmTime1"
+                style="width: 100%"
+                type="fixed-time"
+                value-format="HH:mm:ss"
+              ></el-time-picker>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogAddAtt = false">取 消</el-button>
+        <el-button class="addAttBtn" @click="addAttTrue('addAttRecordFormData')"
           >确 定</el-button
         >
       </div>
@@ -314,7 +412,7 @@ export default {
         student: {},
         modifyAMstatus: "",
         modifyAMDate1: "",
-        modifyAMTime1: '',
+        modifyAMTime1: "",
       },
       formLabelWidth: "100px",
       dialogModifyAttPM: false, //修改签退信息模态框
@@ -323,8 +421,69 @@ export default {
         student: {},
         modifyPMstatus: "",
         modifyPMDate2: "",
-        modifyPMTime2: '',
+        modifyPMTime2: "",
       },
+      dialogAddAtt: false, //添加缺勤记录模态框
+      // 添加缺勤记录数据
+      addAttRecordFormData: {
+        attStuId: "",
+        attStuName: "",
+        attAmStatus: "",
+        Amdate1: "",
+        AmTime1: "",
+        attPmStatus: "",
+        Pmdate1: "",
+        PmTime1: "",
+      },
+      rules: {
+        attStuId: [
+          { required: true, message: "请输入学生ID", trigger: "blur" },
+        ],
+        attStuName: [
+          { required: true, message: "请输入学生姓名", trigger: "blur" },
+        ],
+        attAmStatus: [
+          { required: true, message: "请选择早上考勤状态", trigger: "change" },
+        ],
+        Amdate1: [
+          {
+            // type: "date",
+            required: true,
+            message: "请选择日期",
+            trigger: "change",
+          },
+        ],
+        AmTime1: [
+          {
+            // type: "date",
+            required: true,
+            message: "请选择时间",
+            trigger: "change",
+          },
+        ],
+        attPmStatus: [
+          { required: true, message: "请选择晚上考勤状态", trigger: "change" },
+        ],
+        Pmdate1: [
+          {
+            // type: "date",
+            required: true,
+            message: "请选择日期",
+            trigger: "change",
+          },
+        ],
+        PmTime1: [
+          {
+            // type: "date",
+            required: true,
+            message: "请选择时间",
+            trigger: "change",
+          },
+        ],
+      },
+      option:{},
+      eachartData: [],
+      myChart:null,
     };
   },
   mixins: [checkInMixins],
@@ -333,11 +492,13 @@ export default {
       console.log(document.getElementById("checkInEchartsBox"));
       // 基于准备好的dom，初始化echarts实例
       // let myChart = echarts.init(document.getElementById("checkInEchartsBox"));
-      let myChart = this.$echarts.init(
+      this.myChart = this.$echarts.init(
         document.getElementById("checkInEchartsBox")
       );
+      console.log('饼子');
+      console.log(this.eachartData);
       // 指定图表的配置项和数据
-      let option = {
+      this.option = {
         title: {
           text: "学生出勤表",
         },
@@ -350,17 +511,12 @@ export default {
           {
             name: "出勤情况",
             type: "pie",
-            data: [
-              { name: "正常出勤", value: 80 },
-              { name: "迟到", value: 5 },
-              { name: "旷课", value: 10 },
-              { name: "早退", value: 5 },
-            ],
-            color: ["#78c5b0", "#C5E3D2", "#B2DBD4", "#16B387", "#F9D789"],
+            data: this.eachartData,
+            color: ["#16b387", "#f66077", "#fdf17f", "#8adcff"],
           },
         ],
       };
-      myChart.setOption(option);
+      this.myChart.setOption(this.option);
     },
     // 点击页码切换当前页
     changePage(val) {
@@ -378,16 +534,32 @@ export default {
       }).then((data) => {
         console.log(data);
         if (data.code == 200) {
-          data.data.forEach(item => {
-            item.attendabncePmTime=item.attendabncePmTime==null?'未打卡':item.attendabncePmTime;
-            item.attendabnceAmTime=item.attendabnceAmTime==null?'未打卡':item.attendabnceAmTime;
-            item.attendabncePmStatus=item.attendabncePmStatus==null?'未打卡':item.attendabncePmStatus;
+          data.data.forEach((item) => {
+            item.attendabncePmTime =
+              item.attendabncePmTime == null
+                ? "未打卡"
+                : item.attendabncePmTime;
+            item.attendabnceAmTime =
+              item.attendabnceAmTime == null
+                ? "未打卡"
+                : item.attendabnceAmTime;
+            item.attendabncePmStatus =
+              item.attendabncePmStatus == null
+                ? "未打卡"
+                : item.attendabncePmStatus;
           });
           this.checkInTableData = data.data;
           this.pageTotal = data.count;
+          for (let key in data.date2) {
+            if(key!='all'){
+              this.eachartData.push({ name: key, value: data.date2[key]});
+            }
+          }
+          this.eachartData.map(item=>item.name=item.name == "abnormalProbabilityAM"? "迟到": item.name == "abnormalProbabilityPM"? "早退": item.name == "leaveProbability"? "请假": item.name == "normalProbability"? "正常": "未打卡")
+          this.eachartData.map(item=>item.value=item.value*100)
         }
       });
-    },
+    },           
     // 修改考勤信息模态框
     modifyStatus(obj) {
       for (let i in obj) {
@@ -444,7 +616,7 @@ export default {
             message: data.msg,
           });
           this.getAttendanceDataFn();
-        }else{
+        } else {
           this.$message({
             type: "error",
             message: data.msg,
@@ -474,7 +646,7 @@ export default {
             message: data.msg,
           });
           this.getAttendanceDataFn();
-        }else{
+        } else {
           this.$message({
             type: "error",
             message: data.msg,
@@ -483,36 +655,95 @@ export default {
       });
     },
     // 搜索
-    searchAttData(){
-      
-      let tempObj={
-        endTime:this.CheckInDateEnd,
-        startTime:this.CheckInDateStart,
-        name:this.selectStuName,
-        page:this.nowPage,
-        limit:this.pageSize
-      }
+    searchAttData() {
+      let tempObj = {
+        endTime: this.CheckInDateEnd,
+        startTime: this.CheckInDateStart,
+        name: this.selectStuName,
+        page: this.nowPage,
+        limit: this.pageSize,
+      };
       this.selectAllData({
-        name:'ATTENDANCEALL',
-        data:tempObj
-      }).then(data=>{
+        name: "ATTENDANCEALL",
+        data: tempObj,
+      }).then((data) => {
         if (data.code == 200) {
-          data.data.forEach(item => {
-            item.attendabncePmTime=item.attendabncePmTime==null?'未打卡':item.attendabncePmTime;
-            item.attendabnceAmTime=item.attendabnceAmTime==null?'未打卡':item.attendabnceAmTime;
-            item.attendabncePmStatus=item.attendabncePmStatus==null?'未打卡':item.attendabncePmStatus;
+          data.data.forEach((item) => {
+            item.attendabncePmTime =
+              item.attendabncePmTime == null
+                ? "未打卡"
+                : item.attendabncePmTime;
+            item.attendabnceAmTime =
+              item.attendabnceAmTime == null
+                ? "未打卡"
+                : item.attendabnceAmTime;
+            item.attendabncePmStatus =
+              item.attendabncePmStatus == null
+                ? "未打卡"
+                : item.attendabncePmStatus;
           });
           this.checkInTableData = data.data;
           this.pageTotal = data.count;
         }
-      })
+      });
     },
     // 重置
-    resetAttData(){
+    resetAttData() {
       this.getAttendanceDataFn();
-      this.selectStuName='';
-      this.CheckInDateEnd='';
-      this.CheckInDateStart='';
+      this.selectStuName = "";
+      this.CheckInDateEnd = "";
+      this.CheckInDateStart = "";
+    },
+    // 确定添加考勤信息
+    addAttTrue(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.dialogAddAtt = false;
+          let tempobj = {
+            attendabnceAmStatus: this.addAttRecordFormData.attAmStatus,
+            attendabnceAmTime:
+              this.addAttRecordFormData.Amdate1 +
+              " " +
+              this.addAttRecordFormData.AmTime1,
+            attendabncePmStatus: this.addAttRecordFormData.attPmStatus,
+            attendabncePmTime:
+              this.addAttRecordFormData.Pmdate1 +
+              " " +
+              this.addAttRecordFormData.PmTime1,
+            studentId: this.addAttRecordFormData.attStuId,
+          };
+          console.log(tempobj);
+          this.addData({
+            name: "ADDATTDATA",
+            data: tempobj,
+          }).then((data) => {
+            console.log(data);
+            if (data.code == 200) {
+              this.$message({
+                type: "success",
+                message: data.msg,
+              });
+              this.selectExam();
+            } else {
+              this.$message({
+                type: "error",
+                message: data.msg,
+              });
+            }
+          });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+  },
+  watch:{
+    eachartData(value){
+      console.log(value);
+      console.log(123);
+      this.option.series[0].data =value;
+      this.myChart.setOption(this.option);
     }
   },
   mounted() {
@@ -542,10 +773,12 @@ export default {
 // 搜索栏：
 .searchBox {
   padding-left: 1.5%;
+  box-sizing: border-box;
   width: 100%;
   display: flex;
   justify-content: flex-start;
-  margin: 1rem 1rem;
+  margin: 1rem 0;
+  // border: 1px solid red;
 }
 // 发起考试
 .addAbsence {
@@ -605,8 +838,8 @@ export default {
 }
 // 图表
 #checkInEchartsBox {
-  width: 30%;
-  margin-top: 5%;
+  width: 29%;
+  margin-top: 4.5%;
   // border: 1px solid red;
 }
 </style>

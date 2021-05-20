@@ -53,6 +53,13 @@ export default {
         console.log(data);
         return data.data
       })
+    },
+    //添加数据的方法
+    addData(obj){
+      return api[obj.name](obj.data).then(data => {
+        console.log(data);
+        return data.data
+      })
     }
   }
 }

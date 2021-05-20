@@ -156,8 +156,9 @@ export default {
           let h = parseInt(
             data.data.attendabnceUpdateTime.split(" ")[1].split(":")[0]
           );
+          console.log(h);
           this.signInFlag = h < 12 ? true : false; //true是上课打卡，false下课打卡
-          // data.data.attendabnceAmStatus==2?'待签到':data.data.attendabnceAmStatus==0?''
+          
           if (this.signInFlag) {
             if (data.data.attendabnceAmStatus == 2) {
               this.signInText = "待签到";

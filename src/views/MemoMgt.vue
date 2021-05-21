@@ -139,7 +139,7 @@
             </div>
           </el-card>
           <div class="block">
-          <el-pagination layout="prev, pager, next" :total="pageTotal" :page-size="pageSize" @current-change="changePage"></el-pagination>
+          <el-pagination layout="prev, pager, next" :total="pageTotal" :page-size="pageSize" @current-change="changePage1"></el-pagination>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -326,6 +326,10 @@ this.form.type=event.bb
      changePage(val){
       this.nowPage=val
       this.getData1()
+    },
+    changePage1(val){
+      this.nowPage=val
+      this.getData2()
     },
     getData() {
       // console.log(this.form1.parentPhone);

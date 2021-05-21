@@ -17,7 +17,7 @@
       </el-input>
       <!--通过班级-->
       <yy_teacherClassList
-              v-if="shenfen=='老师'||shenfen=='班主任'||shenfen=='管理员'"
+              v-if="shenfen=='老师'||shenfen=='班主任'||shenfen=='管理员'||shenfen=='学生'||shenfen=='家长'"
               @getClassId="filteredByClassFn"/>
 
       <!--通过考试类型-->
@@ -31,9 +31,9 @@
       </el-select>
     </div>
 <!--    显示班级排名（学生）-->
-    <div class="show-class-score" v-if="shenfen=='学生'||shenfen=='家长'">
-      <el-button size="small" plain>显示班级排名</el-button>
-    </div>
+<!--    <div class="show-class-score" v-if="shenfen=='学生'||shenfen=='家长'">-->
+<!--      <el-button size="small" plain>显示班级排名</el-button>-->
+<!--    </div>-->
 <!--    批量录入成绩（老师）-->
 
     <!--通过excel表格批量添加学生-->

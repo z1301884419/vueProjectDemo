@@ -60,8 +60,8 @@
       </el-table-column>
       <el-table-column
               align="center"
+              prop="scoreClassRank"
               label="排名">
-        <template slot-scope="scope">{{scope.$index+1}}</template>
       </el-table-column>
       <el-table-column
               align="center"

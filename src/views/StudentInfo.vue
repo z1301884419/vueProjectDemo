@@ -7,39 +7,39 @@
     </el-breadcrumb>
     <el-divider></el-divider>
     <!--学生的页面-->
-    <div v-if="shenfen=='学生'||shenfen=='家长'" class="this-stu-info">
-      <div class="left">
-        <div>
-          <img src="" style="width: 200px;height: 200px; vertical-align: top" alt="">
-        </div>
-        <div class="beizhu">
-          <h3>备注信息</h3>
-          <div class="beizhu-text">
-            {{stuData.studentDesc}}
-          </div>
-        </div>
-      </div>
-      <div class="xinxi right">
-        <ul>
-          <li>学号：<span>{{stuData.studentNumber}}</span></li>
-          <li>姓名：<span>{{stuData.studentName}}</span></li>
-          <li>性别：<span>{{stuData.studentGender}}</span></li>
-          <li>年龄：<span>{{stuData.studentAge}}</span></li>
-          <li>名族：<span>{{stuData.studentNation}}</span></li>
-          <li>政治面貌：<span>{{stuData.studentPolitics}}</span></li>
-          <li>获奖情况：<span>{{stuData.studentExperience}}</span></li>
-          <li>在读状态：<span>{{stuData.studentState==1?'在读':stuData.student_state==2?'休学':'退学'}}</span></li>
-          <li>班主任：<span>{{stuData.classId}}</span></li>
-          <li>班级：<span>{{stuData.classId}}</span></li>
-          <li>身份证号：<span>{{stuData.studentIdcardno}}</span></li>
-          <li>住址：<span>{{stuData.studentHome}}</span></li>
-          <li>联系方式：<span>{{stuData.studentContact}}</span></li>
-          <li>入学日期：<span>{{stuData.studentDate}}</span></li>
-        </ul>
-      </div>
-    </div>
+<!--    <div v-if="shenfen=='学生'||shenfen=='家长'" class="this-stu-info">-->
+<!--      <div class="left">-->
+<!--        <div>-->
+<!--          <img src="" style="width: 200px;height: 200px; vertical-align: top" alt="">-->
+<!--        </div>-->
+<!--        <div class="beizhu">-->
+<!--          <h3>备注信息</h3>-->
+<!--          <div class="beizhu-text">-->
+<!--            {{stuData.studentDesc}}-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="xinxi right">-->
+<!--        <ul>-->
+<!--          <li>学号：<span>{{stuData.studentNumber}}</span></li>-->
+<!--          <li>姓名：<span>{{stuData.studentName}}</span></li>-->
+<!--          <li>性别：<span>{{stuData.studentGender}}</span></li>-->
+<!--          <li>年龄：<span>{{stuData.studentAge}}</span></li>-->
+<!--          <li>名族：<span>{{stuData.studentNation}}</span></li>-->
+<!--          <li>政治面貌：<span>{{stuData.studentPolitics}}</span></li>-->
+<!--          <li>获奖情况：<span>{{stuData.studentExperience}}</span></li>-->
+<!--          <li>在读状态：<span>{{stuData.studentState==1?'在读':stuData.student_state==2?'休学':'退学'}}</span></li>-->
+<!--          <li>班主任：<span>{{stuData.classId}}</span></li>-->
+<!--          <li>班级：<span>{{stuData.classId}}</span></li>-->
+<!--          <li>身份证号：<span>{{stuData.studentIdcardno}}</span></li>-->
+<!--          <li>住址：<span>{{stuData.studentHome}}</span></li>-->
+<!--          <li>联系方式：<span>{{stuData.studentContact}}</span></li>-->
+<!--          <li>入学日期：<span>{{stuData.studentDate}}</span></li>-->
+<!--        </ul>-->
+<!--      </div>-->
+<!--    </div>-->
     <!--老师的页面-->
-    <div v-if="shenfen=='老师'||shenfen=='班主任'||shenfen=='管理员'">
+    <div v-if="shenfen=='老师'||shenfen=='班主任'||shenfen=='管理员'||shenfen=='学生'||shenfen=='家长'">
       <div class="filter-cpns">
         <!--学号-->
         <el-input
@@ -81,11 +81,11 @@
         </el-button>
       </div>
       <!--给学生群发通告-->
-      <div class="send-message-stu">
-        <el-button style="padding:0 1rem;margin: 0 0.5rem;" size="small" plain>
-          <yy_ReleaseMessage/>
-        </el-button>
-      </div>
+<!--      <div class="send-message-stu">-->
+<!--        <el-button style="padding:0 1rem;margin: 0 0.5rem;" size="small" plain>-->
+<!--          <yy_ReleaseMessage/>-->
+<!--        </el-button>-->
+<!--      </div>-->
       <!--学生信息表-->
       <div class="stu-table">
         <yy_StudentInfoTable :tableData="renderData" :nowPage="nowPage"/>
@@ -109,7 +109,7 @@
   import {mapState,mapActions} from 'vuex'
   import { getStorage } from "../utils/storage";
   import yy_FilterByClass from '@/components/yy_FilterByClass'
-  import yy_ReleaseMessage from '@/components/yy_ReleaseMessage'
+  //import yy_ReleaseMessage from '@/components/yy_ReleaseMessage'
   import yy_StudentInfoTable from '@/components/yy_StudentInfoTable'
   import yy_AddOrSetStudentDialog from '@/components/yy_AddOrSetStudentDialog'
   import yy_UploadExcel from '@/components/yy_UploadExcel'
@@ -118,7 +118,7 @@
     name:'StudentInfo',
     components:{
       yy_FilterByClass,
-      yy_ReleaseMessage,
+      //yy_ReleaseMessage,
       yy_StudentInfoTable,
       yy_AddOrSetStudentDialog,
       yy_UploadExcel,
